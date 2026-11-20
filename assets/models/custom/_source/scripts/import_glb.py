@@ -16,9 +16,9 @@ OUT_ROOT = os.path.join(CUSTOM, "sketchfab")
 
 # chiave = nome del file (senza .glb) -> impostazioni
 CONFIG = {
-    "4a8c1e43d3bf42ea96a5517fb173b1ca": dict(cat="architettura", name="edificio_greco_bouleuterion", cap=24000, tex=1024),
+    "4a8c1e43d3bf42ea96a5517fb173b1ca": dict(cat="architettura", name="edificio_greco_bouleuterion", cap=60000, tex=1024, weld=True),   # texture a piastrelle: sotto ~60k le UV si deformano
     "50fd926fa8494ace9ad39553dc335d86": dict(cat="architettura", name="colonna_corinzia_frammento", cap=10000, tex=2048,
-                                              upright=True, height=3.5),
+                                              upright=True, height=3.5, bake=True),   # fotogrammetria: decimazione senza UV + bake del colore
     "832d4c43a07a481e9b700212d99dbd86": dict(cat="rovine", name="rovina_arco_muschio", cap=10000, tex=2048),
 }
 
@@ -32,6 +32,71 @@ def fix_gltf(path):
     for m in g.get("materials", []):
         m.pop("alphaMode", None); m["doubleSided"] = False
     json.dump(g, open(path, "w"), indent=1)
+
+
+def bake_lowpoly(high, cfg):
+    """Mesh da fotogrammetria: le isole UV impediscono di decimare. Copio la mesh, tolgo le UV, decimo al budget,
+    la rimappo (Smart UV) e cuocio il colore dall'originale su una nuova texture."""
+    import bmesh
+    dims = high.dimensions
+    big = max(dims)
+    low = high.copy(); low.data = high.data.copy(); low.name = "low"
+    bpy.context.scene.collection.objects.link(low)
+    while low.data.uv_layers:
+        low.data.uv_layers.remove(low.data.uv_layers[0])
+    bm = bmesh.new(); bm.from_mesh(low.data)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=big * 1e-6)
+    bm.to_mesh(low.data); bm.free()
+    for i in range(6):
+        cur = tris_of(low.data)
+        if cur <= cfg["cap"] * 1.05:
+            break
+        bpy.ops.object.select_all(action="DESELECT"); low.select_set(True)
+        bpy.context.view_layer.objects.active = low
+        mod = low.modifiers.new("dec", "DECIMATE"); mod.ratio = max(0.02, cfg["cap"] / cur)
+        bpy.ops.object.modifier_apply(modifier=mod.name)
+    if tris_of(low.data) > cfg["cap"] * 1.3:
+        # topologia sporca (bordi aperti): la decimazione si pianta. Rimagliatura voxel (superficie pulita), poi decimo.
+        bpy.ops.object.select_all(action="DESELECT"); low.select_set(True)
+        bpy.context.view_layer.objects.active = low
+        rm = low.modifiers.new("rm", "REMESH"); rm.mode = "VOXEL"; rm.voxel_size = big / cfg.get("voxels", 160)
+        rm.use_smooth_shade = True
+        bpy.ops.object.modifier_apply(modifier=rm.name)
+        print("BAKE remesh tris", tris_of(low.data))
+        bm = bmesh.new(); bm.from_mesh(low.data)
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.to_mesh(low.data); bm.free()
+        for i in range(6):
+            cur = tris_of(low.data)
+            if cur <= cfg["cap"] * 1.05:
+                break
+            mod = low.modifiers.new("dec", "DECIMATE"); mod.ratio = max(0.02, cfg["cap"] / cur)
+            bpy.ops.object.modifier_apply(modifier=mod.name)
+    print("BAKE low tris", tris_of(low.data))
+    bpy.ops.object.select_all(action="DESELECT"); low.select_set(True)
+    bpy.context.view_layer.objects.active = low
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=0.004)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    size = cfg["tex"]
+    img = bpy.data.images.new("bake_color", size, size)
+    mat = bpy.data.materials.new("M_" + cfg["name"]); mat.use_nodes = True
+    nt = mat.node_tree; bsdf = nt.nodes["Principled BSDF"]
+    tn = nt.nodes.new("ShaderNodeTexImage"); tn.image = img
+    nt.links.new(tn.outputs["Color"], bsdf.inputs["Base Color"])
+    nt.nodes.active = tn
+    low.data.materials.clear(); low.data.materials.append(mat)
+    sc = bpy.context.scene
+    sc.render.engine = "CYCLES"; sc.cycles.device = "CPU"; sc.cycles.samples = 4
+    sc.render.bake.use_pass_direct = False; sc.render.bake.use_pass_indirect = False; sc.render.bake.use_pass_color = True
+    bpy.ops.object.select_all(action="DESELECT"); high.select_set(True); low.select_set(True)
+    bpy.context.view_layer.objects.active = low
+    bpy.ops.object.bake(type="DIFFUSE", pass_filter={"COLOR"}, use_selected_to_active=True,
+                        cage_extrusion=big * 0.01, margin=8, use_clear=True)
+    img.file_format = "JPEG"
+    bpy.data.objects.remove(high)
+    print("BAKE ok")
+    return low
 
 
 def main(key, src):
@@ -60,17 +125,22 @@ def main(key, src):
     src_tris = tris_of(me)
     # materiali e texture: ridimensiona, colore opaco in JPEG
     size = cfg["tex"]
-    for im in list(bpy.data.images):
+    for im in ([] if cfg.get("bake") else list(bpy.data.images)):
         if im.size[0] == 0:
             continue
         nonc = im.colorspace_settings.name != "sRGB"
         lim = max(1024, size // 2) if nonc else size
-        if max(im.size) > lim:
-            im.scale(lim, lim)
-        if not nonc:
-            im.file_format = "JPEG"
-    # decimazione
-    if src_tris > cfg["cap"]:
+        w = min(im.size[0], lim)
+        im.file_format = "PNG" if nonc else "JPEG"   # mai WebP (le fonti Sketchfab ne hanno): meglio JPEG/PNG
+        im.scale(w, w)                                # anche a pari risoluzione, per forzare la ricodifica
+    if cfg.get("weld"):
+        import bmesh
+        bm = bmesh.new(); bm.from_mesh(ob.data)
+        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+        bm.to_mesh(ob.data); bm.free()
+    if cfg.get("bake"):
+        ob = bake_lowpoly(ob, cfg)
+    elif src_tris > cfg["cap"]:
         mod = ob.modifiers.new("dec", "DECIMATE")
         mod.ratio = max(0.02, cfg["cap"] / src_tris)
         bpy.ops.object.modifier_apply(modifier=mod.name)

@@ -52,6 +52,36 @@ for g in glob.glob(os.path.join(root, "*", "*", "*.gltf")):
             img["uri"] = u[:-4] + ".jpg"; img["mimeType"] = "image/jpeg"; ch = True
     if ch:
         json.dump(d, open(g, "w"), indent=1)
+# --- WebP -> JPEG/PNG: le sorgenti Sketchfab hanno EXT_texture_webp; non dipendiamo dal suo supporto in Godot ---
+for g in glob.glob(os.path.join(root, "**", "*.gltf"), recursive=True):
+    d = json.load(open(g)); gd = os.path.dirname(g); ch = False
+    for img in d.get("images", []):
+        u = img.get("uri", "")
+        if u.endswith(".webp") and os.path.exists(os.path.join(gd, u)):
+            im = Image.open(os.path.join(gd, u)); im.load()
+            has_a = im.mode in ("RGBA", "LA") and im.getchannel("A").getextrema()[0] < 255
+            new = u[:-5] + (".png" if has_a else ".jpg")
+            if has_a:
+                im.save(os.path.join(gd, new), "PNG", optimize=True)
+            else:
+                im.convert("RGB").save(os.path.join(gd, new), "JPEG", quality=90, subsampling=0, optimize=True)
+            os.remove(os.path.join(gd, u))
+            if os.path.exists(os.path.join(gd, u + ".import")):
+                os.remove(os.path.join(gd, u + ".import"))
+            img["uri"] = new; img["mimeType"] = "image/png" if has_a else "image/jpeg"; ch = True
+    if ch:
+        for t in d.get("textures", []):
+            ext = t.get("extensions", {}).pop("EXT_texture_webp", None)
+            if ext is not None:
+                t["source"] = ext["source"]
+            if not t.get("extensions"):
+                t.pop("extensions", None)
+        for k in ("extensionsUsed", "extensionsRequired"):
+            if k in d:
+                d[k] = [e for e in d[k] if e != "EXT_texture_webp"]
+                if not d[k]:
+                    del d[k]
+        json.dump(d, open(g, "w"), indent=1)
 # --- niente profili ICC ---
 import subprocess, shutil
 stripped = 0
