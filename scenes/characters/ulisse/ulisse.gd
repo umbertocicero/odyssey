@@ -5,6 +5,7 @@ extends GridUnit
 ## I comandi sono relativi alla camera: "su" sposta Ulisse verso l'alto dello
 ## schermo, lungo l'asse della griglia più vicino a quella direzione.
 ## Su mobile uno swipe fa un passo nella direzione dello swipe.
+## Se un soldato acheo gli sbarra la strada, i due si scambiano di posto.
 
 signal action_requested(action: StringName)
 
@@ -17,7 +18,11 @@ var _queued_swipe := Vector2.ZERO
 
 func _ready() -> void:
 	add_to_group(&"player")
+	# Ulisse passa attraverso i suoi soldati scambiandosi di posto.
+	can_swap_with_allies = true
 	super._ready()
+	if grid:
+		grid.validate_connectivity(cell)
 
 
 func _physics_process(_delta: float) -> void:

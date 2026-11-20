@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dl2c5w6mh4lul"
-path="res://.godot/imported/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png-448a1b463289b8429aeef5ed86092c29.ctex"
+path.s3tc="res://.godot/imported/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png-448a1b463289b8429aeef5ed86092c29.s3tc.ctex"
+path.etc2="res://.godot/imported/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png-448a1b463289b8429aeef5ed86092c29.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "03bdfafd533ad900446c83cbde04392b"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/troia/vegetazione/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png"
-dest_files=["res://.godot/imported/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png-448a1b463289b8429aeef5ed86092c29.ctex"]
+dest_files=["res://.godot/imported/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png-448a1b463289b8429aeef5ed86092c29.s3tc.ctex", "res://.godot/imported/cypress_tree_poly_by_google_eUQDPAFMQfv_CypressTree_BaseColor.png-448a1b463289b8429aeef5ed86092c29.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

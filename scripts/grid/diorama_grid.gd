@@ -6,7 +6,8 @@ extends Node3D
 ##
 ## Il centro della griglia coincide con l'origine del nodo, sul piano y = 0.
 ## Gli ostacoli sono nodi 3D nel gruppo "grid_obstacle": la loro cella viene
-## calcolata dalla posizione e segnata come bloccata all'avvio.
+## calcolata dalla posizione e segnata come bloccata all'avvio. Se il nodo ha
+## un metodo get_blocked_cells(grid) (es. GridProp), blocca tutte quelle caselle.
 
 const OBSTACLE_GROUP := &"grid_obstacle"
 
@@ -65,7 +66,7 @@ func is_blocked(cell: Vector2i) -> bool:
 
 
 func get_occupant(cell: Vector2i) -> Node:
-	return _occupants.get(cell)
+	return _occupants.get(cell) as Node
 
 
 func is_walkable(cell: Vector2i) -> bool:
@@ -88,9 +89,48 @@ func release(cell: Vector2i, unit: Node) -> void:
 		_occupants.erase(cell)
 
 
+## Restituisce le caselle libere da ostacoli che non si possono raggiungere
+## partendo da start (le unità non contano: si spostano o si scambiano).
+## Una lista vuota significa che il livello non ha caselle chiuse.
+func find_unreachable_cells(start: Vector2i) -> Array[Vector2i]:
+	var reached := {start: true}
+	var frontier: Array[Vector2i] = [start]
+	while not frontier.is_empty():
+		var current: Vector2i = frontier.pop_back()
+		for direction: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			var next := current + direction
+			if is_inside(next) and not is_blocked(next) and not reached.has(next):
+				reached[next] = true
+				frontier.append(next)
+	var unreachable: Array[Vector2i] = []
+	for y in size.y:
+		for x in size.x:
+			var c := Vector2i(x, y)
+			if not is_blocked(c) and not reached.has(c):
+				unreachable.append(c)
+	return unreachable
+
+
+## Controlla che da start si possano raggiungere tutte le caselle libere;
+## altrimenti avvisa nel log quali caselle sono chiuse dagli ostacoli.
+func validate_connectivity(start: Vector2i) -> bool:
+	if is_blocked(start):
+		push_warning("DioramaGrid: la casella di partenza %s è bloccata da un ostacolo." % start)
+		return false
+	var unreachable := find_unreachable_cells(start)
+	if not unreachable.is_empty():
+		push_warning("DioramaGrid: caselle chiuse dagli ostacoli, irraggiungibili: %s" % [unreachable])
+		return false
+	return true
+
+
 func _register_obstacles() -> void:
 	for node in get_tree().get_nodes_in_group(OBSTACLE_GROUP):
-		if node is Node3D:
+		if node.has_method(&"get_blocked_cells"):
+			# Oggetti con un'impronta di più caselle (GridProp).
+			for c: Vector2i in node.get_blocked_cells(self):
+				set_blocked(c, true)
+		elif node is Node3D:
 			set_blocked(world_to_cell((node as Node3D).global_position), true)
 
 
@@ -108,6 +148,10 @@ func _rebuild_tiles() -> void:
 	var material := StandardMaterial3D.new()
 	material.vertex_color_use_as_albedo = true
 	material.roughness = 1.0
+	if tile_color_a.a < 1.0 or tile_color_b.a < 1.0:
+		# Caselle semitrasparenti: lasciano vedere il terreno sotto.
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	mesh.material = material
 
 	var multimesh := MultiMesh.new()

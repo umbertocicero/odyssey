@@ -64,3 +64,6 @@ Desktop.ini
 
 # ── Claude: impostazioni locali (quelle condivise restano) ──
 .claude/settings.local.json
+
+# Schermate generate dai test
+tests/screenshots/

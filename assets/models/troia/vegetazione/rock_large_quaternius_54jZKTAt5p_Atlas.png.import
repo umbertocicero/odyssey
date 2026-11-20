@@ -3,9 +3,11 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cv0kils20xl7q"
-path="res://.godot/imported/rock_large_quaternius_54jZKTAt5p_Atlas.png-005131899b73133a0d6a92a55dc68a51.ctex"
+path.s3tc="res://.godot/imported/rock_large_quaternius_54jZKTAt5p_Atlas.png-005131899b73133a0d6a92a55dc68a51.s3tc.ctex"
+path.etc2="res://.godot/imported/rock_large_quaternius_54jZKTAt5p_Atlas.png-005131899b73133a0d6a92a55dc68a51.etc2.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "b6b1d5843eb67973aacf764f46d2f25b"
@@ -14,11 +16,11 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/models/troia/vegetazione/rock_large_quaternius_54jZKTAt5p_Atlas.png"
-dest_files=["res://.godot/imported/rock_large_quaternius_54jZKTAt5p_Atlas.png-005131899b73133a0d6a92a55dc68a51.ctex"]
+dest_files=["res://.godot/imported/rock_large_quaternius_54jZKTAt5p_Atlas.png-005131899b73133a0d6a92a55dc68a51.s3tc.ctex", "res://.godot/imported/rock_large_quaternius_54jZKTAt5p_Atlas.png-005131899b73133a0d6a92a55dc68a51.etc2.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +42,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

@@ -122,13 +122,19 @@ Da riga di comando: `godot --path /percorso/di/Odyssey` (aggiungere `--editor` p
 
 ## Prototipo del livello 1
 
-Il prototipo contiene un diorama di prova della pianura di Troia (`scenes/levels/level1/level1.tscn`):
+Il prototipo contiene il diorama del livello 1 (`scenes/levels/level1/level1.tscn`), dalle navi achee alla porta di Troia, costruito con i modelli scaricati in `assets/models/troia/` (crediti in `assets/models/troia/CREDITS.md`):
 
-- **Camera fissa** (`scripts/camera/fixed_camera.gd`): guarda il diorama da distanza, inclinazione e rotazione costanti, regolabili dall'Inspector.
-- **Griglia** (`scripts/grid/diorama_grid.gd`): 12×8 caselle da 1 m. I nodi nel gruppo `grid_obstacle` bloccano la loro casella; le unità occupano la casella su cui si trovano.
-- **Ulisse** (`scenes/characters/ulisse/`): segnaposto a capsula, si muove di una casella alla volta. I comandi seguono lo schermo (su = verso l'alto dello schermo). Su mobile si muove con uno swipe.
-- **Soldati achei** (`scripts/units/ally_soldier.gd`): seguono Ulisse sulla griglia. Qui andrà la logica con cui lo aiutano a combattere.
-- **Soldati troiani** (`scenes/enemies/troiano/`): segnaposto fermi, pronti per state machine e combattimento.
+- **Diorama quadrato**: una base di 52×52 m con il bordo, e dentro la griglia giocabile di 40×40 caselle. Il percorso è a L: dall'accampamento acheo (angolo sud-ovest, con il mare e le navi sul lato ovest) attraversa la pianura verso est, poi sale a nord tra le rovine fino allo spiazzo davanti alla porta, dove andrà il cavallo (`PuntoCavallo`). Sul lato nord, dentro la base, ci sono le mura e la porta di Troia, l'acropoli con il tempio e la città.
+- **Griglia** (`scripts/grid/diorama_grid.gd`): 40×40 caselle da 1 m. Gli oggetti bloccano le caselle della loro impronta; all'avvio il livello controlla che non ci siano caselle chiuse.
+- **Oggetti** (`scripts/props/grid_prop.gd`): ogni oggetto usa un `.glb` scaricato e lo porta alla misura giusta (`fit_size`), appoggiato a terra, senza modificare il file. Si può usare un solo pezzo di un pack (`piece`), correggere l'orientamento (`model_rotation_degrees`) e scegliere quali caselle bloccare (per esempio solo i pilastri di un arco).
+- **Decorazioni** (`scripts/props/prop_scatter.gd`): alberi, cespugli, fiori ed erba ripetuti con MultiMesh, una chiamata di disegno per mesh. Non bloccano la griglia.
+- **Camera fissa** (`scripts/camera/fixed_camera.gd`): angolo costante; segue Ulisse spostando solo il punto guardato, entro i limiti del diorama.
+- **Ulisse** (`scenes/characters/ulisse/`): segnaposto a capsula, si muove di una casella alla volta. I comandi seguono lo schermo. Su mobile si muove con uno swipe. Se un soldato acheo gli sbarra la strada, si scambiano di posto.
+- **Soldati achei** (`scripts/units/ally_soldier.gd`): seguono Ulisse sulla griglia.
+- **Soldati troiani** (`scenes/enemies/troiano/`): segnaposto fermi, una pattuglia nella pianura e i difensori davanti alle mura.
+- **Luci**: un sole e due luci puntiformi (falò e porta), per restare leggeri su mobile e web.
+
+Test: `godot --headless --path . -s res://tests/test_grid_movement.gd` controlla che Ulisse non resti mai bloccato.
 
 Le azioni di combattimento (attacco, parata, schivata, interazione, abilità) sono già nella mappa degli input, ma non sono ancora implementate.
 
@@ -149,4 +155,4 @@ Per sostituire un segnaposto con un modello `.glb`, trascinare il `.glb` dentro 
 
 ## Stato
 
-Il progetto Godot è creato: c'è il diorama di prova del livello 1 con camera fissa, griglia, Ulisse controllabile, alleati che lo seguono e nemici segnaposto. Mancano il combattimento, i modelli definitivi e il filtro pixel art.
+Il progetto Godot è creato: c'è il diorama del livello 1 con i modelli scaricati, camera fissa che segue Ulisse, griglia, alleati che lo seguono e nemici segnaposto. Mancano il combattimento, il cavallo, i modelli dei personaggi e il filtro pixel art.
