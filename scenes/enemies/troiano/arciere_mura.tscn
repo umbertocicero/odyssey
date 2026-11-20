@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://assets/models/custom/personaggi/arciere_troiano.glb" id="9_glb"]
 [ext_resource type="Script" path="res://scripts/combat/wall_shooter.gd" id="1_shooter"]
 [ext_resource type="Resource" path="res://data/combat/freccia.tres" id="2_profile"]
 
@@ -25,10 +26,4 @@ muzzle_height = 1.0
 
 [node name="Model" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-mesh = SubResource("mesh_body")
-
-[node name="Arco" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.3)
-mesh = SubResource("mesh_bow")
+[node name="Mesh" parent="Model" instance=ExtResource("9_glb")]

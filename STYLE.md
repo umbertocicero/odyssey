@@ -101,3 +101,46 @@ Il renderer Compatibility non offre SSAO, SSR, SDFGI né nebbia volumetrica: il 
 - Ordine nel post-process: prima colore e sfocatura tilt-shift, poi pixelatura e riduzione della palette.
 - La palette del filtro va presa dal riferimento (arancio, pesca, beige, oliva, rosso, bronzo, blu-verde), così il pixel art resta caldo.
 - La dimensione dei pixel deve restare piccola (2–3 px a 1080p): i dettagli piccoli e le sagome dei personaggi devono rimanere leggibili.
+
+## 5. Accampamento e stile Età del bronzo (richiesta di Umberto, vale per tutto il gioco)
+
+Riferimento: foto `ispirazione/accampamento_riferimento.jpg` (**non ancora salvata**: il file non è arrivato al computer, va rimandato). Regole estratte dalla descrizione:
+- **Epoca**: Età del bronzo greca. Niente tendoni da circo, niente colori vivaci o piatti.
+- **Luce**: tramonto dorato cinematografico, foschia e colonne di fumo. Ambiente smorzato (saturazione globale 0,8 in `Environment`), foschia calda più densa.
+- **Palette**: terrosa e smorzata: sabbia, ocra, oliva, legno consumato, bronzo opaco, rosso/marrone spento per mantelli e stendardi.
+- **Tende**: grandi, di tela e pelli consumate, con rami frondosi e pellicce sopra, pali e corde. In scena: modelli a tenda scuri, desaturati (`GridProp.tint` e `desaturate`).
+- **Campo**: denso, irregolare, vissuto: fuochi con calderoni su pietre, pithoi, botti, panche, rastrelliere con lance, scudi rotondi appoggiati, palizzate di pali appuntiti, cumuli di terra, casse sparse, file di tende che si perdono in lontananza. Terra e sabbia con impronte e ciuffi d'erba secca, pini, colline sullo sfondo. Niente piazzale a lastre nel campo.
+- **Navi**: legno scuro, scafo curvo, sartiame, vela quadra, tirate in secca con schiuma.
+- **Personaggi**: tuniche semplici, mantelli rosso/marrone spenti, corazza ed elmo di bronzo. Presenti i cavalli.
+- **Mancano** (non inventati): panche, calderoni, pithoi, tende con pelli e rami, cavalli (esiste solo `sketchfab/animali/cavallo_lowpoly_marrone`, licenza da verificare, non inserito), vele quadre con sartiame dettagliato.
+
+## 6. Sentiero verso Troia e Troia sullo sfondo (riferimento `ispirazione/sentiero_troia_riferimento.jpg`, non ancora salvato)
+- Steppa secca ocra dorata; strada di terra larga e curva con solchi profondi di ruote e impronte; palizzate di pali appuntiti e staccionate basse lungo il sentiero; cumuli di pietre e barricate di pali; ciuffi di erba gialla secca e cespugli; pochi alberi tondi; capanne e fuochi lontani; colonne di fumo sulla piana.
+- Troia sullo sfondo: cittadella massiccia di arenaria chiara su una collina bassa all'orizzonte, mura merlate con torri quadrate, porta centrale, molti edifici con tetti di terracotta, fumo.
+- Soldati con elmo a cresta rossa, corazza di bronzo, mantello rosso scuro, lance; un carro con cavalli in lontananza.
+- Luce morbida con foschia, cielo nuvoloso, sole caldo del pomeriggio con ombre lunghe.
+
+## 7. Mura e porta di Troia da vicino (`ispirazione/mura_porta_troia_riferimento.jpg`, non ancora salvato)
+- Mura di blocchi di calcare ocra tagliati grezzamente con giunti di malta, muschio e usura; grandi torri quadrate merlate ai lati di una porta centrale a due battenti di legno scuro con borchie e rinforzi di metallo, incorniciata di pietra.
+- In cima palizzata di legno, piattaforme di guardia coperte con tetto di tegole, scale di legno addossate, bracieri fumanti sulle torri, bandiere scure e dorate su pali, difensori con scudi rotondi ed elmi a cresta.
+- Davanti alla porta barricate di pali appuntiti e cumuli di pietre, strada polverosa con solchi, cespugli secchi in primo piano.
+
+## 8. Pianura di battaglia (`ispirazione/battaglia_pianura_riferimento.jpg`, non ancora salvato)
+- Battaglia fitta su pianura sabbiosa calpestata sotto le mura; luce dorata con foschia, colonne di fumo scuro, frecce infuocate nel cielo.
+- Opliti greci con corazza di bronzo, elmi a cresta (rossi, blu, semplici), scudi rotondi di bronzo, mantelli blu/rossi/marroni; masse di soldati che si perdono nella foschia, cavalli, un carro da guerra.
+- Troiani sulle mura: arcieri su merli e torri, bandiere, bracieri; davanti catapulte di legno (braccio con contrappeso) e baliste su telai con ruote, con serventi e piccoli fuochi; barricate di pali, detriti, frecce conficcate a terra, fango e impronte; campo greco e navi in lontananza a sinistra.
+
+## 9. Ulisse e i soldati achei da vicino (`ispirazione/achei_ulisse_riferimento.jpg`, non ancora salvato)
+- Bronzo consumato da battaglia, opaco e invecchiato (non lucido, non giallo piatto): roughness alta, metallico moderato, graffi.
+- Elmi corinzi con incisioni e paraguance, alte creste di crine nero (più grande sul capo); corazza muscolata con volute incise e spalline a strati; cinghie e cinturoni di cuoio, bracciali; scudi rotondi (hoplon) di bronzo martellato con ammaccature e simboli (tridente, chevron); tunica scura.
+- Volti ruvidi e barbuti, capelli scuri, cicatrici, sporco; sfondo con file di opliti e lance, polvere e fumo, luce diffusa morbida.
+
+## 10. Mare, riva e navi (riferimento solo testuale; `mare_riva_navi_riferimento.jpg` assente)
+- Mare blu-verde scuro mosso con onde bianche che si rompono sulla sabbia bagnata (`assets/shaders/sea.gdshader`, rifatto da un altro agente: non toccarlo), luce coperta di crepuscolo, fumo e fuochi sulla spiaggia.
+- Grandi navi scure con occhio dipinto e vela quadra all'ancora al largo, navi medie più vicine, piccole barche a remi che fanno la spola, alcune tirate in secca spinte in acqua da soldati; tende scure sulla spiaggia.
+- Nel livello 1 il mare è una striscia di 4,4 m sul lato ovest del blocco: oggi ci sono 2 triremi e 2 pentecontere. Mancano barche a remi, navi con occhio dipinto, soldati in acqua.
+
+## 11. Cielo e luce (riferimento solo testuale; `cielo_luce_riferimento.jpg` assente)
+- Tramonto drammatico: sole basso arancione-oro dietro colline lontane, grandi cumuli stratificati grigio-viola con bordi arancio/rosa/oro, foschia dorata e polvere sul terreno, ombre lunghe e morbide, colonne di fumo scuro, terreno in controluce caldo, mare con riflessi caldi, mura con torri fumanti in controluce.
+- Contrasto caldo-freddo: arancio e oro contro blu ardesia e viola (sole oro-arancio, riempimento viola ardesia).
+- Implementazione: `assets/shaders/sky_dusk.gdshader` (cielo con sole, gradiente e nuvole procedurali; ottave 2/3/5 per qualità), sole a 22° (`LevelAtmosphere.sun_elevation_degrees`), `fog_sun_scatter` 0,55, luce di riempimento viola. Il Compatibility non ha nebbia volumetrica né raggi di luce: la foschia è quella per distanza; i raggi volumetrici restano da fare (cards o post-process) se il profilo regge.

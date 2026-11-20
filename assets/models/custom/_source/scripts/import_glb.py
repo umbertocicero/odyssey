@@ -14,12 +14,33 @@ from mathutils import Vector, Matrix
 CUSTOM = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 OUT_ROOT = os.path.join(CUSTOM, "sketchfab")
 
+FLIP = os.environ.get("FLIP") == "1"
 # chiave = nome del file (senza .glb) -> impostazioni
 CONFIG = {
     "4a8c1e43d3bf42ea96a5517fb173b1ca": dict(cat="architettura", name="edificio_greco_bouleuterion", cap=60000, tex=1024, weld=True),   # texture a piastrelle: sotto ~60k le UV si deformano
     "50fd926fa8494ace9ad39553dc335d86": dict(cat="architettura", name="colonna_corinzia_frammento", cap=10000, tex=2048,
-                                              upright=True, height=3.5, bake=True),   # fotogrammetria: decimazione senza UV + bake del colore
+                                              upright=True, flipud=False, double=True, height=3.5),   # scansione: la decimazione si pianta a ~66k triangoli (bake e remesh voxel provati, inservibili)
     "832d4c43a07a481e9b700212d99dbd86": dict(cat="rovine", name="rovina_arco_muschio", cap=10000, tex=2048),
+    # --- new4 (20/11/2026) ---
+    "penteconter": dict(cat="navi", name="pentecontera_greca", cap=30000, tex=1024, weld=True,
+                        author="Thales (ThalesMML)", license="CC-BY-4.0",
+                        url="https://sketchfab.com/3d-models/greek-penteconter-50-oared-monoreme-stormworks-41777109ea814be48fb0e2b2a22af0b6"),
+    # NON USABILE: la gerarchia FBX mescola unita' (scafo 8 m, parti a 100x): l'insieme risulta alto 317 m
+    "barca_ercolano": dict(cat="navi", name="barca_romana_ercolano", cap=24000, tex=1024, weld=True,
+                           author="Opus Poly (OpusPoly)", license="CC-BY-4.0",
+                           url="https://sketchfab.com/3d-models/herculaneum-boat-roman-boat-fd84e8e9cf184426b1701e80c9018067"),
+    "cavallo_marrone": dict(cat="animali", name="cavallo_lowpoly_marrone", cap=9000, tex=2048, weld=True, height=1.8,
+                            author="?", license="? (nessun file di licenza)", url="?"),
+    "rilievo_tempio": dict(cat="rovine", name="rilievo_tempio_pietra", cap=20000, tex=2048, weld=True,
+                           author="ScanForgeFAB", license="CC-BY-4.0",
+                           url="https://sketchfab.com/3d-models/ancient-stone-temple-relief-photogrammetry-free-18e4293c232246e78bf3e88d9a3501c6"),
+    "e0ae274f9e764ceb846944f733331aa5": dict(cat="rovine", name="testa_statua_barbuta", cap=25000, tex=2048, weld=True, height=0.5,
+                                              author="?", license="? (nessun file di licenza)", url="?"),
+    # --- new5 (20/11/2026): tenda di Gajk.Mv, CC-BY-4.0; in centimetri (FBX), tela a doppia faccia
+    "tenda_gajk": dict(cat="tende", name="tenda_sketchfab_gajk", cap=12000, tex=1024, scale=0.01, double=True,
+                       author="Gajk.Mv", license="CC-BY-4.0", url="https://sketchfab.com/3d-models/tent-fa46028e8d3849399ba5271df07ed99c"),
+    "ICQIQYIC26VJNC5KK64ZPHAZP": dict(cat="fuori_epoca", name="nave_asiatica_torri", cap=16000, tex=1024,
+                                       author="?", license="? (nessun file di licenza)", url="?"),
 }
 
 
@@ -27,10 +48,10 @@ def tris_of(me):
     return sum(len(p.vertices) - 2 for p in me.polygons)
 
 
-def fix_gltf(path):
+def fix_gltf(path, double=False):
     g = json.load(open(path))
     for m in g.get("materials", []):
-        m.pop("alphaMode", None); m["doubleSided"] = False
+        m.pop("alphaMode", None); m["doubleSided"] = double
     json.dump(g, open(path, "w"), indent=1)
 
 
@@ -65,6 +86,8 @@ def bake_lowpoly(high, cfg):
         print("BAKE remesh tris", tris_of(low.data))
         bm = bmesh.new(); bm.from_mesh(low.data)
         bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        if cfg.get("flip"):
+            bmesh.ops.reverse_faces(bm, faces=bm.faces)
         bm.to_mesh(low.data); bm.free()
         for i in range(6):
             cur = tris_of(low.data)
@@ -104,8 +127,13 @@ def main(key, src):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=src)
     meshes = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    for o in meshes:   # shape key (es. remi animati) impediscono modificatori e join: le tolgo (posa di riposo)
+        if o.data.shape_keys:
+            o.shape_key_clear()
     for o in meshes:   # tutte le parti nel loro posto (coordinate mondo)
+        mw = o.matrix_world.copy()
         o.parent = None
+        o.matrix_world = mw
     bpy.context.view_layer.update()
     bpy.ops.object.select_all(action="DESELECT")
     for o in meshes:
@@ -167,13 +195,17 @@ def main(key, src):
             cx = sum(v.x for v in sel) / len(sel); cy = sum(v.y for v in sel) / len(sel)
             return sum(math.hypot(v.x - cx, v.y - cy) for v in sel) / len(sel)
         bottom, top = [v for v in vs if v.z <= lo], [v for v in vs if v.z >= hi]
-        if top and bottom and spread(bottom) > spread(top):   # il capitello (largo) deve stare in alto
+        if cfg.get("flipud"):                                   # orientamento verificato a vista: base quadrata sotto, capitello sopra
+            for v in me.vertices:
+                v.co = Matrix.Rotation(math.radians(180), 4, "X") @ v.co
+            vs = [v.co.copy() for v in me.vertices]
+        elif cfg.get("flipud") is None and top and bottom and spread(bottom) > spread(top):   # il capitello (largo) deve stare in alto
             for v in me.vertices:
                 v.co = Matrix.Rotation(math.radians(180), 4, "X") @ v.co
             vs = [v.co.copy() for v in me.vertices]
     mn = Vector((min(v.x for v in vs), min(v.y for v in vs), min(v.z for v in vs)))
     mx = Vector((max(v.x for v in vs), max(v.y for v in vs), max(v.z for v in vs)))
-    s = cfg["height"] / (mx.z - mn.z) if cfg.get("height") else 1.0
+    s = cfg["height"] / (mx.z - mn.z) if cfg.get("height") else cfg.get("scale", 1.0)
     off = Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, mn.z))
     for v in me.vertices:
         v.co = (v.co - off) * s
@@ -191,9 +223,10 @@ def main(key, src):
         export_materials="EXPORT", export_image_format="AUTO", export_texture_dir="textures",
         export_texcoords=True, export_normals=True, export_animations=False, export_skins=False,
         export_cameras=False, export_lights=False)
-    fix_gltf(out)
+    fix_gltf(out, cfg.get("double", False))
     rec = dict(asset=key, variant=cfg["name"], tris_src=src_tris, tris=tris_of(ob.data), dim=[round(x, 2) for x in dims],
-               tex=size, scale=round(s, 4), file=os.path.relpath(out, CUSTOM))
+               tex=size, scale=round(s, 4), file=os.path.relpath(out, CUSTOM),
+               author=cfg.get("author"), license=cfg.get("license"), url=cfg.get("url"))
     print("JOB", json.dumps(rec, ensure_ascii=False))
     with open(os.path.join(OUT_ROOT, "_report.jsonl"), "a") as f:
         f.write(json.dumps(rec, ensure_ascii=False) + "\n")

@@ -7,54 +7,65 @@
 [ext_resource type="PackedScene" uid="uid://iflk678p4q3a" path="res://assets/models/troia/oggetti/amphora_bruno_oliveira_7Q8MkXjALbL.glb" id="m_amphora"]
 [ext_resource type="PackedScene" uid="uid://qc7v7nm4eo2l" path="res://assets/models/troia/architettura/arch_quaternius_QwWdOcNIMh.glb" id="m_arch"]
 [ext_resource type="PackedScene" uid="uid://c0eam2qjfygnm" path="res://assets/models/troia/oggetti/bags_quaternius_gzvyAQ797z.glb" id="m_bags"]
-[ext_resource type="PackedScene" uid="uid://bhalnhvrf7i5s" path="res://assets/models/troia/accampamento/banner_quaternius_svYG8KZxjq.glb" id="m_banner"]
-[ext_resource type="PackedScene" uid="uid://l5g2cra3uke6" path="res://assets/models/troia/oggetti/barrel_quaternius_ONdghDBByN.glb" id="m_barrel"]
-[ext_resource type="PackedScene" uid="uid://dlxy8heexy7e5" path="res://assets/models/troia/oggetti/barrel_quaternius_Eko3cjAMW9.glb" id="m_barrel2"]
-[ext_resource type="PackedScene" uid="uid://b5lwj4r5ailmo" path="res://assets/models/troia/oggetti/broken_cart_quaternius_NBDHe8J7f9.glb" id="m_broken_cart"]
-[ext_resource type="PackedScene" uid="uid://cendlghykht0m" path="res://assets/models/troia/vegetazione/bush_quaternius_ooG6CkLyE8.glb" id="m_bush"]
-[ext_resource type="PackedScene" uid="uid://b7l4b1evm2euw" path="res://assets/models/troia/vegetazione/bushes_quaternius_J2h3HrO356.glb" id="m_bushes"]
-[ext_resource type="PackedScene" uid="uid://t3j031k5887" path="res://assets/models/troia/vegetazione/bush_with_flowers_quaternius_U1ymDy8tbY.glb" id="m_bush_fl"]
-[ext_resource type="PackedScene" uid="uid://ystospkxwt4p" path="res://assets/models/troia/oggetti/cart_quaternius_l7bDe7ak6j.glb" id="m_cart"]
 [ext_resource type="PackedScene" uid="uid://dcbxid8sesn66" path="res://assets/models/troia/architettura/modular_castle_kit_quaternius_AhhyXvO6Fd.glb" id="m_castle_kit"]
 [ext_resource type="PackedScene" uid="uid://duayy50tqjxcg" path="res://assets/models/troia/architettura/column_round_quaternius_n8ZvVFcJhl.glb" id="m_column_base"]
-[ext_resource type="PackedScene" uid="uid://dakndte31wb63" path="res://assets/models/troia/oggetti/crate_quaternius_SfJtdV8GDr.glb" id="m_crate"]
-[ext_resource type="PackedScene" uid="uid://dqb05qvnnr52f" path="res://assets/models/troia/oggetti/crate_quaternius_oTD0P0yGLG.glb" id="m_crate2"]
-[ext_resource type="PackedScene" uid="uid://lcir0wkn0ecm" path="res://assets/models/troia/vegetazione/cypress_tree_poly_by_google_eUQDPAFMQfv.glb" id="m_cypress"]
 [ext_resource type="PackedScene" uid="uid://crk64druqowih" path="res://assets/models/troia/architettura/doric_greek_column_victor_vi_a_5VD5-v8NBZ4.glb" id="m_doric"]
-[ext_resource type="PackedScene" uid="uid://cnmwc1pofsyoh" path="res://assets/models/troia/navi/drakkar_aim_tribolet_6jiLHSU15wB.glb" id="m_drakkar"]
-[ext_resource type="PackedScene" uid="uid://cepq6wnb8oy5t" path="res://assets/models/troia/accampamento/fence_quaternius_U7g0Wxpt63.glb" id="m_fence"]
-[ext_resource type="PackedScene" uid="uid://cqe6fslb76gd0" path="res://assets/models/troia/accampamento/fence_quaternius_r0n40F7FKx.glb" id="m_fence_s"]
-[ext_resource type="PackedScene" uid="uid://c75p0gy16x7bp" path="res://assets/models/troia/accampamento/fire_pit_1_circuitz_DsQslCOoz0.glb" id="m_firepit"]
-[ext_resource type="PackedScene" uid="uid://bbdm4rvl1c81n" path="res://assets/models/troia/accampamento/flag_quaternius_FuOkF3WBrx.glb" id="m_flag"]
-[ext_resource type="PackedScene" uid="uid://c7icy5via1om2" path="res://assets/models/troia/vegetazione/flowers_quaternius_NBUxHir6FJ.glb" id="m_flowers"]
-[ext_resource type="PackedScene" uid="uid://bted277kb5vao" path="res://assets/models/troia/vegetazione/flower_bushes_quaternius_1X06RgvSr6.glb" id="m_flower_bushes"]
-[ext_resource type="PackedScene" uid="uid://di1h6xdj7kqb4" path="res://assets/models/troia/architettura/castle_gate_quaternius_tKTchdiQzV.glb" id="m_gate"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/fuochi/focolare_calderone/focolare_calderone.gltf" id="m_firepit"]
 [ext_resource type="PackedScene" uid="uid://d2wxko3431msl" path="res://assets/models/troia/architettura/greek_columns_geoffrey_bell_60CJrsmi_Tt.glb" id="m_greek_cols"]
-[ext_resource type="PackedScene" uid="uid://763kds72kjwh" path="res://assets/models/troia/accampamento/guard_tower_quaternius_sbaM8I229r.glb" id="m_guard_tower"]
 [ext_resource type="PackedScene" uid="uid://d3ff5e7vqnv6b" path="res://assets/models/troia/oggetti/clay_jug_reyshapes_FfvhIuFaLu.glb" id="m_jug"]
-[ext_resource type="PackedScene" uid="uid://cc738lr1oofk5" path="res://assets/models/troia/vegetazione/olive_tree_poly_by_google_cKHksYy9jPk.glb" id="m_olive"]
-[ext_resource type="PackedScene" uid="uid://bxhq2s2n26qc5" path="res://assets/models/troia/accampamento/fence_fortified_kenney_9FQPNr0sdJ.glb" id="m_palisade"]
 [ext_resource type="PackedScene" uid="uid://csl80e5ly4iw4" path="res://assets/models/troia/architettura/roman_pillar_peter_gedeon_3GnC-e_xWS-.glb" id="m_pillar"]
-[ext_resource type="PackedScene" uid="uid://ccfxcc8yxdsjx" path="res://assets/models/troia/oggetti/ceramic_pot_large_milkandbanana_fHMy0Xrb0V.glb" id="m_pot"]
-[ext_resource type="PackedScene" uid="uid://bl0duw5lfryd2" path="res://assets/models/troia/vegetazione/rocks_quaternius_gYhoEOKItJ.glb" id="m_rocks"]
-[ext_resource type="PackedScene" uid="uid://5b6js8mxvn0y" path="res://assets/models/troia/vegetazione/rock_large_quaternius_54jZKTAt5p.glb" id="m_rock_large"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/giare_panche/pithos_grande/pithos_grande.gltf" id="m_pot"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/giare_panche/pithos_medio_coperchio/pithos_medio_coperchio.gltf" id="n_pithos_m"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/giare_panche/panca_assi/panca_assi.gltf" id="n_panca_a"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/giare_panche/panca_ceppi/panca_ceppi.gltf" id="n_panca_c"]
 [ext_resource type="PackedScene" uid="uid://brt81jl8u01ba" path="res://assets/models/troia/architettura/roman_arch_icawfype_agiRDMN0VR.glb" id="m_roman_arch"]
 [ext_resource type="PackedScene" uid="uid://bu6xj010643lf" path="res://assets/models/troia/architettura/modular_ruins_pack_quaternius_F2LAK03B0r.glb" id="m_ruins"]
-[ext_resource type="PackedScene" uid="uid://b786dgdojdaeb" path="res://assets/models/troia/oggetti/shield_round_quaternius_lWajrVXcnA.glb" id="m_shield"]
-[ext_resource type="PackedScene" uid="uid://k037y270awd1" path="res://assets/models/troia/oggetti/shield_round_quaternius_UKXj8qjiF8.glb" id="m_shield2"]
-[ext_resource type="PackedScene" uid="uid://dcxksflffx8rl" path="res://assets/models/troia/navi/viking_boat_quaternius_J7SCPiNoSy.glb" id="m_ship"]
 [ext_resource type="PackedScene" uid="uid://b7a6yrnoc11yo" path="res://assets/models/troia/oggetti/spear_quaternius_fH1zmvjPNx.glb" id="m_spear"]
 [ext_resource type="PackedScene" uid="uid://b8yihceiq3lxb" path="res://assets/models/troia/oggetti/spear_quaternius_3zA9NtYBEi.glb" id="m_spear_flat"]
 [ext_resource type="PackedScene" uid="uid://dq8w7ocrel7o5" path="res://assets/models/troia/architettura/greek_temple_alexandre_thomas_ashtom_cdMQnl19MB9.glb" id="m_temple"]
-[ext_resource type="PackedScene" uid="uid://cbwuvweuvhe1c" path="res://assets/models/troia/accampamento/tent_quaternius_5Q7qIrfDxA.glb" id="m_tent"]
-[ext_resource type="PackedScene" uid="uid://btguachouw2bt" path="res://assets/models/troia/accampamento/tent_kenney_LrTs3hVGXv.glb" id="m_tent_s"]
 [ext_resource type="PackedScene" uid="uid://22ev8l3trcfl" path="res://assets/models/troia/accampamento/wooden_torch_quaternius_pNsfJzhXiD.glb" id="m_torch"]
-[ext_resource type="PackedScene" uid="uid://bhb5e77qk1i04" path="res://assets/models/troia/vegetazione/tree_quaternius_2paAm1ja4w.glb" id="m_tree"]
-[ext_resource type="PackedScene" uid="uid://b3lr7r8ir1bos" path="res://assets/models/troia/vegetazione/trees_quaternius_etFGNvsiFv.glb" id="m_trees"]
-[ext_resource type="PackedScene" uid="uid://4pfqdaku6wod" path="res://assets/models/troia/oggetti/wagon_konta_johanna_7PGwjkWbUrS.glb" id="m_wagon"]
-[ext_resource type="PackedScene" uid="uid://j2g113umn4fd" path="res://assets/models/troia/architettura/stone_wall_towers_quaternius_geisKzlSFZ.glb" id="m_wall_towers"]
-[ext_resource type="PackedScene" uid="uid://qdq5dtdf4w72" path="res://assets/models/troia/accampamento/watch_tower_quaternius_f2J0aSLVi4.glb" id="m_watch_tower"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/alberi/fir_sapling_medium/fir_sapling_medium_a.gltf" id="n_fir_a"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/alberi/fir_sapling_medium/fir_sapling_medium_b.gltf" id="n_fir_b"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/alberi/fir_sapling_medium/fir_sapling_medium_c.gltf" id="n_fir_c"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/rocce/boulder_01/boulder_01.gltf" id="n_boulder1"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/rocce/namaqualand_boulder_02/namaqualand_boulder_02.gltf" id="n_boulder2"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/rocce/namaqualand_boulder_03/namaqualand_boulder_03.gltf" id="n_boulder3"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/tende/tenda_tela_rami/tenda_tela_rami.gltf" id="n_tenda"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/tende/tenda_pelli/tenda_pelli.gltf" id="n_tenda_p"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/wooden_bucket_02/wooden_bucket_02.gltf" id="n_bucket"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/wooden_stool_02/wooden_stool_02.gltf" id="n_stool"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/wooden_ladder_02/wooden_ladder_02.gltf" id="n_ladder"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/stendardi/stendardo_acheo.glb" id="n_stendardo_a"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/stendardi/stendardo_troiano.glb" id="n_stendardo_t"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/accampamento/carro_coperto.glb" id="n_carro"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/accampamento/rastrelliera_lance.glb" id="n_rack"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/wooden_barrels_01/wooden_barrels_01_barrel01.gltf" id="n_barrel1"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/wooden_barrels_01/wooden_barrels_01_barrel02.gltf" id="n_barrel2"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/wooden_crate_01/wooden_crate_01.gltf" id="n_crate"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/oggetti/treasure_chest/treasure_chest.gltf" id="n_chest"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/othonna_cerarioides/othonna_cerarioides_b.gltf" id="n_othonna_b"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/othonna_cerarioides/othonna_cerarioides_c.gltf" id="n_othonna_c"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/fern_02/fern_02_d.gltf" id="n_fern_d"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/flower_heliophila/flower_heliophila_medium.gltf" id="n_helio_m"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/flower_heliophila/flower_heliophila_small.gltf" id="n_helio_s"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/periwinkle_plant/periwinkle_plant_01.gltf" id="n_peri"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/celandine_01/celandine_01_a.gltf" id="n_celandine"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/polyhaven/vegetazione/dandelion_01/dandelion_01_a.gltf" id="n_dandelion"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/stendardi/scudo_acheo.glb" id="n_scudo_low"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/difese/palizzata_sezione/palizzata_sezione.gltf" id="n_paliz"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/difese/barricata_cheval_de_frise/barricata_cheval_de_frise.gltf" id="n_cheval"]
+[ext_resource type="Script" path="res://scripts/props/dirt_road.gd" id="s_road"]
+[ext_resource type="Script" path="res://scripts/props/smoke_columns.gd" id="s_smoke"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/mura/mura_tratto/mura_tratto.gltf" id="n_mura"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/mura/torre_quadrata/torre_quadrata.gltf" id="n_torre"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/mura/porta_due_battenti/porta_due_battenti.gltf" id="n_porta"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/carri/carro_da_guerra/carro_da_guerra.gltf" id="n_carro_guerra"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/equipaggiamento/hoplon_tridente/hoplon_tridente.gltf" id="n_hoplon_t"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/equipaggiamento/hoplon_chevron/hoplon_chevron.gltf" id="n_hoplon_c"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/navi/nave_scura_occhio/nave_scura_occhio.gltf" id="n_nave_scura"]
 [ext_resource type="Shader" uid="uid://8yw050aib4ol" path="res://assets/shaders/sea.gdshader" id="sh_sea"]
+[ext_resource type="Shader" path="res://assets/shaders/sky_dusk.gdshader" id="sh_sky"]
+[ext_resource type="Script" path="res://scripts/rendering/sea_water.gd" id="s_sea_water"]
 [ext_resource type="Script" uid="uid://cfl1ue5s4q3o0" path="res://scripts/props/level_atmosphere.gd" id="s_atmo"]
 [ext_resource type="Script" uid="uid://datg26c6gf42f" path="res://scripts/camera/fixed_camera.gd" id="s_camera"]
 [ext_resource type="Script" uid="uid://jsry7v3yniv3" path="res://scripts/props/grass_field.gd" id="s_grass"]
@@ -73,15 +84,8 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/troiano/soldato_troiano.tscn" id="u_troiano"]
 [ext_resource type="PackedScene" path="res://scenes/characters/ulisse/ulisse.tscn" id="u_ulisse"]
 
-[sub_resource type="ProceduralSkyMaterial" id="sky_mat"]
-sky_top_color = Color(0.42, 0.4, 0.6, 1)
-sky_horizon_color = Color(1, 0.7, 0.48, 1)
-sky_curve = 0.16
-ground_bottom_color = Color(0.2, 0.14, 0.12, 1)
-ground_horizon_color = Color(0.85, 0.58, 0.42, 1)
-ground_curve = 0.08
-sun_angle_max = 25.0
-sun_curve = 0.1
+[sub_resource type="ShaderMaterial" id="sky_mat"]
+shader = ExtResource("sh_sky")
 
 [sub_resource type="Sky" id="sky"]
 sky_material = SubResource("sky_mat")
@@ -104,8 +108,8 @@ glow_hdr_threshold = 1.4
 fog_enabled = true
 fog_mode = 1
 fog_light_color = Color(0.96, 0.66, 0.48, 1)
-fog_sun_scatter = 0.3
-fog_density = 0.6
+fog_sun_scatter = 0.55
+fog_density = 0.9
 fog_sky_affect = 0.0
 fog_height = 0.6
 fog_height_density = 0.012
@@ -114,6 +118,7 @@ fog_depth_begin = 22.0
 fog_depth_end = 95.0
 adjustment_enabled = true
 adjustment_contrast = 1.05
+adjustment_saturation = 0.8
 
 [sub_resource type="StandardMaterial3D" id="mat_rock"]
 albedo_color = Color(0.22, 0.19, 0.17, 1)
@@ -193,7 +198,7 @@ environment = SubResource("env")
 
 [node name="Sole" type="DirectionalLight3D" parent="." unique_id=1675360879]
 transform = Transform3D(-0.618872, 0.351203, -0.702605, 0, 0.894478, 0.447112, 0.785492, 0.276705, -0.553568, 0, 12, 0)
-light_color = Color(1, 0.76, 0.54, 1)
+light_color = Color(1, 0.7, 0.44, 1)
 light_energy = 0.95
 shadow_enabled = true
 shadow_bias = 0.12
@@ -204,7 +209,7 @@ directional_shadow_max_distance = 45.0
 
 [node name="Riempimento" type="DirectionalLight3D" parent="." unique_id=1497155660]
 transform = Transform3D(0.748075, -0.366938, 0.552938, 0, 0.833222, 0.552938, -0.663615, -0.413639, 0.623312, 0, 12, 0)
-light_color = Color(0.95, 0.62, 0.52, 1)
+light_color = Color(0.72, 0.6, 0.8, 1)
 light_energy = 0.25
 sky_mode = 1
 
@@ -264,6 +269,7 @@ mesh = SubResource("mesh_sand")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.8, -0.3, 1.5)
 cast_shadow = 0
 mesh = SubResource("mesh_sea")
+script = ExtResource("s_sea_water")
 
 [node name="Rilievo" type="Node3D" parent="Terreno" unique_id=483116556 groups=["procedural_terrain"]]
 script = ExtResource("s_relief")
@@ -275,17 +281,20 @@ script = ExtResource("s_sides")
 
 [node name="LastricoStradaEst" type="Node3D" parent="Terreno" unique_id=364143347 groups=["grass_exclude"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 11.5)
+visible = false
 script = ExtResource("s_slabs")
 area_size = Vector2(25, 3)
 
 [node name="LastricoStradaNord" type="Node3D" parent="Terreno" unique_id=2043067127 groups=["grass_exclude"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, -6.5)
+visible = false
 script = ExtResource("s_slabs")
 area_size = Vector2(3, 33)
 random_seed = 4
 
 [node name="PiazzaleAccampamento" type="Node3D" parent="Terreno" unique_id=2093269393 groups=["grass_exclude"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, 12)
+visible = false
 script = ExtResource("s_slabs")
 area_size = Vector2(13, 13)
 slab_size = 1.15
@@ -293,6 +302,7 @@ random_seed = 5
 
 [node name="PiazzaleDellaPorta" type="Node3D" parent="Terreno" unique_id=1022600471 groups=["grass_exclude"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, -17.5)
+visible = false
 script = ExtResource("s_slabs")
 area_size = Vector2(15, 6)
 slab_size = 1.1
@@ -333,56 +343,60 @@ show_tiles = false
 [node name="Tenda1" type="Node3D" parent="Scenario/Accampamento" unique_id=1905715442]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 16)
 script = ExtResource("s_prop")
-model = ExtResource("m_tent")
-fit_size = 4.0
+model = ExtResource("n_tenda")
+fit_size = 4.7
 footprint = Vector2i(2, 4)
 
 [node name="Tenda2" type="Node3D" parent="Scenario/Accampamento" unique_id=1934267058]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 17)
 script = ExtResource("s_prop")
-model = ExtResource("m_tent")
-fit_size = 4.0
-footprint = Vector2i(2, 4)
+lazy_model_path = "res://assets/models/custom/sketchfab/tende/tenda_gajk_pelli_rami/tenda_gajk_pelli_rami.gltf"
+low_quality_model = ExtResource("n_tenda")
+fit_size = 4.6
+footprint = Vector2i(2, 3)
 
 [node name="Tenda3" type="Node3D" parent="Scenario/Accampamento" unique_id=1204662243]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 7)
 script = ExtResource("s_prop")
-model = ExtResource("m_tent")
-fit_size = 4.0
-footprint = Vector2i(2, 4)
+lazy_model_path = "res://assets/models/custom/sketchfab/tende/tenda_gajk_pelli_rami/tenda_gajk_pelli_rami.gltf"
+low_quality_model = ExtResource("n_tenda")
+fit_size = 4.6
+footprint = Vector2i(2, 3)
 
 [node name="TendaPiccola1" type="Node3D" parent="Scenario/Accampamento" unique_id=1734271094]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 16)
 script = ExtResource("s_prop")
-model = ExtResource("m_tent_s")
-fit_size = 2.2
-footprint = Vector2i(2, 2)
+model = ExtResource("n_tenda_p")
+fit_size = 3.8
+footprint = Vector2i(2, 3)
 
 [node name="TendaPiccola2" type="Node3D" parent="Scenario/Accampamento" unique_id=1154933116]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 6)
 script = ExtResource("s_prop")
-model = ExtResource("m_tent_s")
-fit_size = 2.2
-footprint = Vector2i(2, 2)
+model = ExtResource("n_tenda_p")
+fit_size = 3.8
+footprint = Vector2i(2, 3)
 
 [node name="TendaPiccola3" type="Node3D" parent="Scenario/Accampamento" unique_id=1112419377]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 6)
 script = ExtResource("s_prop")
-model = ExtResource("m_tent_s")
-fit_size = 2.2
-footprint = Vector2i(2, 2)
+model = ExtResource("n_tenda_p")
+fit_size = 3.8
+footprint = Vector2i(2, 3)
 
 [node name="Falo" type="Node3D" parent="Scenario/Accampamento" unique_id=1833303759]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 8.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_firepit")
-fit_axis = 1
-fit_size = 1.3
+fit_axis = 2
+fit_size = 1.8
 
 [node name="Stendardo1" type="Node3D" parent="Scenario/Accampamento" unique_id=1704649352]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 9.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_banner")
+model = ExtResource("n_stendardo_a")
+tint = Color(0.85, 0.68, 0.5, 1)
+desaturate = 0.6
 fit_axis = 2
 fit_size = 3.2
 footprint = Vector2i(2, 1)
@@ -390,7 +404,9 @@ footprint = Vector2i(2, 1)
 [node name="Stendardo2" type="Node3D" parent="Scenario/Accampamento" unique_id=185426058]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 8.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_banner")
+model = ExtResource("n_stendardo_a")
+tint = Color(0.85, 0.68, 0.5, 1)
+desaturate = 0.6
 fit_axis = 2
 fit_size = 3.2
 footprint = Vector2i(2, 1)
@@ -398,61 +414,55 @@ footprint = Vector2i(2, 1)
 [node name="BandieraPorta1" type="Node3D" parent="Scenario/Accampamento" unique_id=1658687104]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0, 9.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_flag")
+model = ExtResource("n_stendardo_t")
+tint = Color(0.85, 0.68, 0.5, 1)
+desaturate = 0.6
 fit_axis = 2
 fit_size = 3.6
 
 [node name="BandieraPorta2" type="Node3D" parent="Scenario/Accampamento" unique_id=570638296]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0, 13.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_flag")
+model = ExtResource("n_stendardo_t")
+tint = Color(0.85, 0.68, 0.5, 1)
+desaturate = 0.6
 fit_axis = 2
 fit_size = 3.6
 
 [node name="Recinto1" type="Node3D" parent="Scenario/Accampamento" unique_id=1164861694]
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -7.5, 0, 6)
 script = ExtResource("s_prop")
-model = ExtResource("m_fence")
-fit_axis = 1
-fit_size = 4.0
+vault_mode = 1
 footprint = Vector2i(4, 1)
 
 [node name="Recinto2" type="Node3D" parent="Scenario/Accampamento" unique_id=476551936]
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -7.5, 0, 16)
 script = ExtResource("s_prop")
-model = ExtResource("m_fence")
-fit_axis = 1
-fit_size = 4.0
+vault_mode = 1
 footprint = Vector2i(4, 1)
 
 [node name="Recinto3" type="Node3D" parent="Scenario/Accampamento" unique_id=473570649]
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -7.5, 0, 19)
 script = ExtResource("s_prop")
-model = ExtResource("m_fence_s")
-fit_axis = 1
-fit_size = 2.0
+vault_mode = 1
 footprint = Vector2i(2, 1)
 
 [node name="Recinto4" type="Node3D" parent="Scenario/Accampamento" unique_id=1667335270]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 0, 2.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_fence")
-fit_axis = 1
-fit_size = 4.0
+vault_mode = 1
 footprint = Vector2i(4, 1)
 
 [node name="Recinto5" type="Node3D" parent="Scenario/Accampamento" unique_id=494614471]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, 2.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_fence")
-fit_axis = 1
-fit_size = 4.0
+vault_mode = 1
 footprint = Vector2i(4, 1)
 
 [node name="TorreDiGuardia" type="Node3D" parent="Scenario/Accampamento" unique_id=169948511]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 6)
 script = ExtResource("s_prop")
-model = ExtResource("m_guard_tower")
+model = ExtResource("n_torre")
 fit_axis = 2
 fit_size = 4.5
 footprint = Vector2i(2, 2)
@@ -474,22 +484,24 @@ fit_size = 2.2
 [node name="Cassa1" type="Node3D" parent="Scenario/Accampamento" unique_id=1436315854]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, 10.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="Cassa2" type="Node3D" parent="Scenario/Accampamento" unique_id=1466650362]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, 11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate2")
+model = ExtResource("n_chest")
+low_quality_model = ExtResource("n_crate")
 fit_axis = 1
-fit_size = 0.8
+fit_size = 0.9
 
 [node name="Botte1" type="Node3D" parent="Scenario/Accampamento" unique_id=868986881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 0, 11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel")
+model = ExtResource("n_barrel1")
 fit_axis = 2
+fit_size = 0.95
 
 [node name="Sacchi1" type="Node3D" parent="Scenario/Accampamento" unique_id=221282928]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 0, 13.5)
@@ -513,9 +525,10 @@ fit_axis = 2
 [node name="Vaso1" type="Node3D" parent="Scenario/Accampamento" unique_id=1435209073]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, 13.5)
 script = ExtResource("s_prop")
+vault_mode = 1
 model = ExtResource("m_pot")
 fit_axis = 2
-fit_size = 0.8
+fit_size = 1.4
 
 [node name="Brocca1" type="Node3D" parent="Scenario/Accampamento" unique_id=747017091]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 13.5)
@@ -527,36 +540,38 @@ fit_size = 0.7
 [node name="Cassa3" type="Node3D" parent="Scenario/Accampamento" unique_id=1198636520]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 13.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="Botte2" type="Node3D" parent="Scenario/Accampamento" unique_id=1829342054]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, 19.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel2")
+model = ExtResource("n_barrel2")
 fit_axis = 2
 fit_size = 0.8
 
 [node name="Lance1" type="Node3D" parent="Scenario/Accampamento" unique_id=928868578]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, 4.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_spear")
+model = ExtResource("n_rack")
 fit_axis = 2
-fit_size = 2.4
+fit_size = 2.0
 
 [node name="Cassa4" type="Node3D" parent="Scenario/Accampamento" unique_id=260964035]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.5, 0, 16.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate2")
+model = ExtResource("n_chest")
+low_quality_model = ExtResource("n_crate")
 fit_axis = 1
-fit_size = 0.8
+fit_size = 0.9
 
 [node name="Botte3" type="Node3D" parent="Scenario/Accampamento" unique_id=1308379768]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 16.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel")
+model = ExtResource("n_barrel1")
 fit_axis = 2
+fit_size = 0.95
 
 [node name="Sacchi2" type="Node3D" parent="Scenario/Accampamento" unique_id=1772664902]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, 17.5)
@@ -574,37 +589,38 @@ fit_axis = 2
 [node name="Botte4" type="Node3D" parent="Scenario/Accampamento" unique_id=615052792]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0, 7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel2")
+model = ExtResource("n_barrel2")
 fit_axis = 2
 fit_size = 0.8
 
 [node name="Cassa5" type="Node3D" parent="Scenario/Accampamento" unique_id=1167691742]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 0, 6.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="Lance2" type="Node3D" parent="Scenario/Accampamento" unique_id=1413268378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_spear")
+model = ExtResource("n_rack")
 fit_axis = 2
-fit_size = 2.4
+fit_size = 2.0
 
 [node name="Lance3" type="Node3D" parent="Scenario/Accampamento" unique_id=409249268]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, 3.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_spear")
+model = ExtResource("n_rack")
 fit_axis = 2
-fit_size = 2.4
+fit_size = 2.0
 
 [node name="Vaso2" type="Node3D" parent="Scenario/Accampamento" unique_id=1980790958]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 0, 11.5)
 script = ExtResource("s_prop")
+vault_mode = 1
 model = ExtResource("m_pot")
 fit_axis = 2
-fit_size = 0.8
+fit_size = 1.4
 
 [node name="Torcia3" type="Node3D" parent="Scenario/Accampamento" unique_id=1447393921]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 3.5)
@@ -630,25 +646,31 @@ fit_size = 2.2
 [node name="ScudoAcc1" type="Node3D" parent="Scenario/Accampamento" unique_id=1062698435]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.5, 0, 9.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 blocking = false
 
 [node name="ScudoAcc2" type="Node3D" parent="Scenario/Accampamento" unique_id=2067129082]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, 11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield2")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 blocking = false
 
 [node name="ScudoAcc3" type="Node3D" parent="Scenario/Accampamento" unique_id=1272609970]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0, 14.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_c")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 blocking = false
 
 [node name="LanciaAcc1" type="Node3D" parent="Scenario/Accampamento" unique_id=143523579]
@@ -668,95 +690,318 @@ blocking = false
 [node name="CespuglioAcc1" type="Node3D" parent="Scenario/Accampamento" unique_id=1674473428]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, 2.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioAcc2" type="Node3D" parent="Scenario/Accampamento" unique_id=1565975103]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, 17.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CespuglioAcc3" type="Node3D" parent="Scenario/Accampamento" unique_id=848740610]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, 18.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
+
+[node name="Secchio1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -11.0, 0, 14.8)
+script = ExtResource("s_prop")
+model = ExtResource("n_bucket")
+fit_size = 0.5
+blocking = false
+
+[node name="Secchio2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -16.5, 0, 12.0)
+script = ExtResource("s_prop")
+model = ExtResource("n_bucket")
+fit_size = 0.5
+blocking = false
+
+[node name="Secchio3" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -8.5, 0, 11.5)
+script = ExtResource("s_prop")
+model = ExtResource("n_bucket")
+fit_size = 0.45
+blocking = false
+
+[node name="Sgabello1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.8660, 0, -0.5000, 0, 1, 0, 0.5000, 0, 0.8660, -12.5, 0, 10.5)
+script = ExtResource("s_prop")
+model = ExtResource("n_stool")
+fit_size = 0.7
+blocking = false
+
+[node name="Sgabello2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(-0.9397, 0, 0.3420, 0, 1, 0, -0.3420, 0, -0.9397, -12.0, 0, 11.1)
+script = ExtResource("s_prop")
+model = ExtResource("n_stool")
+fit_size = 0.7
+blocking = false
+
+[node name="Sgabello3" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.1736, 0, -0.9848, 0, 1, 0, 0.9848, 0, 0.1736, -9.5, 0, 15.2)
+script = ExtResource("s_prop")
+model = ExtResource("n_stool")
+fit_size = 0.7
+blocking = false
+
+[node name="Sgabello4" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.9848, 0, -0.1736, 0, 1, 0, 0.1736, 0, 0.9848, -17.0, 0, 10.0)
+script = ExtResource("s_prop")
+model = ExtResource("n_stool")
+fit_size = 0.7
+blocking = false
+
+[node name="Scala1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, -1.0000, 0, 1, 0, 1.0000, 0, 0.0000, -19.2, 0, 13.0)
+script = ExtResource("s_prop")
+model = ExtResource("n_ladder")
+fit_size = 1.8
+blocking = false
+
+[node name="Scala2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.9848, 0, -0.1736, 0, 1, 0, 0.1736, 0, 0.9848, -7.2, 0, 16.5)
+script = ExtResource("s_prop")
+model = ExtResource("n_ladder")
+fit_size = 1.8
+blocking = false
+
+[node name="PancaFalo1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.9397, 0, -0.3420, 0, 1, 0, 0.3420, 0, 0.9397, -12.0, 0, 10.9)
+script = ExtResource("s_prop")
+model = ExtResource("n_panca_a")
+fit_axis = 0
+fit_size = 2.2
+blocking = false
+
+[node name="PancaFalo2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.3420, 0, 0.9397, 0, 1, 0, -0.9397, 0, 0.3420, -14.6, 0, 9.2)
+script = ExtResource("s_prop")
+model = ExtResource("n_panca_c")
+fit_axis = 0
+fit_size = 2.0
+blocking = false
+
+[node name="PancaFalo3" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(-0.0872, 0, -0.9962, 0, 1, 0, 0.9962, 0, -0.0872, -10.2, 0, 8.0)
+script = ExtResource("s_prop")
+model = ExtResource("n_panca_a")
+fit_axis = 0
+fit_size = 2.2
+blocking = false
+
+[node name="PancaTenda1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.9962, 0, -0.0872, 0, 1, 0, 0.0872, 0, 0.9962, -17.2, 0, 13.6)
+script = ExtResource("s_prop")
+model = ExtResource("n_panca_c")
+fit_axis = 0
+fit_size = 2.0
+blocking = false
+
+[node name="PithosCampo1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -9.0, 0, 14.6)
+script = ExtResource("s_prop")
+model = ExtResource("n_pithos_m")
+fit_axis = 2
+fit_size = 1.1
+blocking = false
+
+[node name="PithosCampo2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -17.6, 0, 8.4)
+script = ExtResource("s_prop")
+model = ExtResource("n_pithos_m")
+fit_axis = 2
+fit_size = 1.1
+blocking = false
+
+[node name="PithosCampo3" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -15.3, 0, 15.0)
+script = ExtResource("s_prop")
+model = ExtResource("n_pithos_m")
+fit_axis = 2
+fit_size = 1.1
+blocking = false
+
+[node name="PithosCampo4" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -7.6, 0, 9.0)
+script = ExtResource("s_prop")
+model = ExtResource("n_pithos_m")
+fit_axis = 2
+fit_size = 1.1
+blocking = false
+
+[node name="CavalloCampo1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(-0.9397, 0, 0.3420, 0, 1, 0, -0.3420, 0, -0.9397, -9.40, 0.00, 17.40)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 1
+
+[node name="CavalloCampo2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.3420, 0, -0.9397, 0, 1, 0, 0.9397, 0, 0.3420, -8.20, 0.00, 6.20)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_grigio/cavallo_grigio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 1
+
+[node name="CarroStrada" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.9903, 0, -0.1392, 0, 1, 0, 0.1392, 0, 0.9903, 9.40, 0.00, -3.00)
+script = ExtResource("s_prop")
+model = ExtResource("n_carro_guerra")
+fit_axis = 0
+fit_size = 3.0
+blocking = false
+min_quality = 1
+
+[node name="CavalloStrada1" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 9.00, 0.00, -5.90)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 1
+
+[node name="CavalloStrada2" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 9.90, 0.00, -5.90)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_grigio/cavallo_grigio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 1
+
+[node name="CarroBattaglia" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.8192, 0, 0.5736, 0, 1, 0, -0.5736, 0, 0.8192, -9.50, 0.00, -11.50)
+script = ExtResource("s_prop")
+model = ExtResource("n_carro_guerra")
+fit_axis = 0
+fit_size = 3.0
+blocking = false
+min_quality = 2
+
+[node name="CavalloBattaglia1" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.8192, 0, 0.5736, 0, 1, 0, -0.5736, 0, 0.8192, -10.60, 0.00, -14.20)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 2
+
+[node name="CavalloBattaglia2" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.8192, 0, 0.5736, 0, 1, 0, -0.5736, 0, 0.8192, -9.60, 0.00, -14.90)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_grigio/cavallo_grigio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 2
+
+[node name="CavalloBattaglia3" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.5000, 0, -0.8660, 0, 1, 0, 0.8660, 0, 0.5000, 14.50, 0.00, -10.50)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+fit_axis = 2
+fit_size = 2.0
+blocking = false
+min_quality = 2
 
 [node name="Pianura" type="Node3D" parent="Scenario" unique_id=688489604]
 
 [node name="CarroRotto1" type="Node3D" parent="Scenario/Pianura" unique_id=1384511715]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
+transform = Transform3D(0.9872, 0.1585, 0.0159, -0.1593, 0.9823, 0.0986, 0.0000, -0.0998, 0.9950, -3.000, 0.000, 1.000)
 script = ExtResource("s_prop")
-model = ExtResource("m_broken_cart")
+model = ExtResource("n_carro_guerra")
 fit_size = 3.0
 footprint = Vector2i(2, 2)
 
 [node name="CarroRotto2" type="Node3D" parent="Scenario/Pianura" unique_id=837149479]
-transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 12, 0, 16)
+transform = Transform3D(-0.0159, 0.1585, 0.9872, -0.0986, 0.9823, -0.1593, -0.9950, -0.0998, 0.0000, 12.000, 0.000, 16.000)
 script = ExtResource("s_prop")
-model = ExtResource("m_broken_cart")
+model = ExtResource("n_carro_guerra")
 fit_size = 3.0
 footprint = Vector2i(2, 2)
 
 [node name="Carretto" type="Node3D" parent="Scenario/Pianura" unique_id=795098558]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 16)
 script = ExtResource("s_prop")
-model = ExtResource("m_cart")
-fit_size = 2.2
+model = ExtResource("n_carro_guerra")
+fit_size = 3.0
 footprint = Vector2i(1, 2)
 
 [node name="CarroCoperto" type="Node3D" parent="Scenario/Pianura" unique_id=1100838102]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0, 2)
 script = ExtResource("s_prop")
-model = ExtResource("m_wagon")
+model = ExtResource("n_carro")
 fit_size = 4.0
 footprint = Vector2i(2, 4)
 
 [node name="Scudo1" type="Node3D" parent="Scenario/Pianura" unique_id=774411047]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Scudo2" type="Node3D" parent="Scenario/Pianura" unique_id=1570520586]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -1.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield2")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Scudo3" type="Node3D" parent="Scenario/Pianura" unique_id=21942668]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Scudo4" type="Node3D" parent="Scenario/Pianura" unique_id=86544397]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, -3.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield2")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Scudo5" type="Node3D" parent="Scenario/Pianura" unique_id=1395540845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0, 10.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_c")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Scudo6" type="Node3D" parent="Scenario/Pianura" unique_id=1866159530]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 2.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield2")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_t")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Lancia1" type="Node3D" parent="Scenario/Pianura" unique_id=211430798]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 4.5)
@@ -810,160 +1055,186 @@ blocking = false
 [node name="Masso1" type="Node3D" parent="Scenario/Pianura" unique_id=2073103018]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -4)
 script = ExtResource("s_prop")
-model = ExtResource("m_rock_large")
+model = ExtResource("n_boulder3")
+fit_axis = 0
 fit_size = 2.4
 footprint = Vector2i(2, 2)
 
 [node name="Masso2" type="Node3D" parent="Scenario/Pianura" unique_id=1713533070]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, 18)
 script = ExtResource("s_prop")
-model = ExtResource("m_rock_large")
+model = ExtResource("n_boulder2")
+fit_axis = 0
 fit_size = 2.4
 footprint = Vector2i(2, 2)
 
 [node name="Masso3" type="Node3D" parent="Scenario/Pianura" unique_id=1798964442]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 6)
 script = ExtResource("s_prop")
-model = ExtResource("m_rock_large")
+model = ExtResource("n_boulder3")
+fit_axis = 0
 fit_size = 2.4
 footprint = Vector2i(2, 2)
 
 [node name="Roccia1" type="Node3D" parent="Scenario/Pianura" unique_id=788371187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 18.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_1"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="Roccia2" type="Node3D" parent="Scenario/Pianura" unique_id=2073289198]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 1.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_2"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="Roccia3" type="Node3D" parent="Scenario/Pianura" unique_id=1801801512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, -6.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_3"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="Roccia4" type="Node3D" parent="Scenario/Pianura" unique_id=1576934764]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, 18.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_4"
+model = ExtResource("n_boulder2")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="Roccia5" type="Node3D" parent="Scenario/Pianura" unique_id=386947434]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -3.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_5"
+model = ExtResource("n_boulder2")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="Roccia6" type="Node3D" parent="Scenario/Pianura" unique_id=1799445283]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0, -1.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_1"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="Ulivo1" type="Node3D" parent="Scenario/Pianura" unique_id=1272504559]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 18)
 script = ExtResource("s_prop")
-model = ExtResource("m_olive")
-fit_size = 4.6
+lazy_model_path = "res://assets/models/custom/polyhaven/alberi/island_tree_01/island_tree_01_geometry_nodes.gltf"
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+low_quality_model = ExtResource("n_fir_b")
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+fit_axis = 2
+fit_size = 4.2
+trunk_radius = 0.3
 footprint = Vector2i(2, 2)
 
 [node name="Ulivo2" type="Node3D" parent="Scenario/Pianura" unique_id=1366163266]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 0, 14)
 script = ExtResource("s_prop")
-model = ExtResource("m_olive")
-fit_size = 4.6
+lazy_model_path = "res://assets/models/custom/polyhaven/alberi/island_tree_02/island_tree_02_geometry_nodes.gltf"
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+low_quality_model = ExtResource("n_fir_c")
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+fit_axis = 2
+fit_size = 3.8
+trunk_radius = 0.3
 footprint = Vector2i(2, 2)
 
 [node name="Ulivo3" type="Node3D" parent="Scenario/Pianura" unique_id=1409454499]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0, -2)
 script = ExtResource("s_prop")
-model = ExtResource("m_olive")
-fit_size = 4.6
+lazy_model_path = "res://assets/models/custom/polyhaven/alberi/island_tree_01/island_tree_01_geometry_nodes.gltf"
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+low_quality_model = ExtResource("n_fir_b")
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+fit_axis = 2
+fit_size = 4.2
+trunk_radius = 0.3
 footprint = Vector2i(2, 2)
 
 [node name="Cipresso1" type="Node3D" parent="Scenario/Pianura" unique_id=109523011]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, 1.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_cypress")
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_axis = 2
-fit_size = 5.5
+fit_size = 5.0
+trunk_radius = 0.25
 
 [node name="Cipresso2" type="Node3D" parent="Scenario/Pianura" unique_id=1821032747]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 0.8, -6.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_cypress")
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_axis = 2
-fit_size = 5.5
+fit_size = 5.0
+trunk_radius = 0.25
 
 [node name="Cipresso3" type="Node3D" parent="Scenario/Pianura" unique_id=109557896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 19.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_cypress")
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_axis = 2
-fit_size = 5.5
+fit_size = 5.0
+trunk_radius = 0.25
 
 [node name="Cespuglio1" type="Node3D" parent="Scenario/Pianura" unique_id=115716312]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 8.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="Cespuglio2" type="Node3D" parent="Scenario/Pianura" unique_id=2032075720]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 5.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="Cespuglio3" type="Node3D" parent="Scenario/Pianura" unique_id=2024585886]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 9.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="Cespuglio4" type="Node3D" parent="Scenario/Pianura" unique_id=180274108]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0.8, -4.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="Cespuglio5" type="Node3D" parent="Scenario/Pianura" unique_id=2119321378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 19.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="Cespuglio6" type="Node3D" parent="Scenario/Pianura" unique_id=1172721325]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, 5.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="RudereMuro1" type="Node3D" parent="Scenario/Pianura" unique_id=203610489]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Broken"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -972,6 +1243,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, 16, 0, 7.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Half"
 fit_size = 2.0
 footprint = Vector2i(1, 2)
@@ -980,131 +1253,137 @@ footprint = Vector2i(1, 2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, 11.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Column_Round_Short"
 fit_axis = 1
 
 [node name="CespuglioP1" type="Node3D" parent="Scenario/Pianura" unique_id=1587444300]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 8.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioP2" type="Node3D" parent="Scenario/Pianura" unique_id=938810705]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 13.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CespuglioP3" type="Node3D" parent="Scenario/Pianura" unique_id=1405329186]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 16.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioP4" type="Node3D" parent="Scenario/Pianura" unique_id=443205832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 3.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CespuglioP5" type="Node3D" parent="Scenario/Pianura" unique_id=2012505454]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0, 2.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioP6" type="Node3D" parent="Scenario/Pianura" unique_id=1259387218]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -0.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CespuglioP7" type="Node3D" parent="Scenario/Pianura" unique_id=1649135388]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -6.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioP8" type="Node3D" parent="Scenario/Pianura" unique_id=844866209]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 13.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="RocciaP1" type="Node3D" parent="Scenario/Pianura" unique_id=1534787374]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, 10.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_2"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 
 [node name="RocciaP2" type="Node3D" parent="Scenario/Pianura" unique_id=1187464589]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 12.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_3"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 
 [node name="RocciaP3" type="Node3D" parent="Scenario/Pianura" unique_id=1983524286]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -0.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_1"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 
 [node name="RocciaP4" type="Node3D" parent="Scenario/Pianura" unique_id=467031042]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, 11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_5"
+model = ExtResource("n_boulder2")
 fit_axis = 1
 
 [node name="RocciaP5" type="Node3D" parent="Scenario/Pianura" unique_id=1399185564]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0, 1.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_4"
+model = ExtResource("n_boulder2")
 fit_axis = 1
 
 [node name="RocciaP6" type="Node3D" parent="Scenario/Pianura" unique_id=1258583797]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 12.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_3"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 
 [node name="CassaP1" type="Node3D" parent="Scenario/Pianura" unique_id=1479620062]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="CassaP2" type="Node3D" parent="Scenario/Pianura" unique_id=943778919]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate2")
+model = ExtResource("n_chest")
+low_quality_model = ExtResource("n_crate")
 fit_axis = 1
-fit_size = 0.8
+fit_size = 0.9
 
 [node name="BotteP1" type="Node3D" parent="Scenario/Pianura" unique_id=611864675]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, 12.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel")
+model = ExtResource("n_barrel1")
 fit_axis = 2
+fit_size = 0.95
 
 [node name="BotteP2" type="Node3D" parent="Scenario/Pianura" unique_id=1120405187]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0, 12.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel2")
+model = ExtResource("n_barrel2")
 fit_axis = 2
 fit_size = 0.8
 
@@ -1139,6 +1418,8 @@ fit_size = 2.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 18.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Overgrown"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1147,6 +1428,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0, -2.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Column_Round_Short"
 fit_axis = 1
 
@@ -1154,6 +1437,8 @@ fit_axis = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 10.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Column_Round_Short"
 fit_axis = 1
 
@@ -1161,6 +1446,8 @@ fit_axis = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 8.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Bricks"
 fit_axis = 1
 blocking = false
@@ -1169,6 +1456,8 @@ blocking = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 2.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Bricks"
 fit_axis = 1
 blocking = false
@@ -1179,6 +1468,8 @@ blocking = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -14.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_doric")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 3.2
 
@@ -1186,6 +1477,8 @@ fit_size = 3.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -10.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_doric")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 3.2
 
@@ -1193,6 +1486,8 @@ fit_size = 3.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -14.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_doric")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 3.2
 
@@ -1200,6 +1495,8 @@ fit_size = 3.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -10.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_doric")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 3.2
 
@@ -1207,6 +1504,8 @@ fit_size = 3.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -11.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_pillar")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 2.6
 
@@ -1214,6 +1513,8 @@ fit_size = 2.6
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.8, -11.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_pillar")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 2.6
 
@@ -1221,6 +1522,8 @@ fit_size = 2.6
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -8.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_column_base")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 1.2
 
@@ -1228,6 +1531,8 @@ fit_size = 1.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1.6, -9.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_greek_cols")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 2
 fit_size = 3.0
 footprint = Vector2i(2, 1)
@@ -1236,6 +1541,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -6.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_arch")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 1
 fit_size = 4.0
 footprint = Vector2i(4, 1)
@@ -1245,6 +1552,8 @@ blocked_cells_in_footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(3, 0)])
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, -15.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_roman_arch")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_axis = 1
 fit_size = 4.0
 footprint = Vector2i(4, 1)
@@ -1254,6 +1563,8 @@ blocked_cells_in_footprint = Array[Vector2i]([Vector2i(0, 0), Vector2i(3, 0)])
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -12.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Broken"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1262,6 +1573,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.8, -9.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Broken"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1270,6 +1583,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.4, -14.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Overgrown"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1278,6 +1593,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(6.12323e-17, 0, 1, 0, 1, 0, -1, 0, 6.12323e-17, -17, 0, -3.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Half"
 fit_size = 2.0
 footprint = Vector2i(1, 2)
@@ -1286,6 +1603,8 @@ footprint = Vector2i(1, 2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -14.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Stairs"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1294,6 +1613,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -8.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Bricks"
 fit_axis = 1
 blocking = false
@@ -1301,7 +1622,7 @@ blocking = false
 [node name="TorreDiVedetta" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1498768158]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.8, -18)
 script = ExtResource("s_prop")
-model = ExtResource("m_watch_tower")
+model = ExtResource("n_torre")
 fit_axis = 2
 fit_size = 4.2
 footprint = Vector2i(2, 2)
@@ -1310,204 +1631,189 @@ footprint = Vector2i(2, 2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=672887940]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata3" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1717911245]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata4" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=707138895]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata5" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=973088940]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata6" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=491049886]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata7" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1414450519]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata8" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1978492700]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata9" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1327674583]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata10" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1596715436]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata11" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1274840508]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.8, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata12" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=640515393]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.8, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata13" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1530822002]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.8, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata14" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=978825436]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0.8, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata15" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=821418505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0.8, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="Palizzata16" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=835446145]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.8, -5.5)
 script = ExtResource("s_prop")
 vault_mode = 2
-model = ExtResource("m_palisade")
-fit_axis = 1
 
 [node name="CassaTroiana1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=2027502318]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, -8.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="BotteTroiana1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=82232319]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.8, -8.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel")
+model = ExtResource("n_barrel1")
 fit_axis = 2
+fit_size = 0.95
 
 [node name="BotteTroiana2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=45619129]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.8, -8.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel2")
+model = ExtResource("n_barrel2")
 fit_axis = 2
 fit_size = 0.8
 
 [node name="UlivoOvest" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=901042525]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0, -1)
 script = ExtResource("s_prop")
-model = ExtResource("m_olive")
-fit_size = 4.6
+model = ExtResource("n_fir_a")
+foliage_gain = Color(5.5, 12, 6, 1)
+fit_axis = 2
+fit_size = 5.0
+trunk_radius = 0.25
 footprint = Vector2i(2, 2)
 
 [node name="UlivoNordEst" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=852121395]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 2.4, -19)
 script = ExtResource("s_prop")
-model = ExtResource("m_olive")
-fit_size = 4.6
+lazy_model_path = "res://assets/models/custom/polyhaven/alberi/island_tree_02/island_tree_02_geometry_nodes.gltf"
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+low_quality_model = ExtResource("n_fir_c")
+foliage_gain = Color(2.6, 5.0, 2.2, 1)
+fit_axis = 2
+fit_size = 3.8
+trunk_radius = 0.3
 footprint = Vector2i(2, 2)
 
 [node name="CipressoOvest1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=842022612]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.5, 2.4, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_cypress")
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_axis = 2
-fit_size = 5.5
+fit_size = 5.0
+trunk_radius = 0.25
 
 [node name="CipressoOvest2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1955271266]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0, -5.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_cypress")
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_axis = 2
-fit_size = 5.5
+fit_size = 5.0
+trunk_radius = 0.25
 
 [node name="RocciaOvest1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1761848936]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 1.6, -13.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_2"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 fit_size = 1.1
 
 [node name="MassoOvest" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1259578754]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
 script = ExtResource("s_prop")
-model = ExtResource("m_rock_large")
+model = ExtResource("n_boulder2")
+fit_axis = 0
 fit_size = 2.4
 footprint = Vector2i(2, 2)
 
 [node name="CespuglioOvest1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=452405544]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 1.6, -17.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioOvest2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1269461325]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.5, 0.8, -7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CarroRottoOvest" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1554506671]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, -18)
+transform = Transform3D(0.9872, 0.1585, 0.0159, -0.1593, 0.9823, 0.0986, 0.0000, -0.0998, 0.9950, -6.000, 0.000, -18.000)
 script = ExtResource("s_prop")
-model = ExtResource("m_broken_cart")
+model = ExtResource("n_carro_guerra")
 fit_size = 3.0
 footprint = Vector2i(2, 2)
 
 [node name="ScudoOvest" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=196942817]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0.8, -10.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_shield")
-model_rotation_degrees = Vector3(-90, 0, 0)
-fit_axis = 1
+model = ExtResource("n_hoplon_c")
+low_quality_model = ExtResource("n_scudo_low")
+model_rotation_degrees = Vector3(-14, 0, 0)
+fit_axis = 0
+fit_size = 0.95
 
 [node name="Torcia6" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1499894199]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -13.5)
@@ -1526,22 +1832,24 @@ fit_size = 2.2
 [node name="CassaM1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1298849335]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.8, -7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="CassaM2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1828511682]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0.8, -7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate2")
+model = ExtResource("n_chest")
+low_quality_model = ExtResource("n_crate")
 fit_axis = 1
-fit_size = 0.8
+fit_size = 0.9
 
 [node name="BotteM1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1643227678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, -7.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_barrel")
+model = ExtResource("n_barrel1")
 fit_axis = 2
+fit_size = 0.95
 
 [node name="AnforaM1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1518928914]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -13.5)
@@ -1559,6 +1867,8 @@ fit_axis = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.8, -6.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Overgrown"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1567,6 +1877,8 @@ footprint = Vector2i(2, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.8, -13.5)
 script = ExtResource("s_prop")
 model = ExtResource("m_ruins")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 piece = "Wall_Broken"
 fit_size = 2.0
 footprint = Vector2i(2, 1)
@@ -1574,64 +1886,67 @@ footprint = Vector2i(2, 1)
 [node name="CespuglioM1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=931811321]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 0, -16.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CespuglioM2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=941602365]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -17.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioM3" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1143489100]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.5, 1.6, -11.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioM4" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=223028077]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, -3.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="CespuglioM5" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=557685001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -17.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush")
-fit_axis = 1
+model = ExtResource("n_othonna_c")
+low_quality_model = ExtResource("n_fern_d")
+fit_axis = 2
 fit_size = 1.2
 
 [node name="CespuglioM6" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=671963704]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 1.6, -17.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_bush_fl")
-fit_axis = 1
-fit_size = 1.2
+model = ExtResource("n_helio_m")
+low_quality_model = ExtResource("n_peri")
+fit_axis = 2
+fit_size = 0.8
 
 [node name="RocciaM1" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=868811932]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0, -9.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_1"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 
 [node name="RocciaM2" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=1286634500]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 1.6, -14.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_4"
+model = ExtResource("n_boulder2")
 fit_axis = 1
 
 [node name="RocciaM3" type="Node3D" parent="Scenario/DavantiAlleMura" unique_id=917301204]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.8, -12.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_rocks")
-piece = "Rock_2"
+model = ExtResource("n_boulder1")
 fit_axis = 1
 
 [node name="PostazioneTroiana" type="Node3D" parent="Scenario" unique_id=1060540064]
@@ -1665,52 +1980,47 @@ fit_axis = 2
 [node name="Barricata1" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=686716561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_palisade")
-fit_axis = 1
+vault_mode = 1
 
 [node name="Barricata2" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=1078309435]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_palisade")
-fit_axis = 1
+vault_mode = 1
 
 [node name="Barricata3" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=981885546]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_palisade")
-fit_axis = 1
+vault_mode = 1
 
 [node name="Barricata4" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=1412467927]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_palisade")
-fit_axis = 1
+vault_mode = 1
 
 [node name="Barricata5" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=522214100]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_palisade")
-fit_axis = 1
+vault_mode = 1
 
 [node name="Barricata6" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=926382033]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_palisade")
-fit_axis = 1
+vault_mode = 1
 
 [node name="CassaPosto1" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=428437540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.8, -18.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate")
+model = ExtResource("n_crate")
 fit_axis = 1
 fit_size = 0.9
 
 [node name="CassaPosto2" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=1975580490]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.8, -17.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_crate2")
+model = ExtResource("n_chest")
+low_quality_model = ExtResource("n_crate")
 fit_axis = 1
-fit_size = 0.8
+fit_size = 0.9
 
 [node name="SacchiPosto" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=1134633810]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 0.8, -18.5)
@@ -1722,108 +2032,182 @@ fit_size = 0.9
 [node name="CarrettoPosto" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=452365206]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0.8, -17)
 script = ExtResource("s_prop")
-model = ExtResource("m_cart")
-fit_size = 2.2
+model = ExtResource("n_carro_guerra")
+fit_size = 3.0
 footprint = Vector2i(1, 2)
 
 [node name="LancePosto1" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=858437611]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.8, -18.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_spear")
+model = ExtResource("n_rack")
 fit_axis = 2
-fit_size = 2.3
+fit_size = 2.0
 
 [node name="LancePosto2" type="Node3D" parent="Scenario/PostazioneTroiana" unique_id=1768554710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 0.8, -15.5)
 script = ExtResource("s_prop")
-model = ExtResource("m_spear")
+model = ExtResource("n_rack")
 fit_axis = 2
-fit_size = 2.3
+fit_size = 2.0
 
 [node name="Navi" type="Node3D" parent="Scenario" unique_id=355167450]
 
 [node name="Nave1" type="Node3D" parent="Scenario/Navi" unique_id=1575863177]
 transform = Transform3D(0.997564, 0, 0.0697565, 0, 1, 0, -0.0697565, 0, 0.997564, -23.6, -0.2, 8)
 script = ExtResource("s_prop")
-model = ExtResource("m_ship")
-fit_size = 7.0
+model = ExtResource("n_nave_scura")
+fit_size = 8.0
 blocking = false
 
 [node name="Nave2" type="Node3D" parent="Scenario/Navi" unique_id=150340164]
 transform = Transform3D(0.994522, 0, -0.104528, 0, 1, 0, 0.104528, 0, 0.994522, -23.8, -0.2, 16)
 script = ExtResource("s_prop")
-model = ExtResource("m_ship")
-fit_size = 7.0
+model = ExtResource("n_nave_scura")
+fit_size = 8.0
 blocking = false
 
 [node name="Drakkar1" type="Node3D" parent="Scenario/Navi" unique_id=1419254528]
 transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, -23.9, -0.15, -2)
 script = ExtResource("s_prop")
-model = ExtResource("m_drakkar")
-fit_size = 5.5
+model = ExtResource("n_nave_scura")
+fit_size = 7.0
 blocking = false
 
 [node name="Drakkar2" type="Node3D" parent="Scenario/Navi" unique_id=621464698]
 transform = Transform3D(0.990268, 0, -0.139173, 0, 1, 0, 0.139173, 0, 0.990268, -23.8, -0.15, -11)
 script = ExtResource("s_prop")
-model = ExtResource("m_drakkar")
-fit_size = 5.5
+model = ExtResource("n_nave_scura")
+fit_size = 7.0
 blocking = false
 
 [node name="MuraDiTroia" type="Node3D" parent="Scenario" unique_id=1983488785]
 
-[node name="Mura1" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=1096020303]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 1.6, -21.6)
+[node name="TorreMura1" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -25.000, 1.6, -21.600)
 script = ExtResource("s_prop")
-model = ExtResource("m_wall_towers")
-fit_axis = 1
-fit_size = 10.0
+model = ExtResource("n_torre")
+fit_axis = 2
+fit_size = 6.70
 blocking = false
 
-[node name="Mura2" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=1684538829]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.6, -21.6)
+[node name="TorreMura2" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -11.000, 1.6, -21.600)
 script = ExtResource("s_prop")
-model = ExtResource("m_wall_towers")
-fit_axis = 1
-fit_size = 10.0
+model = ExtResource("n_torre")
+fit_axis = 2
+fit_size = 6.70
 blocking = false
 
-[node name="Mura3" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=1032829842]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.6, -21.6)
+[node name="TorreMura3" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 2.900, 1.6, -21.600)
 script = ExtResource("s_prop")
-model = ExtResource("m_wall_towers")
-fit_axis = 1
-fit_size = 10.0
+model = ExtResource("n_torre")
+fit_axis = 2
+fit_size = 6.70
 blocking = false
 
-[node name="Mura4" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=1725318793]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.6, -21.6)
+[node name="TorreMura4" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 11.100, 1.6, -21.600)
 script = ExtResource("s_prop")
-model = ExtResource("m_wall_towers")
-fit_axis = 1
-fit_size = 10.0
+model = ExtResource("n_torre")
+fit_axis = 2
+fit_size = 6.70
 blocking = false
 
-[node name="Mura5" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=967699908]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 1.6, -21.6)
+[node name="TorreMura5" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 25.000, 1.6, -21.600)
 script = ExtResource("s_prop")
-model = ExtResource("m_wall_towers")
-fit_axis = 1
-fit_size = 10.0
+model = ExtResource("n_torre")
+fit_axis = 2
+fit_size = 6.70
 blocking = false
 
-[node name="PortaScea" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=2046485544]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.6, -21.6)
+[node name="PortaTroia" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 7.000, 1.6, -21.600)
 script = ExtResource("s_prop")
-model = ExtResource("m_gate")
-fit_axis = 1
-fit_size = 8.0
+model = ExtResource("n_porta")
+fit_axis = 2
+fit_size = 4.10
+blocking = false
+
+[node name="MuraTratto1" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -21.433, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto2" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -18.000, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto3" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -14.567, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto4" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -7.450, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto5" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -4.050, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto6" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, -0.650, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto7" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 14.650, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto8" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 18.050, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
+blocking = false
+
+[node name="MuraTratto9" type="Node3D" parent="Scenario/MuraDiTroia"]
+transform = Transform3D(-1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, -1.0000, 21.450, 1.6, -21.600)
+script = ExtResource("s_prop")
+model = ExtResource("n_mura")
+fit_axis = 2
+fit_size = 3.70
 blocking = false
 
 [node name="Acropoli_Tempio" type="Node3D" parent="Scenario/MuraDiTroia" unique_id=1712397594]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 4.1, -27)
 script = ExtResource("s_prop")
 model = ExtResource("m_temple")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_size = 8.0
 blocking = false
 
@@ -1831,66 +2215,284 @@ blocking = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.6, -27)
 script = ExtResource("s_prop")
 model = ExtResource("m_castle_kit")
+tint = Color(1.08, 0.88, 0.62, 1)
+desaturate = 0.45
 fit_size = 14.0
 blocking = false
 
+[node name="StradaTerra" type="Node3D" parent="Terreno"]
+script = ExtResource("s_road")
+
+[node name="ColonneFumo" type="Node3D" parent="."]
+script = ExtResource("s_smoke")
+
 [node name="UnioneOggetti" type="Node" parent="."]
 script = ExtResource("s_batcher")
+
+[node name="PaliSezione1" type="Node3D" parent="Scenario/DavantiAlleMura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -4.667, 0.000, -5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 2.9
+fit_axis = 0
+blocking = false
+
+[node name="PaliSezione2" type="Node3D" parent="Scenario/DavantiAlleMura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -2.000, 0.000, -5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 2.9
+fit_axis = 0
+blocking = false
+
+[node name="PaliSezione3" type="Node3D" parent="Scenario/DavantiAlleMura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 0.667, 0.000, -5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 2.9
+fit_axis = 0
+blocking = false
+
+[node name="PaliSezione4" type="Node3D" parent="Scenario/DavantiAlleMura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 12.333, 0.000, -5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 2.9
+fit_axis = 0
+blocking = false
+
+[node name="PaliSezione5" type="Node3D" parent="Scenario/DavantiAlleMura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 15.000, 0.800, -5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 2.9
+fit_axis = 0
+blocking = false
+
+[node name="PaliSezione6" type="Node3D" parent="Scenario/DavantiAlleMura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 17.667, 0.800, -5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 2.9
+fit_axis = 0
+blocking = false
+
+[node name="Cheval2" type="Node3D" parent="Scenario/PostazioneTroiana"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 1.500, 0.000, -15.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_cheval")
+fit_size = 2.6
+fit_axis = 0
+blocking = false
+
+[node name="Cheval2" type="Node3D" parent="Scenario/PostazioneTroiana"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 11.500, 0.000, -15.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_cheval")
+fit_size = 2.6
+fit_axis = 0
+blocking = false
+
+[node name="Staccionata1" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 4.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata2" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 5.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata3" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 6.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata4" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 7.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata5" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 14.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata6" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 15.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata7" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 16.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata8" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 17.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata9" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 18.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata10" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(0.0000, 0, 1.0000, 0, 1, 0, -1.0000, 0, 0.0000, -7.500, 0.000, 19.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata11" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -19.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata12" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -18.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata13" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -17.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata14" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -16.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata15" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -13.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata16" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -12.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata17" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -11.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
+
+[node name="Staccionata18" type="Node3D" parent="Scenario/Accampamento"]
+transform = Transform3D(1.0000, 0, 0.0000, 0, 1, 0, -0.0000, 0, 1.0000, -10.500, 0.000, 2.500)
+script = ExtResource("s_prop")
+model = ExtResource("n_paliz")
+fit_size = 1.1
+fit_axis = 2
+blocking = false
 
 [node name="Decorazioni" type="Node3D" parent="." unique_id=313047875]
 
 [node name="AlberiEst1" type="Node3D" parent="Decorazioni" unique_id=1541407880]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 1.6, -4)
 script = ExtResource("s_scatter")
-model = ExtResource("m_trees")
-piece = "NormalTree_1"
+model = ExtResource("n_fir_a")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_size = 4.5
+count = 6
 area_size = Vector2(2.6, 48)
-count = 8
 random_seed = 11
 
 [node name="AlberiEst2" type="Node3D" parent="Decorazioni" unique_id=1204896363]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 1.6, -4)
 script = ExtResource("s_scatter")
-model = ExtResource("m_trees")
-piece = "NormalTree_3"
+model = ExtResource("n_fir_b")
+foliage_gain = Color(5.5, 12, 6, 1)
 fit_size = 4.0
+count = 4
 area_size = Vector2(2.6, 48)
-count = 6
 random_seed = 12
 
 [node name="AlberiSud" type="Node3D" parent="Decorazioni" unique_id=884384200]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 21.2)
 script = ExtResource("s_scatter")
-model = ExtResource("m_tree")
-fit_size = 3.0
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
+fit_size = 3.5
+count = 6
 area_size = Vector2(38, 1.2)
-count = 8
 random_seed = 13
 
 [node name="CipressiEst" type="Node3D" parent="Decorazioni" unique_id=1858300573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 1.6, -4)
 script = ExtResource("s_scatter")
-model = ExtResource("m_cypress")
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
+count = 3
 fit_size = 5.5
 area_size = Vector2(2.6, 48)
-count = 6
 random_seed = 14
 
 [node name="CipressiCitta" type="Node3D" parent="Decorazioni" unique_id=846726789]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.6, -27)
 script = ExtResource("s_scatter")
-model = ExtResource("m_cypress")
-fit_size = 6.0
+model = ExtResource("n_fir_c")
+foliage_gain = Color(5.5, 12, 6, 1)
+fit_size = 5.5
+count = 8
 area_size = Vector2(42, 6)
-count = 14
 random_seed = 16
 
 [node name="CespugliSud" type="Node3D" parent="Decorazioni" unique_id=1172130400]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 21)
 script = ExtResource("s_scatter")
-model = ExtResource("m_bushes")
-piece = "Bush"
+model = ExtResource("n_othonna_b")
 fit_size = 0.9
 area_size = Vector2(44, 1.6)
 count = 22
@@ -1899,8 +2501,7 @@ random_seed = 17
 [node name="CespugliFioriti" type="Node3D" parent="Decorazioni" unique_id=1690092344]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.8, -4)
 script = ExtResource("s_scatter")
-model = ExtResource("m_flower_bushes")
-piece = "Plant_Flowers"
+model = ExtResource("n_helio_s")
 fit_size = 0.9
 area_size = Vector2(2.6, 48)
 count = 14
@@ -1908,8 +2509,7 @@ random_seed = 18
 
 [node name="Fiori1" type="Node3D" parent="Decorazioni" unique_id=1049381881]
 script = ExtResource("s_scatter")
-model = ExtResource("m_flowers")
-piece = "Flower_1_Clump"
+model = ExtResource("n_celandine")
 fit_size = 0.5
 area_size = Vector2(40, 40)
 exclude_rects = Array[Rect2]([Rect2(-17.3, 9.8, 25.6, 3.4), Rect2(4.8, -20.2, 3.4, 33.6)])
@@ -1918,8 +2518,7 @@ random_seed = 19
 
 [node name="Fiori2" type="Node3D" parent="Decorazioni" unique_id=186122706]
 script = ExtResource("s_scatter")
-model = ExtResource("m_flowers")
-piece = "Flower_3_Clump"
+model = ExtResource("n_dandelion")
 fit_size = 0.5
 area_size = Vector2(40, 40)
 exclude_rects = Array[Rect2]([Rect2(-17.3, 9.8, 25.6, 3.4), Rect2(4.8, -20.2, 3.4, 33.6)])

@@ -74,3 +74,8 @@ _source/scripts/render_all.sh                                                   
 ```
 
 Ogni build salva il sorgente in `_source/blend/<categoria>/<nome>.blend` ed esporta il `.glb` nella cartella della categoria. Le anteprime sono in `_previews/` (anche questa con `.gdignore`). I render vanno lanciati **uno alla volta**: più render EEVEE in parallelo hanno bloccato il PC.
+
+## Altri modelli importati
+
+- [`polyhaven/`](polyhaven/README.md): 96 modelli CC0 di Poly Haven e 2 materiali del terreno, con [catalogo](polyhaven/CATALOGO.md) e piano d'uso per i livelli 1 e 2.
+- [`sketchfab/`](sketchfab/README.md): 3 modelli da Sketchfab con **licenza da verificare** (edificio greco, colonna corinzia, rovina).

@@ -1,30 +1,97 @@
 shader_type spatial;
-render_mode cull_back, depth_draw_opaque;
-// Mare del diorama: blu-verde con onde e schiuma bianca che scorrono piano.
-// Costo basso: nessuna texture, solo qualche seno nel fragment shader.
+render_mode cull_back, depth_draw_opaque, specular_schlick_ggx;
+// Mare del diorama, qualità MEDIUM/HIGH (Compatibility-safe).
+// Due strati di normal map che scorrono in direzioni diverse, fresnel con
+// riflesso del cielo, colore sfumato dalla riva al largo (con il fondale
+// sabbioso che traspare vicino a riva), schiuma di battigia animata e schiuma
+// di contatto attorno agli scafi (depth texture). Le mappe sono procedurali
+// (assets/environment/water/gen_water.py), quindi nessuna licenza esterna.
+// `detail`: 0 = una sola normal map, niente schiuma di contatto; 1 = completo.
 
-uniform vec4 deep_color : source_color = vec4(0.05, 0.22, 0.32, 1.0);
-uniform vec4 shallow_color : source_color = vec4(0.12, 0.40, 0.46, 1.0);
-uniform vec4 foam_color : source_color = vec4(0.95, 0.92, 0.85, 1.0);
-uniform float alpha = 0.93;
-uniform float wave_scale = 1.6;
-uniform float speed = 0.35;
+uniform sampler2D normal_tex : hint_normal, repeat_enable, filter_linear_mipmap;
+uniform sampler2D height_tex : hint_default_white, repeat_enable, filter_linear_mipmap;
+uniform sampler2D depth_tex : hint_depth_texture, repeat_disable, filter_nearest;
+
+uniform vec4 deep_color : source_color = vec4(0.02, 0.17, 0.26, 1.0);
+uniform vec4 shallow_color : source_color = vec4(0.10, 0.48, 0.50, 1.0);
+uniform vec4 seabed_color : source_color = vec4(0.62, 0.58, 0.42, 1.0);
+uniform vec4 sky_color : source_color = vec4(0.62, 0.74, 0.86, 1.0);
+uniform vec4 foam_color : source_color = vec4(0.96, 0.95, 0.92, 1.0);
+
+uniform float shore_x = -21.6;      // x mondiale della battigia (mare a sinistra)
+uniform float depth_distance = 3.0; // distanza dalla riva alla quale il mare è "profondo"
+uniform float normal_strength = 0.45;
+uniform float tile_a = 0.07;
+uniform float tile_b = 0.19;
+uniform vec2 flow_a = vec2(0.020, 0.012);
+uniform vec2 flow_b = vec2(-0.012, 0.028);
+uniform float foam_width = 0.55;
+uniform float contact_foam_depth = 0.35;
+uniform float fresnel_power = 4.0;
+uniform int detail = 1;
 
 varying vec3 world_pos;
+varying vec3 world_nrm;
 
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	world_nrm = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 }
 
 void fragment() {
-	vec2 p = world_pos.xz * wave_scale;
-	float t = TIME * speed;
-	float w = sin(p.x * 1.3 + t * 2.0) * 0.5 + sin(p.y * 1.7 - t * 1.6) * 0.5;
-	w += sin((p.x + p.y) * 2.3 + t * 3.1) * 0.35;
-	float bands = smoothstep(0.55, 0.95, w * 0.6 + 0.5);
-	vec3 water = mix(deep_color.rgb, shallow_color.rgb, 0.5 + 0.5 * w * 0.5);
-	ALBEDO = mix(water, foam_color.rgb, bands * 0.45);
-	ROUGHNESS = 0.55;
-	SPECULAR = 0.15;
-	ALPHA = alpha;
+	float top = step(0.5, world_nrm.y);
+	float t = TIME;
+	vec2 p = world_pos.xz;
+
+	// --- normali: due strati incrociati, ondine fini sopra onde lunghe ---
+	vec3 na = texture(normal_tex, p * tile_a + flow_a * t).rgb * 2.0 - 1.0;
+	vec3 nmix = na;
+	if (detail > 0) {
+		vec3 nb = texture(normal_tex, p * tile_b + flow_b * t).rgb * 2.0 - 1.0;
+		nmix = normalize(vec3(na.xy + nb.xy * 0.8, na.z * nb.z));
+	}
+	NORMAL_MAP = nmix * 0.5 + 0.5;
+	NORMAL_MAP_DEPTH = normal_strength * top;
+
+	// --- profondità simulata dalla distanza dalla riva ---
+	float d = shore_x - world_pos.x;
+	float depth01 = smoothstep(0.0, depth_distance, d);
+	vec3 water = mix(shallow_color.rgb, deep_color.rgb, depth01);
+	float bed = (1.0 - smoothstep(0.0, 1.3, d)) * 0.6;   // fondale visibile
+	water = mix(water, seabed_color.rgb * 0.8, bed * (0.6 + 0.4 * na.x));
+
+	// --- schiuma di battigia: onda che sale e si ritira + merletto di rumore ---
+	float h = texture(height_tex, p * 0.35 + vec2(0.0, t * 0.012)).r;
+	float swash = 0.5 + 0.5 * sin(t * 0.9 + p.y * 0.55 + h * 4.0);
+	float dd = d - swash * 0.45 + (h - 0.5) * 0.35;
+	float foam = smoothstep(foam_width, 0.0, dd) * smoothstep(-0.25, 0.05, dd + 0.2);
+	foam *= 0.55 + 0.45 * smoothstep(0.25, 0.7, texture(height_tex, p * 1.3 + vec2(t * 0.02, 0.0)).r);
+	float lace = smoothstep(0.05, 0.0, abs(dd - 0.62)) * (0.4 + 0.6 * h);  // bordo della risacca
+	foam = clamp(foam + lace * 0.6, 0.0, 1.0);
+
+	// --- schiuma di contatto attorno a scafi e oggetti che toccano l'acqua ---
+	if (detail > 0) {
+		float depth = texture(depth_tex, SCREEN_UV).x;
+		vec3 ndc = vec3(SCREEN_UV, depth) * 2.0 - 1.0;
+		vec4 view = INV_PROJECTION_MATRIX * vec4(ndc, 1.0);
+		view.xyz /= view.w;
+		float diff = -view.z + VERTEX.z;
+		float contact = 1.0 - smoothstep(0.0, contact_foam_depth, diff);
+		contact *= 0.5 + 0.5 * texture(height_tex, p * 0.9 + vec2(t * 0.03, t * 0.02)).r;
+		foam = max(foam, contact * 0.85);
+	}
+	foam *= top;
+
+	// --- fresnel: il cielo si riflette a incidenza radente ---
+	float fres = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), fresnel_power);
+
+	ALBEDO = mix(water, foam_color.rgb, foam);
+	EMISSION = sky_color.rgb * fres * 0.55 * (1.0 - foam);
+	ROUGHNESS = mix(0.06, 0.85, foam);
+	SPECULAR = mix(0.7, 0.1, foam);
+	METALLIC = 0.0;
+	if (top < 0.5) {
+		ALBEDO = mix(deep_color.rgb * 0.7, seabed_color.rgb * 0.7, step(0.5, world_nrm.x));
+		ROUGHNESS = 0.6;
+	}
 }

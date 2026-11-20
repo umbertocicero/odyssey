@@ -11,7 +11,7 @@ extends Node
 @export_range(0.0, 1.0) var shadow_opacity := 0.6
 @export_range(0.0, 8.0) var shadow_blur := 2.6
 ## Altezza del sole sull'orizzonte, in gradi (più alto = ombre più corte).
-@export_range(10.0, 70.0) var sun_elevation_degrees := 38.0
+@export_range(10.0, 70.0) var sun_elevation_degrees := 22.0
 
 @export_group("Cielo e ambiente")
 @export var sky_top_color := Color(0.36, 0.52, 0.82)
@@ -70,7 +70,8 @@ func _process(delta: float) -> void:
 # --- Luce, cielo, ambiente --------------------------------------------------
 
 func _setup_light() -> void:
-	var sun := level.get_node_or_null(^"Sole") as DirectionalLight3D
+	var sun_to := Vector3(0.0, 0.4, -0.9).normalized()
+	var sun :=level.get_node_or_null(^"Sole") as DirectionalLight3D
 	if sun:
 		sun.shadow_opacity = shadow_opacity
 		sun.shadow_blur = shadow_blur
@@ -79,9 +80,18 @@ func _setup_light() -> void:
 		var pitch := deg_to_rad(sun_elevation_degrees)
 		var nd := Vector3(cos(pitch) * sin(heading), -sin(pitch), cos(pitch) * cos(heading))
 		sun.global_basis = Basis.looking_at(nd, Vector3.UP)
-	var we := level.get_node_or_null(^"WorldEnvironment") as WorldEnvironment
+		sun_to = -nd
+	var we :=level.get_node_or_null(^"WorldEnvironment") as WorldEnvironment
 	if we and we.environment:
 		var env := we.environment
+		# Memoria video per qualità: shadow map del sole e atlante delle luci puntiformi più piccoli
+		# a bassa e media, glow spento a bassa (l'alta resta com'era).
+		var level_quality := int(Quality.current())
+		RenderingServer.directional_shadow_atlas_set_size([1024, 2048, 4096][level_quality], true)
+		if level_quality < 2:
+			get_viewport().positional_shadow_atlas_size = [512, 1024][level_quality]
+		if level_quality == 0:
+			env.glow_enabled = false
 		env.ambient_light_sky_contribution = ambient_sky_contribution
 		env.ambient_light_energy = ambient_energy
 		var sky := env.sky
@@ -89,6 +99,12 @@ func _setup_light() -> void:
 			var m := sky.sky_material as ProceduralSkyMaterial
 			m.sky_top_color = sky_top_color
 			m.sky_horizon_color = sky_horizon_color
+		elif sky and sky.sky_material is ShaderMaterial:
+			# Cielo di tramonto con nuvole (assets/shaders/sky_dusk.gdshader): il disco del sole
+			# sta dove sta la luce; a qualità bassa meno ottave di rumore per le nuvole.
+			var sm := sky.sky_material as ShaderMaterial
+			sm.set_shader_parameter(&"sun_dir", sun_to)
+			sm.set_shader_parameter(&"octaves", [2, 3, 5][int(Quality.current())])
 
 
 # --- Falò, torce, fumo e scintille ---------------------------------------------

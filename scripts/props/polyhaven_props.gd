@@ -122,7 +122,7 @@ func _add_solid(item: Dictionary) -> void:
 # --- Fogliame -----------------------------------------------------------------
 
 func _wants_gain(role: int) -> bool:
-	return role == PolyhavenCatalog.Role.TREE or role == PolyhavenCatalog.Role.PLANT
+	return role == PolyhavenCatalog.Role.TREE
 
 
 func _tuned_material(mat: Material) -> Material:
@@ -138,30 +138,16 @@ func _tuned_material(mat: Material) -> Material:
 
 
 func _tune_visual(prop: GridProp, role: int) -> void:
-	if not _wants_gain(role):
-		return
+	# FoliageTint: fogliame schiarito (alberi e piante) e metallico spurio azzerato (tutti i modelli).
+	var gain := foliage_gain if _wants_gain(role) else Color(1, 1, 1)
 	for mi in prop.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
-		for i in m.mesh.get_surface_count():
-			var mat := m.mesh.surface_get_material(i)
-			if mat != null:
-				var t := _tuned_material(mat)
-				if t != mat:
-					m.set_surface_override_material(i, t)
+		m.mesh = FoliageTint.apply(m.mesh, gain)
 
 
 func _tuned_mesh(id: String, mesh: Mesh) -> Mesh:
-	if not _wants_gain(PolyhavenCatalog.role(id)):
-		return mesh
-	var key := str(mesh.get_instance_id())
-	if not _tuned_meshes.has(key):
-		var copy := mesh.duplicate() as Mesh
-		for i in copy.get_surface_count():
-			var mat := copy.surface_get_material(i)
-			if mat != null:
-				copy.surface_set_material(i, _tuned_material(mat))
-		_tuned_meshes[key] = copy
-	return _tuned_meshes[key]
+	var gain := foliage_gain if _wants_gain(PolyhavenCatalog.role(id)) else Color(1, 1, 1)
+	return FoliageTint.apply(mesh, gain)
 
 
 # --- Sparsi (MultiMesh) -----------------------------------------------------

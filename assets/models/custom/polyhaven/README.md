@@ -43,6 +43,18 @@ Originali scaricati da Umberto in `~/Scaricati` e `~/Scaricati/new` (collezione 
 
 Il loader di Godot 4.7 **rifiuta le JPEG con profilo ICC incorporato** (l'import risulta `valid=false` e la texture non esiste). I JPEG originali di Poly Haven e i PNG con alpha scritti dall'esporter glTF lo contengono (sRGB, 480 byte). `compress_textures.py` lo toglie da ogni jpg e png sotto `polyhaven/`, senza ricodificare le JPEG (`jpegtran -copy none`, stessi pixel). Va lanciato **dopo ogni nuova importazione**. Se Godot ha già segnato `valid=false`, cancellare il file `.import` della texture prima di rifare l'import, altrimenti non lo riprova. Verifica: `grep -l valid=false $(find polyhaven -name '*.import')` non deve trovare nulla.
 
+## Qualità grafica: texture 1K e 2K delle rocce
+
+Le 7 diffuse delle rocce e del tronco (`rocce/*/textures/*_diff_2k.jpg`) sono ora a **1024** con lo stesso nome (il nome dice ancora `2k`, ma il contenuto è 1K): sono quelle da usare per qualità bassa e media. Gli originali a **2048** sono in `rocce/*/textures_2k/`, stessi nomi, per la qualità alta. Roughness e normal erano già a 1024. I .gltf puntano a `textures/`. Per web e mobile escludere `*/textures_2k/*` dall'export.
+
+## Regola: metallicFactor sempre dichiarato
+
+L'esporter glTF di Blender omette `metallicFactor` quando vale 1 (il predefinito della specifica), e la texture `metallicRoughness` ha **R = occlusione (bianca), G = roughness, B = metallo**. Dove B è un bianco uniforme (artefatto) il materiale risulta metallico o bianco in Godot. `_source/scripts/fix_gltf_materials.py` dichiara `metallicFactor` su ogni materiale di `polyhaven/` e `sketchfab/`: **0** se il canale B non ha una vera mappa di metallo (deviazione standard sotto 40), **1** se ce l'ha (attrezzi, forziere, secchio con cerchi di ferro, trapano, ecc.: 14 materiali). Va lanciato **dopo ogni importazione**, insieme a `compress_textures.py`. Verifica: nessun materiale senza `pbrMetallicRoughness.metallicFactor`.
+
+## Import in Godot: VRAM compressed e mipmap
+
+Anche qui le texture hanno nei `.import` `compress/mode=2` (VRAM compressed) e `mipmaps/generate=true` (normal map con `compress/normal_map=1`, carte con alpha con `process/fix_alpha_border=true`), comprese le 2 texture del terreno costiero e le versioni 2K di `rocce/*/textures_2k/` per la qualità alta. Lo imposta `_source/scripts/tune_imports.py polyhaven`; vale lo stesso per `sketchfab` e `campo`. **Lanciarlo dopo ogni importazione.**
+
 ## Non convertiti
 
 | Modello | Motivo |

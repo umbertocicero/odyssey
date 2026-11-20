@@ -52,6 +52,11 @@ extends Node3D
 	set(value):
 		cast_shadows = value
 		_rebuild()
+## Moltiplicatore dell'albedo del fogliame (vedi FoliageTint). Bianco = nessuna correzione.
+@export var foliage_gain := Color(1, 1, 1):
+	set(value):
+		foliage_gain = value
+		_rebuild()
 
 var _generated: Array[Node] = []
 
@@ -87,7 +92,7 @@ func _rebuild() -> void:
 	for entry in meshes:
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = entry[0]
+		mm.mesh = FoliageTint.apply(entry[0], foliage_gain)
 		mm.instance_count = transforms.size()
 		var local: Transform3D = fit * (entry[1] as Transform3D)
 		for i in transforms.size():

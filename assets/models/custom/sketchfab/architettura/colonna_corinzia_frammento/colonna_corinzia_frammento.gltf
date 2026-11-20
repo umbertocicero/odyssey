@@ -20,20 +20,20 @@
  ],
  "materials": [
   {
-   "doubleSided": false,
-   "name": "M_colonna_corinzia_frammento",
+   "name": "Material_0",
    "pbrMetallicRoughness": {
     "baseColorTexture": {
      "index": 0
     },
     "metallicFactor": 0,
-    "roughnessFactor": 0.5
-   }
+    "roughnessFactor": 0.6000000238418579
+   },
+   "doubleSided": true
   }
  ],
  "meshes": [
   {
-   "name": "mat-0.002",
+   "name": "mat-0",
    "primitives": [
     {
      "attributes": {
@@ -56,69 +56,69 @@
  "images": [
   {
    "mimeType": "image/jpeg",
-   "name": "bake_color",
-   "uri": "textures/bake_color.jpg"
+   "name": "Image_0",
+   "uri": "textures/Image_0.jpg"
   }
  ],
  "accessors": [
   {
    "bufferView": 0,
    "componentType": 5126,
-   "count": 15827,
+   "count": 41643,
    "max": [
-    0.9259239435195923,
-    3.499999761581421,
-    1.1887412071228027
+    0.9316006302833557,
+    3.5,
+    1.2241262197494507
    ],
    "min": [
-    -0.9259239435195923,
-    0,
-    -1.1887412071228027
+    -0.9316006302833557,
+    0.0001296900591114536,
+    -1.2262969017028809
    ],
    "type": "VEC3"
   },
   {
    "bufferView": 1,
    "componentType": 5126,
-   "count": 15827,
+   "count": 41643,
    "type": "VEC3"
   },
   {
    "bufferView": 2,
    "componentType": 5126,
-   "count": 15827,
+   "count": 41643,
    "type": "VEC2"
   },
   {
    "bufferView": 3,
    "componentType": 5123,
-   "count": 26778,
+   "count": 185754,
    "type": "SCALAR"
   }
  ],
  "bufferViews": [
   {
    "buffer": 0,
-   "byteLength": 189924,
+   "byteLength": 499716,
    "byteOffset": 0,
    "target": 34962
   },
   {
    "buffer": 0,
-   "byteLength": 189924,
-   "byteOffset": 189924,
+   "byteLength": 499716,
+   "byteOffset": 499716,
    "target": 34962
   },
   {
    "buffer": 0,
-   "byteLength": 126616,
-   "byteOffset": 379848,
+   "byteLength": 333144,
+   "byteOffset": 999432,
    "target": 34962
   },
   {
    "buffer": 0,
-   "byteLength": 53556,
-   "byteOffset": 506464,
+   "byteLength": 371508,
+   "byteOffset": 1332576,
    "target": 34963
   }
  ],
@@ -130,7 +130,7 @@
  ],
  "buffers": [
   {
-   "byteLength": 560020,
+   "byteLength": 1704084,
    "uri": "colonna_corinzia_frammento.bin"
   }
  ]

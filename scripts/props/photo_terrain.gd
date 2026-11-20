@@ -11,8 +11,9 @@ extends Node3D
 ## Espone height_at() con la quota vera della mesh (colline di pochi cm
 ## comprese), così l'erba poggia sul terreno senza fluttuare.
 
-const FULL := preload("res://assets/models/custom/terreno/terreno_pianura.gltf")
-const MOBILE := preload("res://assets/models/custom/terreno/terreno_pianura_mobile.gltf")
+## Caricati solo quando servono: a qualità bassa e media le texture 2K del terreno pieno non vanno in VRAM.
+const FULL_PATH := "res://assets/models/custom/terreno/terreno_pianura.gltf"
+const MOBILE_PATH := "res://assets/models/custom/terreno/terreno_pianura_mobile.gltf"
 const SPLAT_SHADER := preload("res://assets/models/custom/terreno/godot/terreno_splat.gdshader")
 const TEX_DIR := "res://assets/models/custom/terreno/textures/"
 const CELLS_PER_METER := 4
@@ -44,7 +45,7 @@ func _ready() -> void:
 		return
 	add_to_group(&"photo_terrain")
 	var mobile := force_mobile or Quality.current() != Quality.Level.HIGH
-	terrain_instance = (MOBILE if mobile else FULL).instantiate()
+	terrain_instance = (load(MOBILE_PATH if mobile else FULL_PATH) as PackedScene).instantiate()
 	terrain_instance.name = "TerrenoFoto"
 	add_child(terrain_instance)
 	for node in terrain_instance.find_children("*Superficie*", "MeshInstance3D", true, false):

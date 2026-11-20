@@ -53,7 +53,8 @@ offset_right = 640.0
 offset_bottom = 84.0
 text = "Level 1 - The Plain of Troy
 WASD / arrows / swipe: move Odysseus - click: attack
-Walk next to a wounded comrade and lead him back to camp.
+Walk next to a wounded comrade to lift him up and help him back to camp (you move slower).
+Your soldiers will take him to the ships.
 Red and orange tiles: incoming fire from the walls, move!"
 
 [node name="HUD" type="Control" parent="UI"]

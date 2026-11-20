@@ -262,3 +262,6 @@ Il prato alto circa 20 cm copre tutto il piano (non solo a chiazze) con un unico
 
 L'erba (`GrassField`) cresce solo dove la maschera `GrassMask` lo consente, per tipo di superficie e non per coordinate: nel gruppo `grass_ground` sta la mesh del prato (l'erba non esce dai suoi bordi), nel gruppo `grass_exclude` stanno mare, riva e sabbia, strade e piazzali lastricati. Le basi di costruzioni e oggetti alti (tende, torri, carri, alberi, rocce grandi) sono escluse in automatico. Ai bordi la densità scende gradualmente (`mask_fade`, 0,6 m) verso sabbia, sentieri e costruzioni. Il numero di ciuffi (`count`, `blades_per_tuft`) è la densità sul prato pieno e resta uniforme: a qualità più bassa si abbassa il numero totale, non la distribuzione. Il prato nuovo del secondo agente usa la stessa maschera: `GrassMask.from_tree(get_tree())` e poi `weight(Vector2(x, z))` per ogni punto, oppure basta mettere i suoi nodi nei due gruppi. Test: `tests/test_grass_mask.gd`.
 
+
+## Crediti dei modelli di terzi (Sketchfab, CC-BY)
+- Tenda degli ufficiali (`assets/models/custom/sketchfab/tende/`): "Tent" di Gajk.Mv (https://sketchfab.com/Gajk.Mv), licenza CC-BY-4.0, modificata (colori, pelli e rami aggiunti). Testi completi in `assets/models/custom/sketchfab/CREDITI.md` (da mostrare nei crediti del gioco).

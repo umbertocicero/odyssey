@@ -1,0 +1,202 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "rilievo_tempio_pietra"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "phong_relief",
+   "normalTexture": {
+    "index": 0
+   },
+   "occlusionTexture": {
+    "index": 1
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 2
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 1
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "reliefMesh_phong_relief_0",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2,
+      "TEXCOORD_1": 3,
+      "TEXCOORD_2": 4,
+      "TEXCOORD_3": 5
+     },
+     "indices": 6,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "phong_relief_normal",
+   "uri": "textures/phong_relief_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "phong_relief_metallicRoughness",
+   "uri": "textures/phong_relief_metallicRoughness.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "phong_relief_baseColor",
+   "uri": "textures/phong_relief_baseColor.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 23326,
+   "max": [
+    0.5086777210235596,
+    0.5243879556655884,
+    0.028475096449255943
+   ],
+   "min": [
+    -0.5086777210235596,
+    0,
+    -0.028475096449255943
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 23326,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 23326,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 23326,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 23326,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 23326,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5123,
+   "count": 59985,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 279912,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 279912,
+   "byteOffset": 279912,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 186608,
+   "byteOffset": 559824,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 186608,
+   "byteOffset": 746432,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 186608,
+   "byteOffset": 933040,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 186608,
+   "byteOffset": 1119648,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 119970,
+   "byteOffset": 1306256,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 1426228,
+   "uri": "rilievo_tempio_pietra.bin"
+  }
+ ]
+}

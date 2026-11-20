@@ -25,12 +25,12 @@ func _ready() -> void:
 	_time_label.offset_left = -200
 	_time_label.offset_right = 200
 	_time_label.text = "Retreat signal in --:--"
-	_wounded_label = _make_label(22, HORIZONTAL_ALIGNMENT_RIGHT)
+	_wounded_label = _make_label(20, HORIZONTAL_ALIGNMENT_RIGHT)
 	_wounded_label.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	_wounded_label.offset_left = -360
+	_wounded_label.offset_left = -560
 	_wounded_label.offset_right = -16
-	_wounded_label.offset_top = 12
-	_wounded_label.text = "Wounded rescued: 0 / 0"
+	_wounded_label.offset_top = 52
+	_wounded_label.text = "Wounded in camp: 0 / 0   |   On the ships: 0   |   Lost: 0"
 	_banner = _make_label(34, HORIZONTAL_ALIGNMENT_CENTER)
 	_banner.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_banner.offset_top = 150   # sotto le istruzioni in alto a sinistra
@@ -84,8 +84,8 @@ func set_time(seconds_left: float, wave: int) -> void:
 	_time_label.text = "Retreat signal in %d:%02d   |   Wave %d" % [s / 60, s % 60, wave]
 
 
-func set_wounded(saved: int, lost: int, total: int) -> void:
-	_wounded_label.text = "Wounded rescued: %d / %d   (lost %d)" % [saved, total, lost]
+func set_wounded(saved: int, lost: int, total: int, evacuated := 0) -> void:
+	_wounded_label.text = "Wounded in camp: %d / %d   |   On the ships: %d   |   Lost: %d" % [saved, total, evacuated, lost]
 
 
 func show_banner(text: String, seconds: float) -> void:
@@ -100,8 +100,8 @@ func show_banner(text: String, seconds: float) -> void:
 
 func show_end(s: Dictionary) -> void:
 	_end_title.text = str(s["title"])
-	_end_body.text = "%s\n\nWounded rescued: %d of %d\nTrojans defeated: %d\nWaves survived: %d\n\nScore: %d" % [
-		s["text"], s["saved"], s["total"], s["kills"], s["waves"], s["score"]]
+	_end_body.text = "%s\n\nWounded brought to camp: %d of %d\nWounded evacuated to the ships: %d\nTrojans defeated: %d\nWaves survived: %d\n\nScore: %d" % [
+		s["text"], s["saved"], s["total"], s.get("evacuated", 0), s["kills"], s["waves"], s["score"]]
 	_end_panel.visible = true
 	_end_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_continue.grab_focus()

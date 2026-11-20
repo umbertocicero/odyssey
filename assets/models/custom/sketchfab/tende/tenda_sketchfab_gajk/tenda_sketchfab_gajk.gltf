@@ -1,0 +1,397 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "tenda_sketchfab_gajk"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "Stick",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "roughnessFactor": 0.8211145401000977
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "Ropes",
+   "normalTexture": {
+    "index": 2
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 3
+    },
+    "metallicFactor": 0,
+    "roughnessFactor": 0.8211145401000977
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "Tent",
+   "normalTexture": {
+    "index": 4
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 5
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 6
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Sticks_Stick_0",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2,
+      "TEXCOORD_1": 3
+     },
+     "indices": 4,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 5,
+      "NORMAL": 6,
+      "TEXCOORD_0": 7,
+      "TEXCOORD_1": 8
+     },
+     "indices": 9,
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 10,
+      "NORMAL": 11,
+      "TEXCOORD_0": 12,
+      "TEXCOORD_1": 13
+     },
+     "indices": 14,
+     "material": 2
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  },
+  {
+   "sampler": 0,
+   "source": 6
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "Stick_normal",
+   "uri": "textures/Stick_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "Stick_baseColor",
+   "uri": "textures/Stick_baseColor.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "Ropes_normal",
+   "uri": "textures/Ropes_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "Ropes_baseColor",
+   "uri": "textures/Ropes_baseColor.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "Tent_normal",
+   "uri": "textures/Tent_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "Tent_baseColor",
+   "uri": "textures/Tent_baseColor.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "Tent_metallicRoughness",
+   "uri": "textures/Tent_metallicRoughness.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 1892,
+   "max": [
+    2.0921871662139893,
+    2.274550676345825,
+    1.2521522045135498
+   ],
+   "min": [
+    -2.0921871662139893,
+    0.006423027254641056,
+    -1.1800212860107422
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 1892,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 1892,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 1892,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5123,
+   "count": 9624,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 1779,
+   "max": [
+    1.3227416276931763,
+    2.0573573112487793,
+    1.0349801778793335
+   ],
+   "min": [
+    -1.335465669631958,
+    0.44628867506980896,
+    -1.1791657209396362
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 1779,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5126,
+   "count": 1779,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 1779,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5123,
+   "count": 8136,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 10,
+   "componentType": 5126,
+   "count": 1708,
+   "max": [
+    1.5046006441116333,
+    2.049701452255249,
+    1.4192211627960205
+   ],
+   "min": [
+    -1.4795043468475342,
+    0,
+    -1.4192211627960205
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 11,
+   "componentType": 5126,
+   "count": 1708,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 12,
+   "componentType": 5126,
+   "count": 1708,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 13,
+   "componentType": 5126,
+   "count": 1708,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 14,
+   "componentType": 5123,
+   "count": 9843,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 22704,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 22704,
+   "byteOffset": 22704,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 15136,
+   "byteOffset": 45408,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 15136,
+   "byteOffset": 60544,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 19248,
+   "byteOffset": 75680,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 21348,
+   "byteOffset": 94928,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 21348,
+   "byteOffset": 116276,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 14232,
+   "byteOffset": 137624,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 14232,
+   "byteOffset": 151856,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 16272,
+   "byteOffset": 166088,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 20496,
+   "byteOffset": 182360,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 20496,
+   "byteOffset": 202856,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13664,
+   "byteOffset": 223352,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13664,
+   "byteOffset": 237016,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 19686,
+   "byteOffset": 250680,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 270368,
+   "uri": "tenda_sketchfab_gajk.bin"
+  }
+ ]
+}

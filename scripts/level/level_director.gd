@@ -6,6 +6,7 @@ extends Node
 
 signal wave_started(number: int, trojan_count: int)
 signal wounded_changed(saved: int, lost: int, total: int)
+signal wounded_evacuated(count: int, total: int)
 signal time_changed(seconds_left: float)
 signal level_finished(summary: Dictionary)
 
@@ -24,6 +25,7 @@ var kills := 0
 var summary := {}
 var wounded: Array[WoundedSoldier] = []
 var hud: LevelHud
+var ferry: FerrySystem
 
 var _grid: DioramaGrid
 var _player: GridUnit
@@ -31,6 +33,7 @@ var _units_root: Node
 var _next_wave_at := 0.0
 var _saved := 0
 var _lost := 0
+var _unreachable := {}
 
 
 func _ready() -> void:
@@ -65,6 +68,7 @@ func start() -> void:
 	_lost = 0
 	_next_wave_at = rules.first_wave_delay
 	_spawn_wounded()
+	_setup_ferry()
 	_apply_defence_scaling(1)
 	if hud:
 		hud.show_banner("Hold the line until the retreat signal!", 3.5)
@@ -139,6 +143,10 @@ func _spawn_trojan(world_xz: Vector2) -> bool:
 
 
 func _spawn_wounded() -> void:
+	# I feriti non devono giacere in una zona che Ulisse non può raggiungere.
+	_unreachable.clear()
+	for c in _grid.find_unreachable_cells(_player.cell):
+		_unreachable[c] = true
 	var p := rules.wounded_points
 	var n := mini(rules.wounded_count, p.size())
 	for i in n:
@@ -148,10 +156,27 @@ func _spawn_wounded() -> void:
 		var w := UnitFactory.make(WoundedSoldier, UnitFactory.MODEL_ACHEO, GridUnit.Team.ACHEI,
 			rules.wounded_health, "Wounded%d" % (i + 1)) as WoundedSoldier
 		w.camp_rect = rules.camp_rect
+		w.severe = i >= n - rules.severe_wounded
 		w.position = _grid.cell_to_world(cell)
 		_units_root.add_child(w)
 		w.state_changed.connect(_on_wounded_state.bind(w))
 		wounded.append(w)
+
+
+func _setup_ferry() -> void:
+	ferry = FerrySystem.new()
+	ferry.name = "FerrySystem"
+	add_child(ferry)
+	ferry.setup(_grid, _units_root, get_parent(), rules)
+	ferry.wounded_evacuated.connect(func(n: int) -> void:
+		wounded_evacuated.emit(n, wounded.size())
+		if hud:
+			hud.set_wounded(_saved, _lost, wounded.size(), n)
+			hud.show_banner("A wounded comrade is aboard the ships!", 1.8))
+
+
+func evacuated_count() -> int:
+	return ferry.evacuated if ferry else 0
 
 
 func _free_cell_near(c: Vector2i) -> Vector2i:
@@ -161,7 +186,7 @@ func _free_cell_near(c: Vector2i) -> Vector2i:
 				if maxi(absi(dx), absi(dy)) != r:
 					continue
 				var cc := c + Vector2i(dx, dy)
-				if _grid.is_inside(cc) and _grid.is_walkable(cc) and _grid.get_occupant(cc) == null:
+				if _grid.is_inside(cc) and _grid.is_walkable(cc) and _grid.get_occupant(cc) == null and not _unreachable.has(cc):
 					return cc
 	return Vector2i(-1, -1)
 
@@ -182,18 +207,28 @@ func _on_wounded_state(new_state: int, w: WoundedSoldier) -> void:
 	match new_state:
 		WoundedSoldier.State.SAVED:
 			_saved += 1
+			if ferry:
+				ferry.request_evacuation(w)
 			if hud:
-				hud.show_banner("A wounded comrade is safe in camp!", 1.8)
+				hud.show_banner("A wounded comrade is safe in camp! Soldiers will carry him to the ships.", 2.4)
 		WoundedSoldier.State.LOST:
 			_lost += 1
 			if hud:
 				hud.show_banner("A wounded comrade has fallen...", 1.8)
 		WoundedSoldier.State.FOLLOWING:
 			if hud:
-				hud.show_banner("Bring him back to camp!", 1.5)
+				hud.show_banner("Support him and bring him back to camp - you move slower!", 2.2)
+		WoundedSoldier.State.STRETCHER:
+			if ferry:
+				ferry.request_stretcher(w)
+			if hud:
+				hud.show_banner("Four soldiers lift the stretcher - escort them to camp!", 2.4)
+			return
+		_:
+			return
 	wounded_changed.emit(_saved, _lost, wounded.size())
 	if hud:
-		hud.set_wounded(_saved, _lost, wounded.size())
+		hud.set_wounded(_saved, _lost, wounded.size(), evacuated_count())
 
 
 ## Termina il livello (fine del tempo) e mostra la schermata finale.
@@ -207,6 +242,7 @@ func finish() -> void:
 	summary = {
 		"saved": _saved,
 		"lost": _lost,
+		"evacuated": evacuated_count(),
 		"total": total,
 		"kills": kills,
 		"waves": wave,

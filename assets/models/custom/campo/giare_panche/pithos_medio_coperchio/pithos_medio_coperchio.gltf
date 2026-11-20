@@ -1,0 +1,380 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "pithos_medio_coperchio"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "M_bark",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "M_clay",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "M_stone",
+   "normalTexture": {
+    "index": 6
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 7
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 8
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "pithos_medio_coperchio",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 8,
+      "NORMAL": 9,
+      "TEXCOORD_0": 10
+     },
+     "indices": 11,
+     "material": 2
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  },
+  {
+   "sampler": 0,
+   "source": 6
+  },
+  {
+   "sampler": 0,
+   "source": 7
+  },
+  {
+   "sampler": 0,
+   "source": 8
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "bark_n",
+   "uri": "textures/bark_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bark_c",
+   "uri": "textures/bark_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bark_r",
+   "uri": "textures/bark_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "clay_n",
+   "uri": "textures/clay_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "clay_c",
+   "uri": "textures/clay_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "clay_r",
+   "uri": "textures/clay_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "stone_n",
+   "uri": "textures/stone_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "stone_c",
+   "uri": "textures/stone_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "stone_r",
+   "uri": "textures/stone_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 58,
+   "max": [
+    0.16169999539852142,
+    0.8680999875068665,
+    0.1576458364725113
+   ],
+   "min": [
+    -0.16169999539852142,
+    0.8481000065803528,
+    -0.1576458364725113
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 58,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 58,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 156,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 1232,
+   "max": [
+    0.36959999799728394,
+    0.9603000283241272,
+    0.36959999799728394
+   ],
+   "min": [
+    -0.36959999799728394,
+    0,
+    -0.36959999799728394
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 1232,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 1232,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 4320,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 50,
+   "max": [
+    0.3528248071670532,
+    1.0653386116027832,
+    0.22980177402496338
+   ],
+   "min": [
+    -0.1944248229265213,
+    0.8625383377075195,
+    -0.2951184809207916
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5126,
+   "count": 50,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 10,
+   "componentType": 5126,
+   "count": 50,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 11,
+   "componentType": 5123,
+   "count": 132,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 696,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 696,
+   "byteOffset": 696,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 464,
+   "byteOffset": 1392,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 312,
+   "byteOffset": 1856,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 14784,
+   "byteOffset": 2168,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 14784,
+   "byteOffset": 16952,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9856,
+   "byteOffset": 31736,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 8640,
+   "byteOffset": 41592,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 600,
+   "byteOffset": 50232,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 600,
+   "byteOffset": 50832,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 400,
+   "byteOffset": 51432,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 264,
+   "byteOffset": 51832,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 52096,
+   "uri": "pithos_medio_coperchio.bin"
+  }
+ ]
+}

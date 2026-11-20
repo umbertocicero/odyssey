@@ -38,10 +38,19 @@ extends Resource
 @export_group("Feriti")
 @export_range(0, 20) var wounded_count := 6
 @export_range(5, 300) var wounded_health := 40
+## Gli ultimi N feriti sono gravi: li porta una squadra di 4 soldati su una barella.
+@export_range(0, 8) var severe_wounded := 2
 ## Dove giacciono i feriti (x, z in metri). Se la casella è occupata si usa la più vicina libera.
 @export var wounded_points := PackedVector2Array([Vector2(-6, 1), Vector2(7, -3), Vector2(-15, -5), Vector2(13, 6), Vector2(-1, -11), Vector2(17, -6), Vector2(-9, 6), Vector2(4, 8)])
 ## Casella dell'accampamento (x, z, larghezza, altezza in caselle): lì i feriti sono in salvo.
 @export var camp_rect := Rect2i(2, 28, 12, 7)
+
+@export_group("Evacuazione")
+## Punto d'imbarco sulla riva (x, z in metri): lì i soldati portano i feriti alle barche.
+@export var shore_point := Vector2(-21.0, 12.0)
+@export_range(1, 4) var ferry_boats := 2
+## Secondi per ogni tratta delle barche verso le navi grandi.
+@export_range(1.0, 30.0) var ferry_sail_time := 6.0
 
 @export_group("Punteggio")
 @export_range(0, 1000) var score_per_wounded := 100

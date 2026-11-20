@@ -38,10 +38,10 @@ const LOW_VARIANTS := ["Prato_Denso_A", "Prato_Denso_B", "Prato_Denso_C", "Erba_
 @export var random_seed := 5
 ## Larghezza della fascia in cui l'erba sfuma verso sabbia, sentieri e costruzioni (m).
 @export_range(0.05, 3.0) var mask_fade := 0.5
-@export var tint := Color(0.86, 1.04, 0.80)
-@export var dry_tint := Color(1.08, 1.0, 0.76)
+@export var tint := Color(1.2, 1.0, 0.55)
+@export var dry_tint := Color(1.28, 1.02, 0.5)
 ## Quota dei ciuffi secchi sul totale (la maschera dà la secchezza, qui la si riduce: verdi freschi con punte secche).
-@export_range(0.0, 1.0) var dry_share := 0.45
+@export_range(0.0, 1.0) var dry_share := 0.85
 
 @export_group("Vento")
 @export var wind_direction := Vector2(1.0, 0.3)
@@ -131,7 +131,7 @@ func _build() -> void:
 		if low:
 			scale *= 1.1
 		var colour := tint.lerp(dry_tint, a.a * dry_share * rng.randf_range(0.5, 1.0))
-		colour = colour.lerp(Color(1.12, 1.02, 0.78), b.g * 0.2)
+		colour = colour.lerp(Color(1.15, 1.0, 0.6), b.g * 0.35)
 		var bright := rng.randf_range(0.9, 1.08)
 		colour = Color(colour.r * bright, colour.g * bright, colour.b * bright)
 		var key := Vector3i(floori((x - origin.x) / block), floori((z - origin.y) / block), names.find(variant))

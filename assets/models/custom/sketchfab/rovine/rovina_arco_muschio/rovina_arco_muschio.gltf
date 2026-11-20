@@ -33,7 +33,8 @@
     },
     "metallicRoughnessTexture": {
      "index": 1
-    }
+    },
+    "metallicFactor": 0.0
    },
    "doubleSided": false
   }

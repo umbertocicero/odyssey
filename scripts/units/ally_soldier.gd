@@ -12,6 +12,9 @@ var leader: GridUnit
 @export var attack_damage := 12
 @export var attack_cooldown := 1.0
 
+## Se vero, il soldato è impegnato in un compito (soccorso) comandato da fuori.
+var busy := false
+
 var _think_timer := 0.0
 var _attack_cd := 0.0
 
@@ -23,6 +26,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_attack_cd -= delta
+	if busy:
+		return
 	if _fight():
 		return
 	if leader == null or is_moving:

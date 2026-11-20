@@ -28,6 +28,12 @@ var is_defeated := false
 @export var attack_range := 1.7
 @export var turn_speed := 14.0
 
+## Moltiplicatore di velocità: scende mentre Ulisse sorregge un ferito.
+var speed_multiplier := 1.0
+## Velocità mentre sorregge un ferito: con un compagno che aiuta / da solo.
+@export var carry_speed_helped := 0.70
+@export var carry_speed_alone := 0.55
+
 var _attack_cd := 0.0
 var _touch_start := Vector2.ZERO
 var _queued_swipe := Vector2.ZERO
@@ -46,6 +52,14 @@ func _ready() -> void:
 	spawn_cell = cell
 	if grid:
 		grid.validate_connectivity(cell)
+
+
+## Chiamato dal ferito quando comincia o smette di essere sorretto da Ulisse.
+func set_carrying(on: bool, helped := false) -> void:
+	if not on:
+		speed_multiplier = 1.0
+	else:
+		speed_multiplier = carry_speed_helped if helped else carry_speed_alone
 
 
 ## Ulisse non sparisce: nel prototipo riappare all'accampamento con la vita piena.
@@ -114,7 +128,7 @@ func _free_move(delta: float) -> void:
 	var walking := dir != Vector3.ZERO and grid != null
 	if walking:
 		var start := Vector2(global_position.x, global_position.z)
-		var wish := start + Vector2(dir.x, dir.z) * move_speed * delta
+		var wish := start + Vector2(dir.x, dir.z) * move_speed * speed_multiplier * delta
 		var result := grid.resolve_circle(wish, body_radius, cell)
 		var end: Vector2 = result["pos"]
 		var travelled := (end - start).length()
@@ -133,7 +147,7 @@ func _free_move(delta: float) -> void:
 			global_position = Vector3(end.x, lerpf(global_position.y, y, minf(1.0, 14.0 * delta)), end.y)
 			_sync_cell()
 		_face_yaw = atan2(-dir.x, -dir.z)
-		walking = travelled > delta * move_speed * 0.15
+		walking = travelled > delta * move_speed * speed_multiplier * 0.15
 	is_moving = walking
 	if _model:
 		_model.rotation.y = lerp_angle(_model.rotation.y, _face_yaw, minf(1.0, turn_speed * delta))

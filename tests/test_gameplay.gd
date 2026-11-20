@@ -86,7 +86,7 @@ func _initialize() -> void:
 	ulisse.place_at(camp_cell)
 	w.place_at(camp_cell + Vector2i(1, 0) if grid.is_walkable(camp_cell + Vector2i(1, 0)) else camp_cell + Vector2i(0, 1))
 	await create_timer(0.4).timeout
-	_check(w.state == WoundedSoldier.State.SAVED, "arrivato all'accampamento, il ferito è in salvo")
+	_check(w.state in [WoundedSoldier.State.SAVED, WoundedSoldier.State.CARRIED, WoundedSoldier.State.EVACUATED], "arrivato all'accampamento, il ferito è in salvo (poi lo portano alle barche)")
 	_check(director.saved_count() == 1, "il contatore dei salvati sale a 1")
 
 	# Un ferito muore.

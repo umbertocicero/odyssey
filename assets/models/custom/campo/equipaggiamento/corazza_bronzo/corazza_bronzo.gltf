@@ -1,0 +1,270 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "corazza_bronzo"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "M_bronze",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "M_hide",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "corazza_bronzo",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_n",
+   "uri": "textures/bronze_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_c",
+   "uri": "textures/bronze_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_r",
+   "uri": "textures/bronze_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hide_n",
+   "uri": "textures/hide_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hide_c",
+   "uri": "textures/hide_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hide_r",
+   "uri": "textures/hide_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 1660,
+   "max": [
+    0.21199999749660492,
+    0.7428313493728638,
+    0.1655939668416977
+   ],
+   "min": [
+    -0.21199999749660492,
+    0.1635873168706894,
+    -0.1680799275636673
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 1660,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 1660,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 5088,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 432,
+   "max": [
+    0.20849664509296417,
+    0.7305351495742798,
+    0.1680799275636673
+   ],
+   "min": [
+    -0.20849664509296417,
+    0,
+    -0.1676119714975357
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 432,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 432,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 648,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 19920,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 19920,
+   "byteOffset": 19920,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13280,
+   "byteOffset": 39840,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 10176,
+   "byteOffset": 53120,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 5184,
+   "byteOffset": 63296,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 5184,
+   "byteOffset": 68480,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3456,
+   "byteOffset": 73664,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 1296,
+   "byteOffset": 77120,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 78416,
+   "uri": "corazza_bronzo.bin"
+  }
+ ]
+}

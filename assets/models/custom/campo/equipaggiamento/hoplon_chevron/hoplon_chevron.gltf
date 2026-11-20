@@ -1,0 +1,490 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "hoplon_chevron"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "M_bronze",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "M_hide",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "M_hoplon_chevron",
+   "normalTexture": {
+    "index": 6
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 7
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 8
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "M_rope",
+   "normalTexture": {
+    "index": 9
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 10
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 11
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "hoplon_chevron",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 8,
+      "NORMAL": 9,
+      "TEXCOORD_0": 10
+     },
+     "indices": 11,
+     "material": 2
+    },
+    {
+     "attributes": {
+      "POSITION": 12,
+      "NORMAL": 13,
+      "TEXCOORD_0": 14
+     },
+     "indices": 15,
+     "material": 3
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  },
+  {
+   "sampler": 0,
+   "source": 6
+  },
+  {
+   "sampler": 0,
+   "source": 7
+  },
+  {
+   "sampler": 0,
+   "source": 8
+  },
+  {
+   "sampler": 0,
+   "source": 9
+  },
+  {
+   "sampler": 0,
+   "source": 10
+  },
+  {
+   "sampler": 0,
+   "source": 11
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_n",
+   "uri": "textures/bronze_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_c",
+   "uri": "textures/bronze_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_r",
+   "uri": "textures/bronze_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hide_n",
+   "uri": "textures/hide_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hide_c",
+   "uri": "textures/hide_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hide_r",
+   "uri": "textures/hide_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hoplon_chevron_n",
+   "uri": "textures/hoplon_chevron_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hoplon_chevron_c",
+   "uri": "textures/hoplon_chevron_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "hoplon_chevron_r",
+   "uri": "textures/hoplon_chevron_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "rope_n",
+   "uri": "textures/rope_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "rope_c",
+   "uri": "textures/rope_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "rope_r",
+   "uri": "textures/rope_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 655,
+   "max": [
+    0.46399998664855957,
+    0.9279999732971191,
+    0.09073188900947571
+   ],
+   "min": [
+    -0.46399998664855957,
+    0,
+    -0.027268115431070328
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 655,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 655,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 2100,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 1145,
+   "max": [
+    0.44999998807907104,
+    0.9139999747276306,
+    0.026049602776765823
+   ],
+   "min": [
+    -0.44999998807907104,
+    0.013999998569488525,
+    -0.06273188441991806
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 1145,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 1145,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 6708,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 1145,
+   "max": [
+    0.44999998807907104,
+    0.9139999747276306,
+    -0.0019503957591950893
+   ],
+   "min": [
+    -0.44999998807907104,
+    0.013999998569488525,
+    -0.09073188900947571
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5126,
+   "count": 1145,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 10,
+   "componentType": 5126,
+   "count": 1145,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 11,
+   "componentType": 5123,
+   "count": 6708,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 12,
+   "componentType": 5126,
+   "count": 22,
+   "max": [
+    0.28141269087791443,
+    0.49399998784065247,
+    0.04544008895754814
+   ],
+   "min": [
+    0.2585873305797577,
+    0.4339999854564667,
+    0.023731883615255356
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 13,
+   "componentType": 5126,
+   "count": 22,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 14,
+   "componentType": 5126,
+   "count": 22,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 15,
+   "componentType": 5123,
+   "count": 48,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 7860,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 7860,
+   "byteOffset": 7860,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 5240,
+   "byteOffset": 15720,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 4200,
+   "byteOffset": 20960,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13740,
+   "byteOffset": 25160,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13740,
+   "byteOffset": 38900,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9160,
+   "byteOffset": 52640,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13416,
+   "byteOffset": 61800,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13740,
+   "byteOffset": 75216,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13740,
+   "byteOffset": 88956,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9160,
+   "byteOffset": 102696,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 13416,
+   "byteOffset": 111856,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 264,
+   "byteOffset": 125272,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 264,
+   "byteOffset": 125536,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 176,
+   "byteOffset": 125800,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 96,
+   "byteOffset": 125976,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 126072,
+   "uri": "hoplon_chevron.bin"
+  }
+ ]
+}

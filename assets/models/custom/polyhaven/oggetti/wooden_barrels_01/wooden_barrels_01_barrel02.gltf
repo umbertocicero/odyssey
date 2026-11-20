@@ -31,7 +31,8 @@
     },
     "metallicRoughnessTexture": {
      "index": 2
-    }
+    },
+    "metallicFactor": 0.0
    }
   }
  ],

@@ -10,6 +10,13 @@ extends Node3D
 	set(value):
 		model = value
 		_rebuild()
+## Modello più leggero usato a qualità bassa e media (web, mobile) al posto di `model`
+## (per esempio un albero da 9.000 triangoli invece di uno da 40.000). Vuoto = sempre `model`.
+@export var low_quality_model: PackedScene
+## Percorso del modello caricato solo se serve (alta qualità, o sempre se non c'è `low_quality_model`,
+## e solo da `min_quality` in su): le texture di ciò che non si vede non finiscono in VRAM.
+@export_file("*.gltf", "*.glb", "*.tscn") var lazy_model_path := ""
+
 ## Nome di un singolo pezzo dentro un modello "pack" (vuoto = tutto il modello).
 @export var piece := "":
 	set(value):
@@ -49,6 +56,25 @@ extends Node3D
 	set(value):
 		cast_shadows = value
 		_rebuild()
+## Moltiplicatore dell'albedo del fogliame (materiali alpha-cutout) per i modelli Poly Haven,
+## che alla fonte sono molto scuri (vedi FoliageTint). Bianco = nessuna correzione.
+## Tinta moltiplicata sull'albedo di tutti i materiali (smorza i colori vivaci). Bianco = nessuna.
+@export var tint := Color(1, 1, 1):
+	set(value):
+		tint = value
+		_rebuild()
+## Quanto togliere ai colori vivaci dei materiali senza texture (0 = niente, 1 = grigio) prima della tinta.
+@export_range(0.0, 1.0) var desaturate := 0.0:
+	set(value):
+		desaturate = value
+		_rebuild()
+## Qualità minima per mostrare il modello (0 = sempre, 1 = media e alta, 2 = solo alta): i decori
+## lontani (cavalli, carri) spariscono a bassa qualità. Le collisioni non cambiano.
+@export_range(0, 2) var min_quality := 0
+@export var foliage_gain := Color(1, 1, 1):
+	set(value):
+		foliage_gain = value
+		_rebuild()
 
 var _visual: Node3D
 var _height := -1.0
@@ -62,6 +88,7 @@ func _enter_tree() -> void:
 
 
 func _ready() -> void:
+	_load_lazy()
 	_rebuild()
 	set_process(not Engine.is_editor_hint() and is_tree())
 
@@ -110,9 +137,9 @@ func take_visual() -> Array[Dictionary]:
 
 ## Una chiave uguale per oggetti con lo stesso aspetto (stesso modello, pezzo, misura): solo quelli si uniscono.
 func visual_key() -> String:
-	if model == null or is_tree():
+	if _active_model() == null or is_tree():
 		return ""
-	return "%s|%s|%s|%d|%s|%s" % [model.resource_path, piece, model_rotation_degrees, fit_axis, fit_size, cast_shadows]
+	return "%s|%s|%s|%d|%s|%s|%s|%s" % [_active_model().resource_path, piece, model_rotation_degrees, fit_axis, fit_size, cast_shadows, tint, desaturate]
 
 
 ## True se i personaggi possono scavalcare questo oggetto con un balzo.
@@ -122,6 +149,21 @@ func is_vaultable() -> bool:
 	if vault_mode == 2:
 		return false
 	return visual_height() <= vault_max_size
+
+
+## Il modello da mostrare: quello leggero a qualità bassa e media, se c'è.
+func _load_lazy() -> void:
+	if model != null or lazy_model_path == "" or int(Quality.current()) < min_quality:
+		return
+	if low_quality_model != null and Quality.current() != Quality.Level.HIGH:
+		return
+	model = load(lazy_model_path) as PackedScene
+
+
+func _active_model() -> PackedScene:
+	if low_quality_model != null and Quality.current() != Quality.Level.HIGH:
+		return low_quality_model
+	return model
 
 
 ## Altezza reale del modello dopo l'adattamento (non la misura di fit_size,
@@ -165,10 +207,10 @@ func _compute_box() -> void:
 	if _box_ready:
 		return
 	_box_ready = true
-	if model == null:
+	if _active_model() == null:
 		_height = 0.0
 		return
-	var meshes := ModelFit.extract_meshes(model, piece)
+	var meshes := ModelFit.extract_meshes(_active_model(), piece)
 	var fit := ModelFit.fit_transform(meshes, model_rotation_degrees, fit_axis, fit_size)
 	var box := AABB()
 	var first := true
@@ -204,9 +246,9 @@ func _rebuild() -> void:
 	if _visual:
 		_visual.queue_free()
 		_visual = null
-	if model == null:
+	if _active_model() == null or int(Quality.current()) < min_quality:
 		return
-	var meshes := ModelFit.extract_meshes(model, piece)
+	var meshes := ModelFit.extract_meshes(_active_model(), piece)
 	var fit := ModelFit.fit_transform(meshes, model_rotation_degrees, fit_axis, fit_size)
 	# Nodi generati: senza owner, quindi non vengono salvati nella scena.
 	_visual = Node3D.new()
@@ -214,7 +256,7 @@ func _rebuild() -> void:
 	add_child(_visual)
 	for entry in meshes:
 		var mi := MeshInstance3D.new()
-		mi.mesh = entry[0]
+		mi.mesh = FoliageTint.apply(entry[0], foliage_gain, tint, desaturate)
 		mi.transform = fit * (entry[1] as Transform3D)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if cast_shadows else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_visual.add_child(mi)

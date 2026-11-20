@@ -1,5 +1,7 @@
 [gd_scene load_steps=8 format=3]
 
+[ext_resource type="PackedScene" path="res://assets/models/custom/personaggi/ufficiale_troiano.glb" id="9_glb"]
+[ext_resource type="Script" path="res://scripts/units/character_model.gd" id="9_model"]
 [ext_resource type="Script" path="res://scripts/units/grid_unit.gd" id="1_script"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
@@ -38,15 +40,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 shape = SubResource("CapsuleShape3D_body")
 
 [node name="Model" type="Node3D" parent="."]
-
-[node name="Body" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
-mesh = SubResource("CapsuleMesh_body")
-
-[node name="Helmet" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.38, 0)
-mesh = SubResource("SphereMesh_helmet")
-
-[node name="FacingMarker" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, -0.32)
-mesh = SubResource("BoxMesh_facing")
+script = ExtResource("9_model")
+model_scene = ExtResource("9_glb")

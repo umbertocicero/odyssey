@@ -20,10 +20,14 @@ func _initialize() -> void:
 	var sun := level.get_node("Sole") as DirectionalLight3D
 	_check(sun.shadow_opacity < 0.8, "ombre del sole più leggere (opacità %.2f)" % sun.shadow_opacity)
 	var dir := -sun.global_basis.z
-	_check(rad_to_deg(asin(-dir.y)) > 30.0, "sole più alto, ombre più corte (%.0f°)" % rad_to_deg(asin(-dir.y)))
+	_check(rad_to_deg(asin(-dir.y)) > 15.0 and rad_to_deg(asin(-dir.y)) < 30.0, "sole basso di tramonto, ombre lunghe e morbide (%.0f°)" % rad_to_deg(asin(-dir.y)))
 	var we := level.get_node("WorldEnvironment") as WorldEnvironment
-	var sky := we.environment.sky.sky_material as ProceduralSkyMaterial
-	_check(sky.sky_top_color.b > sky.sky_top_color.r, "cielo azzurro in alto: ambiente freddo nelle ombre")
+	var sky_material := we.environment.sky.sky_material
+	if sky_material is ShaderMaterial:
+		_check((sky_material as ShaderMaterial).get_shader_parameter(&"sun_dir") is Vector3, "cielo di tramonto (sky_dusk): il sole sta dove sta la luce")
+	else:
+		var sky := sky_material as ProceduralSkyMaterial
+		_check(sky.sky_top_color.b > sky.sky_top_color.r, "cielo azzurro in alto: ambiente freddo nelle ombre")
 	_check(atmo.fire_lights.size() > 0, "luci del fuoco registrate (%d)" % atmo.fire_lights.size())
 	var l := atmo.fire_lights[0]
 	var e0 := l.light_energy
