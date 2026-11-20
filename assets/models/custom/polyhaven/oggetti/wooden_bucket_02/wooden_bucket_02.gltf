@@ -1,0 +1,159 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "wooden_bucket_02__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_wooden_bucket_02",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.001",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_wooden_bucket_02_normal",
+   "uri": "textures/PH_wooden_bucket_02_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "wooden_bucket_02_diff_2k",
+   "uri": "textures/wooden_bucket_02_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_wooden_bucket_02_metal-PH_wooden_bucket_02_rough",
+   "uri": "textures/PH_wooden_bucket_02_metal-PH_wooden_bucket_02_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 2772,
+   "max": [
+    0.3074549436569214,
+    0.3501600921154022,
+    0.30773937702178955
+   ],
+   "min": [
+    -0.3074549436569214,
+    0,
+    -0.30773937702178955
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 2772,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 2772,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 9000,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 33264,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 33264,
+   "byteOffset": 33264,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 22176,
+   "byteOffset": 66528,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 18000,
+   "byteOffset": 88704,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 106704,
+   "uri": "wooden_bucket_02.bin"
+  }
+ ]
+}

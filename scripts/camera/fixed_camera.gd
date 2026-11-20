@@ -55,7 +55,7 @@ func _process(delta: float) -> void:
 
 
 func _clamp_target(p: Vector3) -> Vector3:
-	var t := Vector3(p.x, target.y, p.z)
+	var t := Vector3(p.x, p.y, p.z)
 	if follow_bounds.has_area():
 		t.x = clampf(t.x, follow_bounds.position.x, follow_bounds.end.x)
 		t.z = clampf(t.z, follow_bounds.position.y, follow_bounds.end.y)

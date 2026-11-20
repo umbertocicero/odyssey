@@ -1,0 +1,159 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "wooden_barrels_01_barrel01__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_wooden_barrels_01_barrel01",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.001",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "wooden_barrels_01_barrel01_nor_gl_2k",
+   "uri": "textures/wooden_barrels_01_barrel01_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "wooden_barrels_01_barrel01_diff_2k",
+   "uri": "textures/wooden_barrels_01_barrel01_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_wooden_barrels_01_barrel01_metal-PH_wooden_barrels_01_barrel01_rough",
+   "uri": "textures/PH_wooden_barrels_01_barrel01_metal-PH_wooden_barrels_01_barrel01_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 3693,
+   "max": [
+    0.3705408573150635,
+    0.9185461401939392,
+    0.37063390016555786
+   ],
+   "min": [
+    -0.3705408573150635,
+    0,
+    -0.37063390016555786
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 3693,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 3693,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 10500,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 44316,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 44316,
+   "byteOffset": 44316,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 29544,
+   "byteOffset": 88632,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 21000,
+   "byteOffset": 118176,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 139176,
+   "uri": "wooden_barrels_01_barrel01.bin"
+  }
+ ]
+}

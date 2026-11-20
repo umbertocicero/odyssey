@@ -1,0 +1,337 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "fir_sapling_medium_b__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_fir_sapling_medium_branches",
+   "normalTexture": {
+    "index": 0,
+    "texCoord": -1
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1,
+     "texCoord": -1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2,
+     "texCoord": -1
+    }
+   }
+  },
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "name": "PH_fir_sapling_medium_twigs",
+   "normalTexture": {
+    "index": 3,
+    "texCoord": -1
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4,
+     "texCoord": -1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5,
+     "texCoord": -1
+    }
+   },
+   "alphaCutoff": 0.5
+  },
+  {
+   "doubleSided": false,
+   "name": "PH_fir_sapling_medium_branches_dead",
+   "normalTexture": {
+    "index": 6,
+    "texCoord": -1
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 7,
+     "texCoord": -1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 8,
+     "texCoord": -1
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "NurbsPath.011",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1
+     },
+     "indices": 2,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 3,
+      "NORMAL": 4
+     },
+     "indices": 5,
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 6,
+      "NORMAL": 7
+     },
+     "indices": 8,
+     "material": 2
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  },
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "fir_sapling_medium_branches_nor_gl_2k",
+   "uri": "textures/fir_sapling_medium_branches_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "fir_sapling_medium_branches_diff_2k",
+   "uri": "textures/fir_sapling_medium_branches_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "fir_sapling_medium_branches_rough_2k",
+   "uri": "textures/fir_sapling_medium_branches_rough_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "fir_sapling_medium_twigs_nor_gl_2k",
+   "uri": "textures/fir_sapling_medium_twigs_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "PH_fir_sapling_medium_twigs_color-PH_fir_sapling_medium_twigs_alpha",
+   "uri": "textures/PH_fir_sapling_medium_twigs_color-PH_fir_sapling_medium_twigs_alpha.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "fir_sapling_medium_twigs_rough_2k",
+   "uri": "textures/fir_sapling_medium_twigs_rough_2k.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 2106,
+   "max": [
+    1.1783591508865356,
+    7.108044624328613,
+    1.4230164289474487
+   ],
+   "min": [
+    -1.565649151802063,
+    0.12158766388893127,
+    -1.5447827577590942
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 2106,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5123,
+   "count": 11130,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 5049,
+   "max": [
+    2.473160743713379,
+    7.927545070648193,
+    2.7170605659484863
+   ],
+   "min": [
+    -2.473160743713379,
+    0.4516139030456543,
+    -2.7170605659484863
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 5049,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5123,
+   "count": 9723,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 982,
+   "max": [
+    0.5375823974609375,
+    1.2257795333862305,
+    0.6593945026397705
+   ],
+   "min": [
+    -0.7636153697967529,
+    0,
+    -0.7450625896453857
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5126,
+   "count": 982,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5123,
+   "count": 5430,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 25272,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 25272,
+   "byteOffset": 25272,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 22260,
+   "byteOffset": 50544,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 60588,
+   "byteOffset": 72804,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 60588,
+   "byteOffset": 133392,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 19446,
+   "byteOffset": 193980,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 11784,
+   "byteOffset": 213428,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 11784,
+   "byteOffset": 225212,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 10860,
+   "byteOffset": 236996,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 247856,
+   "uri": "fir_sapling_medium_b.bin"
+  }
+ ]
+}

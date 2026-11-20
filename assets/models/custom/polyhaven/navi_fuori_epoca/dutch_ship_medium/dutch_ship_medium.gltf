@@ -1,0 +1,380 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "dutch_ship_medium",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "dutch_ship_medium__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_dutch_ship_medium_hull",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "PH_dutch_ship_medium_rigging",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  },
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "name": "PH_dutch_ship_medium_sails",
+   "normalTexture": {
+    "index": 6
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 7
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 8
+    }
+   },
+   "alphaCutoff": 0.5
+  }
+ ],
+ "meshes": [
+  {
+   "name": "x-Boats-Dutch-medium-baseB-joined.001",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 8,
+      "NORMAL": 9,
+      "TEXCOORD_0": 10
+     },
+     "indices": 11,
+     "material": 2
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  },
+  {
+   "sampler": 0,
+   "source": 6
+  },
+  {
+   "sampler": 0,
+   "source": 7
+  },
+  {
+   "sampler": 0,
+   "source": 8
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "dutch_ship_medium_hull_nor_gl_2k",
+   "uri": "textures/dutch_ship_medium_hull_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "dutch_ship_medium_hull_diff_2k",
+   "uri": "textures/dutch_ship_medium_hull_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_dutch_ship_medium_hull_metal-PH_dutch_ship_medium_hull_rough",
+   "uri": "textures/PH_dutch_ship_medium_hull_metal-PH_dutch_ship_medium_hull_rough.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "dutch_ship_medium_rigging_nor_gl_2k",
+   "uri": "textures/dutch_ship_medium_rigging_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "dutch_ship_medium_rigging_diff_2k",
+   "uri": "textures/dutch_ship_medium_rigging_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_dutch_ship_medium_rigging_metal-PH_dutch_ship_medium_rigging_rough",
+   "uri": "textures/PH_dutch_ship_medium_rigging_metal-PH_dutch_ship_medium_rigging_rough.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "dutch_ship_medium_sails_nor_gl_2k",
+   "uri": "textures/dutch_ship_medium_sails_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "PH_dutch_ship_medium_sails_color-PH_dutch_ship_medium_sails_alpha",
+   "uri": "textures/PH_dutch_ship_medium_sails_color-PH_dutch_ship_medium_sails_alpha.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "dutch_ship_medium_sails_rough_2k",
+   "uri": "textures/dutch_ship_medium_sails_rough_2k.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 7525,
+   "max": [
+    2.513894557952881,
+    7.971064567565918,
+    9.929413795471191
+   ],
+   "min": [
+    -2.6800708770751953,
+    0,
+    -12.032028198242188
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 7525,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 7525,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 20328,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 18758,
+   "max": [
+    3.404630184173584,
+    24.654659271240234,
+    12.032028198242188
+   ],
+   "min": [
+    -3.404630184173584,
+    3.2020225524902344,
+    -11.691794395446777
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 18758,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 18758,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 40518,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 943,
+   "max": [
+    3.166238784790039,
+    18.87141227722168,
+    6.669682502746582
+   ],
+   "min": [
+    -2.881788730621338,
+    6.730724334716797,
+    -3.2354564666748047
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5126,
+   "count": 943,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 10,
+   "componentType": 5126,
+   "count": 943,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 11,
+   "componentType": 5123,
+   "count": 4905,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 90300,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 90300,
+   "byteOffset": 90300,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 60200,
+   "byteOffset": 180600,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 40656,
+   "byteOffset": 240800,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 225096,
+   "byteOffset": 281456,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 225096,
+   "byteOffset": 506552,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 150064,
+   "byteOffset": 731648,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 81036,
+   "byteOffset": 881712,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 11316,
+   "byteOffset": 962748,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 11316,
+   "byteOffset": 974064,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 7544,
+   "byteOffset": 985380,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9810,
+   "byteOffset": 992924,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 1002736,
+   "uri": "dutch_ship_medium.bin"
+  }
+ ]
+}

@@ -1,0 +1,296 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "modular_fort_01_wall_thick_straight_02__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_modular_fort_01_wall_1",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "PH_modular_fort_01_trim_1",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.024",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2,
+      "TEXCOORD_1": 3
+     },
+     "indices": 4,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 5,
+      "NORMAL": 6,
+      "TEXCOORD_0": 7,
+      "TEXCOORD_1": 8
+     },
+     "indices": 9,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_fort_01_wall_nor_gl_2k",
+   "uri": "textures/modular_fort_01_wall_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_fort_01_wall_diff_2k",
+   "uri": "textures/modular_fort_01_wall_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_fort_01_wall_rough_2k",
+   "uri": "textures/modular_fort_01_wall_rough_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_fort_01_trim_nor_gl_2k",
+   "uri": "textures/modular_fort_01_trim_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_fort_01_trim_diff_2k",
+   "uri": "textures/modular_fort_01_trim_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_fort_01_trim_rough_2k",
+   "uri": "textures/modular_fort_01_trim_rough_2k.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 426,
+   "max": [
+    2.058218240737915,
+    7.782875061035156,
+    7.281290531158447
+   ],
+   "min": [
+    -2.113875389099121,
+    0,
+    -7.281393527984619
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 426,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 426,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5126,
+   "count": 426,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5123,
+   "count": 1614,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 2884,
+   "max": [
+    2.113875150680542,
+    8.521389961242676,
+    7.281393527984619
+   ],
+   "min": [
+    -1.873368501663208,
+    2.01849365234375,
+    -7.281348705291748
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 2884,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5126,
+   "count": 2884,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 2884,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5123,
+   "count": 10386,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 5112,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 5112,
+   "byteOffset": 5112,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3408,
+   "byteOffset": 10224,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3408,
+   "byteOffset": 13632,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3228,
+   "byteOffset": 17040,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 34608,
+   "byteOffset": 20268,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 34608,
+   "byteOffset": 54876,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 23072,
+   "byteOffset": 89484,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 23072,
+   "byteOffset": 112556,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 20772,
+   "byteOffset": 135628,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 156400,
+   "uri": "modular_fort_01_wall_thick_straight_02.bin"
+  }
+ ]
+}

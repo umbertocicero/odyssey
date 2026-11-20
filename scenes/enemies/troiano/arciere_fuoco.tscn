@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/wall_shooter.gd" id="1_shooter"]
+[ext_resource type="Resource" path="res://data/combat/freccia_infuocata.tres" id="2_profile"]
+
+[sub_resource type="StandardMaterial3D" id="mat_body"]
+albedo_color = Color(0.70, 0.18, 0.15, 1)
+
+[sub_resource type="CapsuleMesh" id="mesh_body"]
+material = SubResource("mat_body")
+radius = 0.25
+height = 1.2
+
+[sub_resource type="StandardMaterial3D" id="mat_bow"]
+albedo_color = Color(1, 0.5, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="mesh_bow"]
+material = SubResource("mat_bow")
+size = Vector3(0.06, 0.9, 0.08)
+
+[node name="ArciereFuoco" type="Node3D"]
+script = ExtResource("1_shooter")
+profile = ExtResource("2_profile")
+muzzle_height = 1.0
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("mesh_body")
+
+[node name="Arco" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.3)
+mesh = SubResource("mesh_bow")

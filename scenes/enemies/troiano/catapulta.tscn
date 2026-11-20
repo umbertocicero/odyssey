@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/wall_shooter.gd" id="1_shooter"]
+[ext_resource type="Resource" path="res://data/combat/catapulta.tres" id="2_profile"]
+
+[sub_resource type="StandardMaterial3D" id="mat_wood"]
+albedo_color = Color(0.42, 0.29, 0.16, 1)
+
+[sub_resource type="BoxMesh" id="mesh_base"]
+material = SubResource("mat_wood")
+size = Vector3(1.6, 0.5, 2.0)
+
+[sub_resource type="BoxMesh" id="mesh_beam"]
+material = SubResource("mat_wood")
+size = Vector3(0.15, 0.15, 1.8)
+
+[sub_resource type="BoxMesh" id="mesh_arms"]
+material = SubResource("mat_wood")
+size = Vector3(1.6, 0.1, 0.12)
+
+[node name="Catapulta" type="Node3D"]
+script = ExtResource("1_shooter")
+profile = ExtResource("2_profile")
+muzzle_height = 2.0
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="Base" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("mesh_base")
+
+[node name="Braccio" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 0.5, -0.866, 0, 0.866, 0.5, 0, 1.2, -0.2)
+mesh = SubResource("mesh_beam")
+
+[node name="Traverso" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("mesh_arms")

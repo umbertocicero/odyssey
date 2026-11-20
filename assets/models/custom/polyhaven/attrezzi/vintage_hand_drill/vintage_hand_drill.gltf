@@ -1,0 +1,159 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "vintage_hand_drill__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_vintage_hand_drill",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Cylinder.002",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_vintage_hand_drill_normal",
+   "uri": "textures/PH_vintage_hand_drill_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "vintage_hand_drill_diff_2k",
+   "uri": "textures/vintage_hand_drill_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_vintage_hand_drill_metal-PH_vintage_hand_drill_rough",
+   "uri": "textures/PH_vintage_hand_drill_metal-PH_vintage_hand_drill_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 4691,
+   "max": [
+    0.06194335222244263,
+    0.485684335231781,
+    0.062550388276577
+   ],
+   "min": [
+    -0.06194335222244263,
+    0,
+    -0.062550388276577
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 4691,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 4691,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 13500,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 56292,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 56292,
+   "byteOffset": 56292,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 37528,
+   "byteOffset": 112584,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 27000,
+   "byteOffset": 150112,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 177112,
+   "uri": "vintage_hand_drill.bin"
+  }
+ ]
+}

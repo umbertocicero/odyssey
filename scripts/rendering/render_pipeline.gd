@@ -22,6 +22,18 @@ extends Control
 		post_process_material = value
 		_apply()
 
+## Sfocatura da miniatura ai bordi dello schermo (tilt-shift). Spegnerla
+## toglie 8 letture di texture per pixel: utile sui telefoni più lenti.
+@export var depth_of_field := true:
+	set(value):
+		depth_of_field = value
+		_apply()
+## Forza della sfocatura quando è attiva.
+@export_range(0.0, 8.0) var depth_of_field_amount := 3.0:
+	set(value):
+		depth_of_field_amount = value
+		_apply()
+
 @onready var game_view: SubViewportContainer = $GameView
 @onready var game_viewport: SubViewport = $GameView/GameViewport
 
@@ -35,3 +47,6 @@ func _apply() -> void:
 		return
 	game_view.stretch_shrink = pixel_size
 	game_view.material = post_process_material
+	if post_process_material is ShaderMaterial:
+		var amount := depth_of_field_amount if depth_of_field else 0.0
+		(post_process_material as ShaderMaterial).set_shader_parameter(&"blur_amount", amount)

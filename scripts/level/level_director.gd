@@ -1,0 +1,233 @@
+class_name LevelDirector
+extends Node
+## Regia del livello 1: sopravvivere fino al segnale di ritirata mentre
+## ondate di troiani sempre più forti avanzano e si salvano i compagni feriti.
+## Il livello finisce con una ritirata (sconfitta narrativa) che porta al livello 2.
+
+signal wave_started(number: int, trojan_count: int)
+signal wounded_changed(saved: int, lost: int, total: int)
+signal time_changed(seconds_left: float)
+signal level_finished(summary: Dictionary)
+
+enum Phase { IDLE, RUNNING, ENDED }
+
+@export var rules: LevelRules
+## Scena del livello 2 a cui si passa dopo la schermata finale.
+@export_file("*.tscn") var next_level_path := "res://scenes/levels/level2/level2_placeholder.tscn"
+## Avvia da solo il livello all'ingresso nella scena.
+@export var auto_start := true
+
+var phase: Phase = Phase.IDLE
+var elapsed := 0.0
+var wave := 0
+var kills := 0
+var summary := {}
+var wounded: Array[WoundedSoldier] = []
+var hud: LevelHud
+
+var _grid: DioramaGrid
+var _player: GridUnit
+var _units_root: Node
+var _next_wave_at := 0.0
+var _saved := 0
+var _lost := 0
+
+
+func _ready() -> void:
+	if rules == null:
+		rules = LevelRules.new()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	_grid = get_tree().get_first_node_in_group(&"diorama_grid") as DioramaGrid
+	_player = get_tree().get_first_node_in_group(&"player") as GridUnit
+	if _grid == null or _player == null:
+		push_warning("LevelDirector: griglia o Ulisse mancanti.")
+		return
+	_units_root = _player.get_parent()
+	var ui := get_parent().get_node_or_null(^"UI")
+	if ui:
+		hud = LevelHud.new()
+		hud.name = "LevelHud"
+		ui.add_child(hud)
+		hud.continue_pressed.connect(_on_continue)
+	if auto_start:
+		start()
+
+
+func start() -> void:
+	if phase != Phase.IDLE:
+		return
+	phase = Phase.RUNNING
+	elapsed = 0.0
+	wave = 0
+	kills = 0
+	_saved = 0
+	_lost = 0
+	_next_wave_at = rules.first_wave_delay
+	_spawn_wounded()
+	_apply_defence_scaling(1)
+	if hud:
+		hud.show_banner("Hold the line until the retreat signal!", 3.5)
+	wounded_changed.emit(_saved, _lost, wounded.size())
+	time_changed.emit(rules.duration)
+
+
+func _process(delta: float) -> void:
+	if phase != Phase.RUNNING:
+		return
+	elapsed += delta
+	var left := maxf(rules.duration - elapsed, 0.0)
+	time_changed.emit(left)
+	if hud:
+		hud.set_time(left, wave)
+	if elapsed >= _next_wave_at:
+		_start_wave()
+		_next_wave_at += rules.wave_interval
+	if left <= 0.0:
+		finish()
+
+
+func alive_trojans() -> int:
+	var n := 0
+	for node in get_tree().get_nodes_in_group(&"troiani"):
+		var u := node as TrojanSoldier
+		if u and u.health > 0:
+			n += 1
+	return n
+
+
+func saved_count() -> int:
+	return _saved
+
+
+func lost_count() -> int:
+	return _lost
+
+
+## Fa partire subito l'ondata successiva (usato anche dai test).
+func _start_wave() -> void:
+	wave += 1
+	var count := rules.trojans_in_wave(wave)
+	count = mini(count, maxi(rules.max_alive_trojans - alive_trojans(), 0))
+	_apply_defence_scaling(wave)
+	var spawned := 0
+	for i in count:
+		var p := rules.spawn_points
+		if p.is_empty():
+			break
+		if _spawn_trojan(p[(i + wave) % p.size()]):
+			spawned += 1
+	wave_started.emit(wave, spawned)
+	if hud:
+		hud.show_banner("Wave %d: %d Trojans advance!" % [wave, spawned], 2.5)
+
+
+func _spawn_trojan(world_xz: Vector2) -> bool:
+	var cell := _free_cell_near(_grid.world_to_cell(Vector3(world_xz.x, 0.0, world_xz.y)))
+	if cell == Vector2i(-1, -1):
+		return false
+	var t := UnitFactory.make(TrojanSoldier, UnitFactory.MODEL_TROIANO, GridUnit.Team.TROIANI,
+		rules.health_in_wave(wave), "TrojanWave%d_%d" % [wave, get_tree().get_node_count_in_group(&"troiani")]) as TrojanSoldier
+	t.attack_damage = rules.damage_in_wave(wave)
+	t.attack_interval = rules.trojan_attack_interval
+	t.step_duration = rules.step_in_wave(wave)
+	t.show_health_bar = true
+	t.position = _grid.cell_to_world(cell)
+	_units_root.add_child(t)
+	t.died.connect(_on_trojan_died)
+	return true
+
+
+func _spawn_wounded() -> void:
+	var p := rules.wounded_points
+	var n := mini(rules.wounded_count, p.size())
+	for i in n:
+		var cell := _free_cell_near(_grid.world_to_cell(Vector3(p[i].x, 0.0, p[i].y)))
+		if cell == Vector2i(-1, -1):
+			continue
+		var w := UnitFactory.make(WoundedSoldier, UnitFactory.MODEL_ACHEO, GridUnit.Team.ACHEI,
+			rules.wounded_health, "Wounded%d" % (i + 1)) as WoundedSoldier
+		w.camp_rect = rules.camp_rect
+		w.position = _grid.cell_to_world(cell)
+		_units_root.add_child(w)
+		w.state_changed.connect(_on_wounded_state.bind(w))
+		wounded.append(w)
+
+
+func _free_cell_near(c: Vector2i) -> Vector2i:
+	for r in range(0, 8):
+		for dx in range(-r, r + 1):
+			for dy in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var cc := c + Vector2i(dx, dy)
+				if _grid.is_inside(cc) and _grid.is_walkable(cc) and _grid.get_occupant(cc) == null:
+					return cc
+	return Vector2i(-1, -1)
+
+
+func _apply_defence_scaling(n: int) -> void:
+	for node in get_tree().get_nodes_in_group(&"wall_shooters"):
+		var s := node as WallShooter
+		if s:
+			s.reload_scale = rules.reload_scale_in_wave(n)
+			s.damage_scale = rules.damage_scale_in_wave(n)
+
+
+func _on_trojan_died() -> void:
+	kills += 1
+
+
+func _on_wounded_state(new_state: int, w: WoundedSoldier) -> void:
+	match new_state:
+		WoundedSoldier.State.SAVED:
+			_saved += 1
+			if hud:
+				hud.show_banner("A wounded comrade is safe in camp!", 1.8)
+		WoundedSoldier.State.LOST:
+			_lost += 1
+			if hud:
+				hud.show_banner("A wounded comrade has fallen...", 1.8)
+		WoundedSoldier.State.FOLLOWING:
+			if hud:
+				hud.show_banner("Bring him back to camp!", 1.5)
+	wounded_changed.emit(_saved, _lost, wounded.size())
+	if hud:
+		hud.set_wounded(_saved, _lost, wounded.size())
+
+
+## Termina il livello (fine del tempo) e mostra la schermata finale.
+func finish() -> void:
+	if phase == Phase.ENDED:
+		return
+	phase = Phase.ENDED
+	var total := wounded.size()
+	var ratio := float(_saved) / total if total > 0 else 1.0
+	var orderly := ratio >= rules.good_threshold
+	summary = {
+		"saved": _saved,
+		"lost": _lost,
+		"total": total,
+		"kills": kills,
+		"waves": wave,
+		"score": rules.score_for(_saved, kills, total),
+		"orderly": orderly,
+		"title": "Orderly retreat" if orderly else "Desperate retreat",
+		"text": "The horns sound the retreat. The army pulls back to the ships; Troy still stands. Odysseus is already thinking of another way in..." if orderly \
+			else "The horns sound the retreat, too late for many. The camp mourns its wounded. Odysseus swears Troy will not win by force of arms alone...",
+	}
+	for node in get_tree().get_nodes_in_group(&"wall_shooters"):
+		(node as WallShooter).auto_fire = false
+	for node in get_tree().get_nodes_in_group(&"troiani"):
+		if node.has_method(&"halt"):
+			node.halt()
+	if _player:
+		_player.set_physics_process(false)
+	if hud:
+		hud.show_end(summary)
+	level_finished.emit(summary)
+
+
+func _on_continue() -> void:
+	if next_level_path != "" and ResourceLoader.exists(next_level_path):
+		get_tree().change_scene_to_file(next_level_path)

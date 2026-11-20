@@ -1,0 +1,269 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "modular_wooden_pier_section_01__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_modular_wooden_pier_planks",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "PH_modular_wooden_pier_poles",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.002",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_wooden_pier_planks_nor_gl_2k",
+   "uri": "textures/modular_wooden_pier_planks_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_wooden_pier_planks_diff_2k",
+   "uri": "textures/modular_wooden_pier_planks_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_modular_wooden_pier_planks_metal-PH_modular_wooden_pier_planks_rough",
+   "uri": "textures/PH_modular_wooden_pier_planks_metal-PH_modular_wooden_pier_planks_rough.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_wooden_pier_poles_nor_gl_2k",
+   "uri": "textures/modular_wooden_pier_poles_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_wooden_pier_poles_diff_2k",
+   "uri": "textures/modular_wooden_pier_poles_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "modular_wooden_pier_poles_rough_2k",
+   "uri": "textures/modular_wooden_pier_poles_rough_2k.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 3654,
+   "max": [
+    1.24518883228302,
+    3.557619333267212,
+    1.7176836729049683
+   ],
+   "min": [
+    -1.24518883228302,
+    1.2977415323257446,
+    -1.7588322162628174
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 3654,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 3654,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 12750,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 1868,
+   "max": [
+    1.1867505311965942,
+    4.266027927398682,
+    1.7588320970535278
+   ],
+   "min": [
+    -1.1619840860366821,
+    0,
+    -1.7583924531936646
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 1868,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 1868,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 8250,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 43848,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 43848,
+   "byteOffset": 43848,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 29232,
+   "byteOffset": 87696,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 25500,
+   "byteOffset": 116928,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 22416,
+   "byteOffset": 142428,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 22416,
+   "byteOffset": 164844,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 14944,
+   "byteOffset": 187260,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 16500,
+   "byteOffset": 202204,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 218704,
+   "uri": "modular_wooden_pier_section_01.bin"
+  }
+ ]
+}

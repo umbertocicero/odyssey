@@ -1,13 +1,13 @@
-ODISSEA – Livello 1: L'ultima notte di Troia
+ODISSEA – Livello 1: Verso le mura di Troia
 La scelta comporta una precisazione narrativa: il racconto dell'Odissea inizia dopo la caduta di Troia. Quindi questo livello sarà un prologo ambientato alla fine della guerra, che introduce Ulisse e mostra gli eventi che precedono il suo viaggio di ritorno.
 
 Non vogliamo riscrivere Omero: possiamo aggiungere missioni e combattimenti originali, purché non contraddicano gli eventi principali del poema.
 1. Identità del livello
 Elemento	Definizione
-Nome	L'ultima notte di Troia
+Nome	Verso le mura di Troia
 Protagonista	Ulisse
 Ambientazione	Accampamento acheo, mura e strade di Troia
-Periodo	Ultima notte della guerra
+Periodo	Gli ultimi giorni dell'assedio
 Durata	15–20 minuti
 Visuale	Isometrica 2.5D
 Combattimento	Action RPG in tempo reale
@@ -173,3 +173,38 @@ Salvataggi	JSON o Resource
 1. Cosa sviluppare per primo
 Non realizzerei tutte e cinque le aree contemporaneamente. Costruirei un vertical slice: una porzione giocabile che rappresenti la qualità finale del progetto.
 Primo prototipo: la pianura di Troia
+
+
+9. Gameplay del prototipo: "Resistere fino alla ritirata"
+Questa sezione descrive il primo livello giocabile (la pianura di Troia). Non cambia la storia: il cavallo di Troia resta nei livelli successivi.
+
+Obiettivo
+Sopravvivere fino al segnale di ritirata mentre si salvano i compagni feriti sparsi sulla pianura, portandoli all'accampamento.
+
+Tempo e ondate
+- Il livello dura 180 secondi (parametro `duration`). Un conto alla rovescia in alto mostra il tempo alla ritirata.
+- Dopo 8 secondi parte la prima ondata, poi una nuova ondata ogni 25 secondi.
+- Ogni ondata è più forte della precedente: più soldati troiani (da 2, +1 a ondata, fino a 8), più vita, più danno, passo più veloce.
+- Anche le difese sulle mura si intensificano: a ogni ondata arcieri, baliste e catapulte tirano più spesso (+12%) e fanno più danno (+8%).
+- Non ci sono più di 14 troiani vivi insieme, per tenere leggero il gioco su mobile.
+
+Feriti
+- 6 compagni feriti giacciono a terra in punti diversi della pianura, alcuni vicino alle mura e quindi sotto il fuoco.
+- Quando Ulisse arriva accanto a un ferito, questo si rialza e lo segue. Va scortato fino all'area dell'accampamento: lì è in salvo.
+- Un ferito può essere colpito da frecce e dai soldati troiani. Se muore è perso.
+- I troiani attaccano l'acheo più vicino, quindi anche i feriti a terra: tenere i nemici lontani fa parte del gioco.
+
+Combattimento
+- Ulisse attacca con il tasto sinistro del mouse: colpisce il nemico nella casella davanti (o accanto) con la spada.
+- I soldati achei alleati combattono da soli i troiani che arrivano accanto.
+
+Punteggio
+- 100 punti per ogni ferito salvato, 10 per ogni troiano sconfitto, 200 di bonus se si salvano tutti.
+- Ritirata ordinata se si salva almeno metà dei feriti, altrimenti ritirata disperata.
+
+Finale (sconfitta narrativa)
+Allo scadere del tempo suonano i corni della ritirata: gli Achei non espugnano Troia con le armi. Compare una schermata con esito, feriti salvati, troiani sconfitti, ondate superate e punteggio; il pulsante conduce al livello 2, dove Ulisse cercherà un'altra strada.
+
+Parametri
+Tutti i valori si regolano da `data/level1/rules.tres` (resource LevelRules): durata, ritmo delle ondate, numero e forza dei troiani, intensificazione delle difese, numero e posizione dei feriti, area dell'accampamento e punteggio.
+

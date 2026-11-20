@@ -1,0 +1,162 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "dandelion_01_b__x"
+  }
+ ],
+ "materials": [
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "name": "PH_dandelion_01",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   },
+   "alphaCutoff": 0.5
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.002",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_dandelion_01_normal",
+   "uri": "textures/PH_dandelion_01_normal.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "PH_dandelion_01_color-PH_dandelion_01_alpha",
+   "uri": "textures/PH_dandelion_01_color-PH_dandelion_01_alpha.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_dandelion_01_rough",
+   "uri": "textures/PH_dandelion_01_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 281,
+   "max": [
+    0.09865357726812363,
+    0.11210575699806213,
+    0.10574926435947418
+   ],
+   "min": [
+    -0.09865357726812363,
+    0,
+    -0.10574926435947418
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 281,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 281,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 795,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 3372,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3372,
+   "byteOffset": 3372,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 2248,
+   "byteOffset": 6744,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 1590,
+   "byteOffset": 8992,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 10584,
+   "uri": "dandelion_01_b.bin"
+  }
+ ]
+}

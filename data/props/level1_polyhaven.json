@@ -1,0 +1,363 @@
+{
+ "_comment": "Props Poly Haven del livello 1 (pianura di Troia). Coordinate mondo in metri (X, Z); height = altezza finale; sink = quanto affonda nel terreno. Alberi: id pesanti hanno un 'fallback' per qualit\u00e0 bassa.",
+ "level": "level1",
+ "items": [
+  {
+   "name": "AbeteOvest1",
+   "id": "fir_tree_01_c",
+   "fallback": "fir_sapling_medium_a",
+   "pos": [
+    -17.5,
+    -9.5
+   ],
+   "height": 6.5,
+   "yaw": 20
+  },
+  {
+   "name": "AbeteOvest2",
+   "id": "fir_sapling_medium_b",
+   "pos": [
+    -15.5,
+    -5.0
+   ],
+   "height": 4.6,
+   "yaw": 140
+  },
+  {
+   "name": "AbeteOvest3",
+   "id": "fir_sapling_medium_c",
+   "pos": [
+    -18.5,
+    -1.5
+   ],
+   "height": 4.0,
+   "yaw": 260
+  },
+  {
+   "name": "AlberoEst1",
+   "id": "island_tree_01",
+   "fallback": "fir_sapling_medium_c",
+   "pos": [
+    16.5,
+    -1.5
+   ],
+   "height": 4.2,
+   "yaw": 70
+  },
+  {
+   "name": "AlberoEst2",
+   "id": "island_tree_02",
+   "fallback": "fir_sapling_medium_a",
+   "pos": [
+    13.5,
+    3.5
+   ],
+   "height": 3.8,
+   "yaw": 200
+  },
+  {
+   "name": "RoccioneRilievo1",
+   "id": "namaqualand_boulder_03",
+   "pos": [
+    -8.6,
+    -13.0
+   ],
+   "height": 2.0,
+   "sink": 0.35,
+   "yaw": 15,
+   "footprint": [
+    1,
+    1
+   ]
+  },
+  {
+   "name": "RoccioneRilievo2",
+   "id": "namaqualand_boulder_02",
+   "pos": [
+    -8.5,
+    -10.0
+   ],
+   "height": 1.1,
+   "sink": 0.25,
+   "yaw": 100
+  },
+  {
+   "name": "RoccioneRilievo3",
+   "id": "namaqualand_boulder_03",
+   "pos": [
+    -7.8,
+    -6.5
+   ],
+   "height": 1.7,
+   "sink": 0.3,
+   "yaw": 215
+  },
+  {
+   "name": "MassoPianura1",
+   "id": "boulder_01",
+   "pos": [
+    2.5,
+    -3.5
+   ],
+   "height": 0.9,
+   "sink": 0.12,
+   "yaw": 40
+  },
+  {
+   "name": "MassoPianura2",
+   "id": "boulder_01",
+   "pos": [
+    11.5,
+    6.5
+   ],
+   "height": 0.8,
+   "sink": 0.1,
+   "yaw": 310
+  },
+  {
+   "name": "MassoPianura3",
+   "id": "namaqualand_boulder_02",
+   "pos": [
+    -1.5,
+    5.5
+   ],
+   "height": 0.8,
+   "sink": 0.15,
+   "yaw": 160
+  },
+  {
+   "name": "TroncoCaduto",
+   "id": "dead_tree_trunk_02",
+   "pos": [
+    -4.5,
+    2.5
+   ],
+   "height": 3.2,
+   "fit": "longest",
+   "sink": 0.05,
+   "yaw": 25,
+   "footprint": [
+    3,
+    1
+   ]
+  },
+  {
+   "name": "BotteCampo1",
+   "id": "wooden_barrel_01",
+   "pos": [
+    -16.5,
+    8.5
+   ],
+   "height": 0.9,
+   "yaw": 10
+  },
+  {
+   "name": "BotteCampo2",
+   "id": "wooden_barrel_02",
+   "pos": [
+    -15.4,
+    8.7
+   ],
+   "height": 0.9,
+   "yaw": 80
+  },
+  {
+   "name": "CassaCampo1",
+   "id": "wooden_crate_01",
+   "pos": [
+    -14.5,
+    9.5
+   ],
+   "height": 0.5,
+   "yaw": 15
+  },
+  {
+   "name": "CassaCampo2",
+   "id": "wooden_crate_01",
+   "pos": [
+    -11.6,
+    8.8
+   ],
+   "height": 0.5,
+   "yaw": 60
+  },
+  {
+   "name": "ForzierePorta",
+   "id": "treasure_chest",
+   "fallback": "wooden_crate_01",
+   "pos": [
+    4.5,
+    -14.5
+   ],
+   "height": 0.7,
+   "yaw": 180
+  },
+  {
+   "name": "SecchioCampo",
+   "id": "wooden_bucket_02",
+   "pos": [
+    -13.5,
+    10.5
+   ],
+   "height": 0.4
+  },
+  {
+   "name": "SgabelloCampo",
+   "id": "wooden_stool_02",
+   "pos": [
+    -10.5,
+    11.5
+   ],
+   "height": 0.5,
+   "yaw": 30
+  },
+  {
+   "name": "RattoCampo",
+   "id": "street_rat",
+   "pos": [
+    -12.0,
+    9.4
+   ],
+   "height": 0.15,
+   "fit": "longest",
+   "blocking": false,
+   "yaw": 200
+  },
+  {
+   "name": "MoloMare1",
+   "id": "pier_section_01",
+   "pos": [
+    -22.0,
+    -6.5
+   ],
+   "height": 1.0,
+   "fit": "longest",
+   "yaw": 90,
+   "blocking": false
+  },
+  {
+   "name": "MoloMare2",
+   "id": "pier_section_02",
+   "pos": [
+    -24.5,
+    -6.5
+   ],
+   "height": 1.0,
+   "fit": "longest",
+   "yaw": 90,
+   "blocking": false
+  }
+ ],
+ "scatters": [
+  {
+   "name": "FioriGialli",
+   "ids": [
+    "celandine_01_a",
+    "celandine_01_b",
+    "celandine_01_c",
+    "celandine_01_d",
+    "dandelion_01_a",
+    "dandelion_01_b",
+    "dandelion_01_c"
+   ],
+   "rect": [
+    -10,
+    -10,
+    28,
+    20
+   ],
+   "count": 180,
+   "height": [
+    0.22,
+    0.34
+   ],
+   "seed": 3
+  },
+  {
+   "name": "CiuffiAlti",
+   "ids": [
+    "grass_medium_01_tall_a",
+    "grass_medium_01_tall_c",
+    "grass_medium_01_small_b",
+    "grass_medium_01_mid_b",
+    "grass_medium_02_a",
+    "grass_medium_02_c"
+   ],
+   "rect": [
+    -10,
+    -12,
+    28,
+    24
+   ],
+   "count": 320,
+   "height": [
+    0.3,
+    0.55
+   ],
+   "seed": 5
+  },
+  {
+   "name": "Felci",
+   "ids": [
+    "fern_02_a",
+    "fern_02_d",
+    "fern_02_b",
+    "fern_02_c"
+   ],
+   "rect": [
+    -19,
+    -12,
+    11,
+    14
+   ],
+   "count": 36,
+   "height": [
+    0.4,
+    0.7
+   ],
+   "seed": 8
+  },
+  {
+   "name": "Pervinche",
+   "ids": [
+    "periwinkle_plant_01",
+    "periwinkle_plant_02"
+   ],
+   "rect": [
+    -9,
+    -8,
+    16,
+    16
+   ],
+   "count": 45,
+   "height": [
+    0.3,
+    0.45
+   ],
+   "seed": 12
+  },
+  {
+   "name": "Cespugli",
+   "ids": [
+    "othonna_cerarioides_a",
+    "othonna_cerarioides_b",
+    "othonna_cerarioides_c",
+    "searsia_lucida_a",
+    "searsia_lucida_d"
+   ],
+   "rect": [
+    -8,
+    -6,
+    26,
+    14
+   ],
+   "count": 14,
+   "height": [
+    0.9,
+    1.4
+   ],
+   "seed": 21,
+   "cast_shadows": true
+  }
+ ]
+}

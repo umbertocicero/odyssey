@@ -1,0 +1,274 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "othonna_cerarioides_a__x"
+  }
+ ],
+ "materials": [
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "name": "PH_othonna_cerarioides",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   },
+   "alphaCutoff": 0.5
+  },
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "name": "PH_othonna_cerarioides_leaves",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   },
+   "alphaCutoff": 0.5
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.001",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_othonna_cerarioides_normal",
+   "uri": "textures/PH_othonna_cerarioides_normal.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "PH_othonna_cerarioides_color-PH_othonna_cerarioides_alpha",
+   "uri": "textures/PH_othonna_cerarioides_color-PH_othonna_cerarioides_alpha.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_othonna_cerarioides_rough",
+   "uri": "textures/PH_othonna_cerarioides_rough.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_othonna_cerarioides_leaves_normal",
+   "uri": "textures/PH_othonna_cerarioides_leaves_normal.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "PH_othonna_cerarioides_leaves_color-PH_othonna_cerarioides_leaves_alpha",
+   "uri": "textures/PH_othonna_cerarioides_leaves_color-PH_othonna_cerarioides_leaves_alpha.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_othonna_cerarioides_leaves_rough",
+   "uri": "textures/PH_othonna_cerarioides_leaves_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 780,
+   "max": [
+    0.48700234293937683,
+    1.9261877536773682,
+    0.4300927519798279
+   ],
+   "min": [
+    -0.49882224202156067,
+    0,
+    -0.45352011919021606
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 780,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 780,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 1491,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 13151,
+   "max": [
+    0.5478370189666748,
+    1.973116159439087,
+    0.5135307312011719
+   ],
+   "min": [
+    -0.5478370189666748,
+    0.12752582132816315,
+    -0.5135307312011719
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 13151,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 13151,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 13509,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 9360,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9360,
+   "byteOffset": 9360,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 6240,
+   "byteOffset": 18720,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 2982,
+   "byteOffset": 24960,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 157812,
+   "byteOffset": 27944,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 157812,
+   "byteOffset": 185756,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 105208,
+   "byteOffset": 343568,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 27018,
+   "byteOffset": 448776,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 475796,
+   "uri": "othonna_cerarioides_a.bin"
+  }
+ ]
+}

@@ -1,0 +1,272 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "searsia_lucida_b__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_searsia_lucida",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "name": "PH_searsia_lucida_leaves",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   },
+   "alphaCutoff": 0.5
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Cube.002",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_searsia_lucida_normal",
+   "uri": "textures/PH_searsia_lucida_normal.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "searsia_lucida_diff_2k",
+   "uri": "textures/searsia_lucida_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_searsia_lucida_rough",
+   "uri": "textures/PH_searsia_lucida_rough.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_searsia_lucida_leaves_normal",
+   "uri": "textures/PH_searsia_lucida_leaves_normal.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "PH_searsia_lucida_leaves_color-PH_searsia_lucida_leaves_alpha",
+   "uri": "textures/PH_searsia_lucida_leaves_color-PH_searsia_lucida_leaves_alpha.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_searsia_lucida_leaves_rough",
+   "uri": "textures/PH_searsia_lucida_leaves_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 8146,
+   "max": [
+    0.749106764793396,
+    1.9872078895568848,
+    0.731083869934082
+   ],
+   "min": [
+    -0.7482167482376099,
+    0,
+    -0.7259284853935242
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 8146,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 8146,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 16545,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 17064,
+   "max": [
+    0.7549269199371338,
+    1.9935353994369507,
+    0.7265797853469849
+   ],
+   "min": [
+    -0.7549269199371338,
+    0.15235589444637299,
+    -0.7277326583862305
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 17064,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 17064,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 25302,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 97752,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 97752,
+   "byteOffset": 97752,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 65168,
+   "byteOffset": 195504,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 33090,
+   "byteOffset": 260672,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 204768,
+   "byteOffset": 293764,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 204768,
+   "byteOffset": 498532,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 136512,
+   "byteOffset": 703300,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 50604,
+   "byteOffset": 839812,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 890416,
+   "uri": "searsia_lucida_b.bin"
+  }
+ ]
+}

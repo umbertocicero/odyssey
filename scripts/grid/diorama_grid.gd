@@ -34,8 +34,11 @@ const OBSTACLE_GROUP := &"grid_obstacle"
 		_rebuild_tiles()
 
 var _blocked: Dictionary = {}   # Vector2i -> true
+var _vaultable: Dictionary = {} # Vector2i -> true se l'ostacolo è basso e si può scavalcare
 var _occupants: Dictionary = {} # Vector2i -> Node
 var _tiles: MultiMeshInstance3D
+var _thin: Array = []            # cerchi {center: Vector2, radius: float} di tronchi e pali
+var _thin_cells: Dictionary = {} # caselle di tronchi/pali: per il movimento libero non sono quadrate
 
 
 func _ready() -> void:
@@ -45,10 +48,68 @@ func _ready() -> void:
 		_register_obstacles()
 
 
+## Dislivello massimo (in livelli) che si supera con un passo: 1 = scalino.
+@export var max_step_levels := 1
+
+var _relief: TerrainRelief
+var _relief_searched := false
+
+
 func cell_to_world(cell: Vector2i) -> Vector3:
 	var offset := Vector2(size) * cell_size * 0.5
 	var local := Vector3((cell.x + 0.5) * cell_size - offset.x, 0.0, (cell.y + 0.5) * cell_size - offset.y)
-	return to_global(local)
+	var world := to_global(local)
+	world.y += get_height_at_world(world)
+	return world
+
+
+## Rilievo del terreno (livelli di altezza), se il livello ne ha uno.
+func get_relief() -> TerrainRelief:
+	if not _relief_searched and is_inside_tree():
+		_relief_searched = true
+		_relief = get_tree().get_first_node_in_group(&"terrain_relief") as TerrainRelief
+	return _relief
+
+
+## Livello di altezza di una casella (0 = pianura).
+func get_level(cell: Vector2i) -> int:
+	var relief := get_relief()
+	if relief == null:
+		return 0
+	var offset := Vector2(size) * cell_size * 0.5
+	var local := Vector3((cell.x + 0.5) * cell_size - offset.x, 0.0, (cell.y + 0.5) * cell_size - offset.y)
+	var world := to_global(local)
+	return relief.level_at_world(world.x, world.z)
+
+
+## Altezza in metri del terreno in un punto del mondo (anche fuori dalla griglia).
+func get_height_at_world(world: Vector3) -> float:
+	var relief := get_relief()
+	return relief.height_at_world(world.x, world.z) if relief else 0.0
+
+
+## True se da "from" si può passare in "to" con un passo: il dislivello non
+## deve superare max_step_levels (uno scalino sì, una parete di roccia no).
+func step_allowed(from: Vector2i, to: Vector2i) -> bool:
+	return absi(get_level(from) - get_level(to)) <= max_step_levels
+
+
+## True se un tiro dal punto "from" al punto "to" non è fermato dal terreno:
+## il rilievo in mezzo non deve superare la retta tra i due punti.
+func has_line_of_fire(from: Vector3, to: Vector3) -> bool:
+	var relief := get_relief()
+	if relief == null:
+		return true
+	var distance := Vector2(to.x - from.x, to.z - from.z).length()
+	var steps := maxi(int(ceil(distance / 0.5)), 1)
+	for i in range(1, steps):
+		var t := float(i) / steps
+		var x := lerpf(from.x, to.x, t)
+		var z := lerpf(from.z, to.z, t)
+		var ray_y := lerpf(from.y, to.y, t)
+		if relief.height_at_world(x, z) > ray_y:
+			return false
+	return true
 
 
 func world_to_cell(world_position: Vector3) -> Vector2i:
@@ -67,6 +128,35 @@ func is_blocked(cell: Vector2i) -> bool:
 
 func get_occupant(cell: Vector2i) -> Node:
 	return _occupants.get(cell) as Node
+
+
+## True se la casella è bloccata da ostacoli bassi (casse, scudi, sassi, barili...)
+## che si possono scavalcare con un balzo. Muri, mura, torri, tende, alberi e
+## rocce grandi non lo sono.
+func is_vaultable(cell: Vector2i) -> bool:
+	return _blocked.has(cell) and _vaultable.get(cell, false)
+
+
+## True se da `from` si può scavalcare in direzione `dir`: davanti c'è un
+## ostacolo basso, e subito dopo una casella libera dove atterrare.
+func can_vault_over(from: Vector2i, dir: Vector2i) -> bool:
+	var over := from + dir
+	var landing := over + dir
+	if not is_inside(over) or not is_inside(landing) or not is_vaultable(over):
+		return false
+	if is_blocked(landing) or _occupants.has(landing):
+		return false
+	return step_allowed(from, over) and step_allowed(over, landing)
+
+
+## Caselle bloccate da oggetti che non si scavalcano (costruzioni, torri, tende,
+## alberi, rocce grandi): serve a tenere l'erba lontana dalle loro basi.
+func get_solid_cells() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for c: Vector2i in _blocked:
+		if not _vaultable.get(c, false):
+			out.append(c)
+	return out
 
 
 func is_walkable(cell: Vector2i) -> bool:
@@ -99,7 +189,7 @@ func find_unreachable_cells(start: Vector2i) -> Array[Vector2i]:
 		var current: Vector2i = frontier.pop_back()
 		for direction: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 			var next := current + direction
-			if is_inside(next) and not is_blocked(next) and not reached.has(next):
+			if is_inside(next) and not is_blocked(next) and not reached.has(next) and step_allowed(current, next):
 				reached[next] = true
 				frontier.append(next)
 	var unreachable: Array[Vector2i] = []
@@ -126,12 +216,21 @@ func validate_connectivity(start: Vector2i) -> bool:
 
 func _register_obstacles() -> void:
 	for node in get_tree().get_nodes_in_group(OBSTACLE_GROUP):
+		var low: bool = node.has_method(&"is_vaultable") and node.is_vaultable()
 		if node.has_method(&"get_blocked_cells"):
 			# Oggetti con un'impronta di più caselle (GridProp).
+			var thin: Dictionary = node.thin_shape() if node.has_method(&"thin_shape") else {}
+			if not thin.is_empty():
+				_thin.append(thin)
 			for c: Vector2i in node.get_blocked_cells(self):
 				set_blocked(c, true)
+				_vaultable[c] = _vaultable.get(c, true) and low
+				if not thin.is_empty():
+					_thin_cells[c] = true
 		elif node is Node3D:
-			set_blocked(world_to_cell((node as Node3D).global_position), true)
+			var c := world_to_cell((node as Node3D).global_position)
+			set_blocked(c, true)
+			_vaultable[c] = _vaultable.get(c, true) and low
 
 
 func _rebuild_tiles() -> void:
@@ -174,3 +273,66 @@ func _rebuild_tiles() -> void:
 	_tiles.name = "Tiles"
 	_tiles.multimesh = multimesh
 	add_child(_tiles)
+
+
+# --- Movimento libero ----------------------------------------------------------
+# Le unità controllate dal giocatore si muovono in continuo sul piano XZ come un
+# cerchio. Le caselle bloccate sono quadrati, tranne i tronchi e i pali che sono
+# cerchi sottili: si passa sotto le chiome e si costeggiano i pali senza incastri.
+
+## Risolve la collisione di un cerchio (centro XZ, raggio) contro ostacoli, bordi
+## e pareti di roccia. Restituisce {"pos": Vector2, "vault_cell": Vector2i o null}.
+func resolve_circle(pos: Vector2, radius: float, level_cell: Vector2i) -> Dictionary:
+	var vault_cell = null
+	var base_level := get_level(level_cell)
+	for _iter in 2:
+		var c := world_to_cell(Vector3(pos.x, 0.0, pos.y))
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				var cc := c + Vector2i(dx, dy)
+				if not _cell_solid_for_motion(cc, base_level):
+					continue
+				var rect := _cell_rect(cc)
+				var closest := Vector2(clampf(pos.x, rect.position.x, rect.end.x), clampf(pos.y, rect.position.y, rect.end.y))
+				var delta := pos - closest
+				var dist := delta.length()
+				if dist >= radius:
+					continue
+				if dist < 0.0001:
+					# Centro dentro il quadrato: esce dal lato più vicino.
+					var left := pos.x - rect.position.x
+					var right := rect.end.x - pos.x
+					var up := pos.y - rect.position.y
+					var down := rect.end.y - pos.y
+					var m := minf(minf(left, right), minf(up, down))
+					if m == left: pos.x = rect.position.x - radius
+					elif m == right: pos.x = rect.end.x + radius
+					elif m == up: pos.y = rect.position.y - radius
+					else: pos.y = rect.end.y + radius
+				else:
+					pos += delta / dist * (radius - dist)
+				if _vaultable.get(cc, false) and is_blocked(cc):
+					vault_cell = cc
+		for thin: Dictionary in _thin:
+			var center: Vector2 = thin["center"]
+			var r: float = float(thin["radius"]) + radius
+			var d := pos - center
+			var l := d.length()
+			if l < r:
+				pos = center + (d / l if l > 0.0001 else Vector2.RIGHT) * r
+	return {"pos": pos, "vault_cell": vault_cell}
+
+
+func _cell_solid_for_motion(c: Vector2i, base_level: int) -> bool:
+	if not is_inside(c):
+		return true
+	if is_blocked(c):
+		return not _thin_cells.has(c)
+	return absi(get_level(c) - base_level) > max_step_levels
+
+
+func _cell_rect(c: Vector2i) -> Rect2:
+	var offset := Vector2(size) * cell_size * 0.5
+	var local := Vector3(c.x * cell_size - offset.x, 0.0, c.y * cell_size - offset.y)
+	var world := to_global(local)
+	return Rect2(Vector2(world.x, world.z), Vector2.ONE * cell_size)

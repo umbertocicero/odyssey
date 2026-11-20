@@ -1,0 +1,268 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "kite_shield__x"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "PH_kite_shield_body",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "PH_kite_shield_clamps_and_trim",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "Plane.001",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "kite_shield_body_nor_gl_2k",
+   "uri": "textures/kite_shield_body_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "kite_shield_body_diff_2k",
+   "uri": "textures/kite_shield_body_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_kite_shield_body_metal-PH_kite_shield_body_rough",
+   "uri": "textures/PH_kite_shield_body_metal-PH_kite_shield_body_rough.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "kite_shield_clamps_trim_nor_gl_2k",
+   "uri": "textures/kite_shield_clamps_trim_nor_gl_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "kite_shield_clamps_trim_diff_2k",
+   "uri": "textures/kite_shield_clamps_trim_diff_2k.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "PH_kite_shield_clamps_and_trim_metal-PH_kite_shield_clamps_and_trim_rough",
+   "uri": "textures/PH_kite_shield_clamps_and_trim_metal-PH_kite_shield_clamps_and_trim_rough.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 1375,
+   "max": [
+    0.26613649725914,
+    1.3882324695587158,
+    0.061564356088638306
+   ],
+   "min": [
+    -0.2661384642124176,
+    0.023203253746032715,
+    -0.0673646405339241
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 1375,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 1375,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 6210,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 2986,
+   "max": [
+    0.2716452181339264,
+    1.394273042678833,
+    0.0673646405339241
+   ],
+   "min": [
+    -0.2716452181339264,
+    0,
+    -0.06301882117986679
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 2986,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 2986,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 11790,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 16500,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 16500,
+   "byteOffset": 16500,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 11000,
+   "byteOffset": 33000,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 12420,
+   "byteOffset": 44000,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 35832,
+   "byteOffset": 56420,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 35832,
+   "byteOffset": 92252,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 23888,
+   "byteOffset": 128084,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 23580,
+   "byteOffset": 151972,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 175552,
+   "uri": "kite_shield.bin"
+  }
+ ]
+}

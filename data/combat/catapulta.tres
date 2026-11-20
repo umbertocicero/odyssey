@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AttackProfile" format=3 uid="uid://lc4py82ghsfs"]
+
+[ext_resource type="Script" uid="uid://cf3ngqiiub2kd" path="res://scripts/combat/attack_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+display_name = "Catapult"
+range_cells = 20
+min_range_cells = 8
+damage = 30
+reload_time = 9.0
+reload_jitter = 2.0
+warning_time = 2.2
+arc_height = 9.0
+area_radius = 1
+miss_chance = 0.25
+projectile_shape = 2
+projectile_color = Color(0.5, 0.48, 0.45, 1)

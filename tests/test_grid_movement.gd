@@ -25,6 +25,9 @@ func _run() -> void:
 	if grid == null or ulisse == null:
 		quit(1)
 		return
+	# Le difese sulle mura hanno un loro test: qui non devono disturbare.
+	for shooter in get_nodes_in_group(&"wall_shooters"):
+		shooter.auto_fire = false
 
 	# 1. Nessuna casella chiusa dagli ostacoli.
 	var unreachable: Array = grid.find_unreachable_cells(ulisse.cell)
