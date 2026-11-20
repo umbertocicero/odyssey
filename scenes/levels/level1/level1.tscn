@@ -1,0 +1,168 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="Script" path="res://scripts/grid/diorama_grid.gd" id="1_grid"]
+[ext_resource type="Script" path="res://scripts/camera/fixed_camera.gd" id="2_camera"]
+[ext_resource type="PackedScene" path="res://scenes/characters/ulisse/ulisse.tscn" id="3_ulisse"]
+[ext_resource type="PackedScene" path="res://scenes/characters/achei/soldato_acheo.tscn" id="4_acheo"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/troiano/soldato_troiano.tscn" id="5_troiano"]
+
+[sub_resource type="Environment" id="Environment_dusk"]
+background_mode = 1
+background_color = Color(0.10, 0.09, 0.14, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.55, 0.50, 0.65, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_earth"]
+albedo_color = Color(0.42, 0.31, 0.19, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+material = SubResource("StandardMaterial3D_earth")
+size = Vector3(13, 1, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_plinth"]
+albedo_color = Color(0.20, 0.13, 0.08, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_plinth"]
+material = SubResource("StandardMaterial3D_plinth")
+size = Vector3(14, 0.6, 11)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.62, 0.58, 0.52, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_rock"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(0.85, 0.6, 0.8)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_column"]
+material = SubResource("StandardMaterial3D_stone")
+top_radius = 0.28
+bottom_radius = 0.28
+height = 0.95
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bronze"]
+albedo_color = Color(0.72, 0.52, 0.22, 1)
+metallic = 0.7
+roughness = 0.45
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_shield"]
+material = SubResource("StandardMaterial3D_bronze")
+top_radius = 0.38
+bottom_radius = 0.38
+height = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(13, 2.6, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tower"]
+material = SubResource("StandardMaterial3D_stone")
+size = Vector3(1.4, 3.6, 1.4)
+
+[node name="Level1" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dusk")
+
+[node name="Sole" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8192, 0.0000, 0.5736, 0.4394, 0.6428, -0.6275, -0.3687, 0.7660, 0.5265, 0, 8, 0)
+light_color = Color(1, 0.82, 0.62, 1)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="Camera" type="Camera3D" parent="."]
+current = true
+fov = 32.0
+script = ExtResource("2_camera")
+target = Vector3(0, 0, 0.5)
+distance = 22.0
+pitch_degrees = -42.0
+yaw_degrees = 30.0
+
+[node name="Diorama" type="Node3D" parent="."]
+
+[node name="Terreno" type="MeshInstance3D" parent="Diorama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_ground")
+
+[node name="Basamento" type="MeshInstance3D" parent="Diorama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3, 0)
+mesh = SubResource("BoxMesh_plinth")
+
+[node name="MuraDiTroia" type="MeshInstance3D" parent="Diorama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -4.6)
+mesh = SubResource("BoxMesh_wall")
+
+[node name="TorreOvest" type="MeshInstance3D" parent="Diorama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 1.8, -4.7)
+mesh = SubResource("BoxMesh_tower")
+
+[node name="TorreEst" type="MeshInstance3D" parent="Diorama"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 1.8, -4.7)
+mesh = SubResource("BoxMesh_tower")
+
+[node name="Griglia" type="Node3D" parent="."]
+script = ExtResource("1_grid")
+size = Vector2i(12, 8)
+
+[node name="Ostacoli" type="Node3D" parent="."]
+
+[node name="Roccia1" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.3, -1.5)
+mesh = SubResource("BoxMesh_rock")
+
+[node name="Roccia2" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.3, -1.5)
+mesh = SubResource("BoxMesh_rock")
+
+[node name="Roccia3" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.3, -2.5)
+mesh = SubResource("BoxMesh_rock")
+
+[node name="Roccia4" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.3, 1.5)
+mesh = SubResource("BoxMesh_rock")
+
+[node name="Roccia5" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.3, 2.5)
+mesh = SubResource("BoxMesh_rock")
+
+[node name="Roccia6" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.3, 2.5)
+mesh = SubResource("BoxMesh_rock")
+
+[node name="ScudoCaduto1" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.06, 0.5)
+mesh = SubResource("CylinderMesh_shield")
+
+[node name="ScudoCaduto2" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.06, -2.5)
+mesh = SubResource("CylinderMesh_shield")
+
+[node name="ColonnaCaduta1" type="MeshInstance3D" parent="Ostacoli" groups=["grid_obstacle"]]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 1.5, 0.3, 3.5)
+mesh = SubResource("CylinderMesh_column")
+
+[node name="Unita" type="Node3D" parent="."]
+
+[node name="Ulisse" parent="Unita" instance=ExtResource("3_ulisse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 0.5)
+
+[node name="SoldatoAcheo1" parent="Unita" instance=ExtResource("4_acheo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, -0.5)
+
+[node name="SoldatoAcheo2" parent="Unita" instance=ExtResource("4_acheo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 1.5)
+
+[node name="SoldatoTroiano1" parent="Unita" instance=ExtResource("5_troiano")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -0.5)
+
+[node name="SoldatoTroiano2" parent="Unita" instance=ExtResource("5_troiano")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 1.5)
+
+[node name="SoldatoTroiano3" parent="Unita" instance=ExtResource("5_troiano")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 0.5)

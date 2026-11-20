@@ -1,0 +1,66 @@
+# ── Godot 4 ──────────────────────────────────────────────
+# Cache e risorse importate: Godot le rigenera da solo.
+# I file *.import e *.uid accanto agli asset vanno invece COMMITTATI:
+# contengono le impostazioni di import e gli ID stabili delle risorse.
+.godot/
+/android/
+*.translation
+*.tmp
+
+# Export e build
+/build/
+/export/
+/exports/
+*.apk
+*.aab
+*.ipa
+*.pck
+*.exe
+*.x86_64
+*.dmg
+*.zip
+# Credenziali di export: non committarle mai
+export_credentials.cfg
+.android/
+
+# Mono / C# (nel caso si usi in futuro)
+.mono/
+data_*/
+mono_crash.*.json
+
+# Plugin Godot AI: backup e stato degli aggiornamenti locali
+addons/.godot_ai_update/
+
+# Vecchio progetto Godot creato in odyssey/ (sostituito da quello nella root)
+/odyssey/
+
+# ── Blender ──────────────────────────────────────────────
+*.blend1
+*.blend2
+*.blend3
+*.blend@
+*.blend~
+# Esportazioni temporanee e cache
+*.glb.tmp
+blender_cache/
+
+# ── Sistema operativo ───────────────────────────────────
+.DS_Store
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*~
+.directory
+.Trash-*
+
+# ── IDE / editor ────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.code-workspace
+
+# ── Claude: impostazioni locali (quelle condivise restano) ──
+.claude/settings.local.json
