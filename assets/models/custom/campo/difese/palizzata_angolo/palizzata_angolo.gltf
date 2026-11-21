@@ -70,17 +70,17 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   }
  ],
  "accessors": [

@@ -12,8 +12,8 @@ from okit2 import G, M, finish
 V = Vector
 
 
-def horse(name, coat="horse_bay", points="horse_dark", mane_mat="mane_dark", seed=81, scale=1.0):
-    g = G(seed)
+def horse_geom(g, coat="horse_bay", points="horse_dark", mane_mat="mane_dark"):
+    """Geometria del cavallo (corpo, testa, zampe, crini) aggiunta al costruttore g."""
     rnd = g.rnd
     # corpo + collo (unica forma continua), poi testa
     body = [((0, -0.88, 1.28), 0.19, 0.19), ((0, -0.72, 1.31), 0.26, 0.30), ((0, -0.42, 1.22), 0.285, 0.335),
@@ -54,6 +54,11 @@ def horse(name, coat="horse_bay", points="horse_dark", mane_mat="mane_dark", see
     for k in range(9):                                   # ciocche a stella intorno all'asse della coda: volume da ogni lato
         yaw = k * 20
         g.quad(0.34, 0.95, M((0.0, -1.0, 0.28), (7, 0, yaw)), mane_mat)
+
+
+def horse(name, coat="horse_bay", points="horse_dark", mane_mat="mane_dark", seed=81, scale=1.0):
+    g = G(seed)
+    horse_geom(g, coat, points, mane_mat)
     return finish(g, name, "cavalli")
 
 

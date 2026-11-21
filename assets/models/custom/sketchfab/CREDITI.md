@@ -13,3 +13,7 @@ Modelli scaricati con licenza CC-BY-4.0 ma **non convertiti** (crediti da inseri
 - "ocean wave" di Andrea Marziano (https://sketchfab.com/3d-models/ocean-wave-f86f444dc7cc4458a0140f05a03c5896)
 - "Peak, cliff, mountain, rock" di Metazeon (https://sketchfab.com/3d-models/peak-cliff-mountain-rock-77809d638bc74232b10c564b178a0570)
 - "Herculaneum Boat - Roman Boat" di Opus Poly (https://sketchfab.com/3d-models/herculaneum-boat-roman-boat-fd84e8e9cf184426b1701e80c9018067)
+
+## personaggi_nuovi/ (da `art_source/characters/*.blend`)
+Personaggi (Ulisse, Elpenore, Euriloco, Euribate, Filotete, Polite, Perimede, Menelao, Agamennone, 3 troiani) **creati dall'autore del gioco (Umberto) con mesh.ai**.
+Nessun credito di terzi richiesto; ritratti dell'HUD ricavati dalle sue schede di riferimento in `ispirazione/characters/`.

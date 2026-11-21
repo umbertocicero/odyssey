@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/macchine/balista_telaio/balista_telaio.gltf" id="9_glb"]
 [ext_resource type="Script" path="res://scripts/combat/wall_shooter.gd" id="1_shooter"]
 [ext_resource type="Resource" path="res://data/combat/balista.tres" id="2_profile"]
 
@@ -25,14 +26,5 @@ muzzle_height = 0.8
 
 [node name="Model" type="Node3D" parent="."]
 
-[node name="Base" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
-mesh = SubResource("mesh_base")
-
-[node name="Fusto" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 0.97, -0.24, 0, 0.24, 0.97, 0, 0.6, 0.1)
-mesh = SubResource("mesh_beam")
-
-[node name="Archi" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, 0.7)
-mesh = SubResource("mesh_arms")
+[node name="Mesh" parent="Model" instance=ExtResource("9_glb")]
+transform = Transform3D(-0.550, 0, 0, 0, 0.550, 0, 0, 0, -0.550, 0, 0, 0)

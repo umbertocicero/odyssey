@@ -9,6 +9,10 @@ signal wounded_changed(saved: int, lost: int, total: int)
 signal wounded_evacuated(count: int, total: int)
 signal time_changed(seconds_left: float)
 signal level_finished(summary: Dictionary)
+## Un tentativo è finito (Ulisse è caduto): `attempt` è il numero del nuovo tentativo.
+signal attempt_changed(attempt: int, max_attempts: int)
+## Tre tentativi esauriti: si ricomincia da capo (stato iniziale, punteggio azzerato).
+signal full_restart
 
 enum Phase { IDLE, RUNNING, ENDED }
 
@@ -25,6 +29,11 @@ var kills := 0
 var summary := {}
 var wounded: Array[WoundedSoldier] = []
 var hud: LevelHud
+## Tentativo corrente (1..max_attempts); il terzo fallimento riporta tutto allo stato iniziale.
+var attempt := 1
+@export_range(1, 9) var max_attempts := 3
+## Se vero, il riavvio completo ricarica la scena (spento nei test).
+@export var reload_on_full_restart := true
 var ferry: FerrySystem
 
 var _grid: DioramaGrid
@@ -69,9 +78,11 @@ func start() -> void:
 	_next_wave_at = rules.first_wave_delay
 	_spawn_wounded()
 	_setup_ferry()
+	if _player and not _player.died.is_connected(_on_player_died):
+		_player.died.connect(_on_player_died)
 	_apply_defence_scaling(1)
 	if hud:
-		hud.show_banner("Hold the line until the retreat signal!", 3.5)
+		hud.show_banner("Find the wounded and bring them to the ships!", 3.5)
 	wounded_changed.emit(_saved, _lost, wounded.size())
 	time_changed.emit(rules.duration)
 
@@ -84,11 +95,33 @@ func _process(delta: float) -> void:
 	time_changed.emit(left)
 	if hud:
 		hud.set_time(left, wave)
+		hud.set_attempt(attempt, max_attempts)
 	if elapsed >= _next_wave_at:
 		_start_wave()
 		_next_wave_at += rules.wave_interval
 	if left <= 0.0:
 		finish()
+
+
+## Ulisse è caduto: tentativo successivo; dopo l'ultimo si ricomincia tutto da capo.
+func _on_player_died() -> void:
+	if phase != Phase.RUNNING:
+		return
+	if attempt >= max_attempts:
+		full_restart.emit()
+		if hud:
+			hud.show_banner("All attempts used - starting over...", 3.0)
+		if reload_on_full_restart:
+			phase = Phase.ENDED
+			await get_tree().create_timer(3.0).timeout
+			get_tree().reload_current_scene()
+		else:
+			attempt = 1
+		return
+	attempt += 1
+	attempt_changed.emit(attempt, max_attempts)
+	if hud:
+		hud.show_banner("Attempt %d of %d" % [attempt, max_attempts], 2.5)
 
 
 func alive_trojans() -> int:
@@ -123,7 +156,7 @@ func _start_wave() -> void:
 			spawned += 1
 	wave_started.emit(wave, spawned)
 	if hud:
-		hud.show_banner("Wave %d: %d Trojans advance!" % [wave, spawned], 2.5)
+		hud.show_banner("Trojans advance!", 2.5)
 
 
 func _spawn_trojan(world_xz: Vector2) -> bool:

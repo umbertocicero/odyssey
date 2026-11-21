@@ -1,0 +1,424 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "extensionsUsed": [
+  "KHR_materials_emissive_strength"
+ ],
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "braciere_bronzo_acceso"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "M_bronze",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "emissiveFactor": [
+    1,
+    1,
+    1
+   ],
+   "emissiveTexture": {
+    "index": 3
+   },
+   "name": "M_charcoal",
+   "normalTexture": {
+    "index": 4
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 5
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 6
+    }
+   }
+  },
+  {
+   "alphaMode": "MASK",
+   "doubleSided": true,
+   "emissiveFactor": [
+    1,
+    1,
+    1
+   ],
+   "emissiveTexture": {
+    "index": 7
+   },
+   "extensions": {
+    "KHR_materials_emissive_strength": {
+     "emissiveStrength": 2
+    }
+   },
+   "name": "M_flame",
+   "normalTexture": {
+    "index": 8
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 9
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 10
+    }
+   },
+   "alphaCutoff": 0.3
+  }
+ ],
+ "meshes": [
+  {
+   "name": "braciere_bronzo_acceso",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    },
+    {
+     "attributes": {
+      "POSITION": 8,
+      "NORMAL": 9,
+      "TEXCOORD_0": 10
+     },
+     "indices": 11,
+     "material": 2
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  },
+  {
+   "sampler": 0,
+   "source": 6
+  },
+  {
+   "sampler": 0,
+   "source": 7
+  },
+  {
+   "sampler": 0,
+   "source": 8
+  },
+  {
+   "sampler": 0,
+   "source": 9
+  },
+  {
+   "sampler": 0,
+   "source": 10
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_n",
+   "uri": "../../_tex/bronze_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_c",
+   "uri": "../../_tex/bronze_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_r",
+   "uri": "../../_tex/bronze_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "charcoal_e",
+   "uri": "../../_tex/charcoal_e.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "charcoal_n",
+   "uri": "../../_tex/charcoal_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "charcoal_c",
+   "uri": "../../_tex/charcoal_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "charcoal_r",
+   "uri": "../../_tex/charcoal_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "flame_e",
+   "uri": "../../_tex/flame_e.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "flame_n",
+   "uri": "../../_tex/mane_dark_n.jpg"
+  },
+  {
+   "mimeType": "image/png",
+   "name": "flame_c",
+   "uri": "../../_tex/flame_c.png"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "flame_r",
+   "uri": "../../_tex/flame_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 1271,
+   "max": [
+    0.45500001311302185,
+    1.107683539390564,
+    0.40716516971588135
+   ],
+   "min": [
+    -0.45500001311302185,
+    0,
+    -0.40716516971588135
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 1271,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 1271,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 4752,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 313,
+   "max": [
+    0.2681525945663452,
+    1.1776835918426514,
+    0.20564354956150055
+   ],
+   "min": [
+    -0.2686929404735565,
+    0.9376835823059082,
+    -0.2967901825904846
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 313,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 313,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 870,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 8,
+   "componentType": 5126,
+   "count": 12,
+   "max": [
+    0.25841546058654785,
+    1.7076836824417114,
+    0.2309592217206955
+   ],
+   "min": [
+    -0.25841546058654785,
+    1.0876836776733398,
+    -0.31068503856658936
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 9,
+   "componentType": 5126,
+   "count": 12,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 10,
+   "componentType": 5126,
+   "count": 12,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 11,
+   "componentType": 5123,
+   "count": 18,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 15252,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 15252,
+   "byteOffset": 15252,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 10168,
+   "byteOffset": 30504,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9504,
+   "byteOffset": 40672,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3756,
+   "byteOffset": 50176,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3756,
+   "byteOffset": 53932,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 2504,
+   "byteOffset": 57688,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 1740,
+   "byteOffset": 60192,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 61932,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 62076,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 96,
+   "byteOffset": 62220,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 36,
+   "byteOffset": 62316,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 62352,
+   "uri": "braciere_bronzo_acceso.bin"
+  }
+ ]
+}

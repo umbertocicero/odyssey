@@ -14,7 +14,7 @@ from PIL import Image, ImageStat
 
 CUSTOM = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 n0 = n1 = nchanged = 0
-for g in sorted(glob.glob(os.path.join(CUSTOM, "polyhaven", "*", "*", "*.gltf")) + glob.glob(os.path.join(CUSTOM, "sketchfab", "*", "*", "*.gltf")) + glob.glob(os.path.join(CUSTOM, "campo", "*", "*", "*.gltf"))):
+for g in sorted(glob.glob(os.path.join(CUSTOM, "polyhaven", "*", "*", "*.gltf")) + glob.glob(os.path.join(CUSTOM, "sketchfab", "*", "*", "*.gltf")) + glob.glob(os.path.join(CUSTOM, "campo", "**", "*.gltf"), recursive=True)):
     d = json.load(open(g)); ch = False
     for m in d.get("materials", []):
         p = m.setdefault("pbrMetallicRoughness", {})

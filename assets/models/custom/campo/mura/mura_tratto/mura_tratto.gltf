@@ -70,17 +70,17 @@
   {
    "mimeType": "image/jpeg",
    "name": "limestone_n",
-   "uri": "textures/limestone_n.jpg"
+   "uri": "../../_tex/limestone_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "limestone_c",
-   "uri": "textures/limestone_c.jpg"
+   "uri": "../../_tex/limestone_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "limestone_r",
-   "uri": "textures/limestone_r.jpg"
+   "uri": "../../_tex/limestone_r.jpg"
   }
  ],
  "accessors": [

@@ -29,8 +29,10 @@ const OPENING_TEXT := "Hold the line until the retreat signal!"
 const DEFAULT_SHOT_TIMES: Array[float] = [4.0, 14.0, 24.0, 34.0, 42.0, 50.0, 58.0, 66.0, 74.0, 82.0, 92.0, 100.0, 107.0, 112.0, 117.0]
 
 # Dove giace il ferito grave: poco fuori dall'accampamento, così la barella arriva in tempo.
-const SEVERE_SPOT := Vector2(-9.5, 3.5)
+const SEVERE_SPOT := Vector2(-10.5, 6.0)
 # Centro dell'accampamento (x, z in metri).
+# Ferito da soccorrere: sul corridoio libero che Ulisse percorre dopo la cassa.
+const WOUNDED_SPOT := Vector2(-0.5, 3.0)
 const CAMP_CENTER := Vector2(-11.0, 11.0)
 
 var main: Node
@@ -62,6 +64,7 @@ var _fire_enabled := false
 var _attack_down := false
 var _live_caption := Callable()
 var _live_cd := 0.0
+var _debug_cd := 0.0
 
 var _saved_time_scale := 1.0
 var _paused := false
@@ -157,6 +160,17 @@ func _boot(ch: int) -> void:
 	_cam_focus = Vector3(0, 0, -4)
 	_blend = 1.0
 	_hook_end_button()
+	for w in director.wounded:
+		w.max_health = 600
+		w.health = 600
+	# Conta come sconfitti anche i troiani già in campo all'inizio.
+	for n in get_tree().get_nodes_in_group(&"troiani"):
+		(n as GridUnit).died.connect(director._on_trojan_died)
+	ulisse.attack_damage = 45   # i fendenti di Ulisse abbattono un troiano in due colpi
+	if director.ferry:
+		director.ferry.stretcher_speed = 2.8   # la barella è più veloce, per stare nei tempi
+	if director.hud:
+		director.hud.set_wounded(0, 0, director.wounded.size(), 0)
 	clock = CHAPTER_START[ch]
 	_prepare_world(ch)
 	director.elapsed = clock
@@ -175,6 +189,7 @@ func _make_rules() -> LevelRules:
 	r.first_wave_delay = 99999.0   # le ondate le lancia la demo dal capitolo 2
 	r.wave_interval = 22.0
 	r.ferry_sail_time = 4.0
+	r.good_threshold = 0.3   # con 2 feriti su 6 la ritirata risulta "ordinata"
 	return r
 
 
@@ -182,22 +197,37 @@ func _make_rules() -> LevelRules:
 func _prepare_world(ch: int) -> void:
 	# Fino al capitolo 2 i troiani aspettano fermi sotto le mura.
 	_set_trojans_halted(ch < 2)
+	var w0 := _first_wounded()
+	if w0 and ch < 4:
+		_place_near(w0, WOUNDED_SPOT)
 	var severe := _severe()
 	if severe:
-		severe.place_at(grid.world_to_cell(Vector3(SEVERE_SPOT.x, 0, SEVERE_SPOT.y)))
+		_place_near(severe, SEVERE_SPOT)
 	if ch >= 2:
 		director._next_wave_at = clock + 10.0
 	if ch == 3:
-		ulisse.place_at(grid.world_to_cell(Vector3(-1.5, 0, 7.5)))
+		ulisse.place_at(grid.world_to_cell(Vector3(-0.5, 0, 7.5)))
 		_gather_allies_near(ulisse)
 	elif ch >= 4:
 		var w := _first_wounded()
 		if w:
-			w.place_at(grid.world_to_cell(Vector3(-9.5, 0, 10.5)))
+			_place_near(w, Vector2(-9.5, 10.5))
 			w.lie_down()
 			w.mark_saved()
 		ulisse.place_at(grid.world_to_cell(Vector3(-11.5, 0, 8.5)))
 		_gather_allies_near(ulisse)
+
+
+## Mette l'unità nella casella libera più vicina al punto (x, z in metri).
+func _place_near(u: GridUnit, p: Vector2) -> bool:
+	var c := grid.world_to_cell(Vector3(p.x, 0, p.y))
+	for r in range(0, 6):
+		for dx in range(-r, r + 1):
+			for dy in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) == r and grid.is_walkable(c + Vector2i(dx, dy)) \
+						and grid.get_occupant(c + Vector2i(dx, dy)) == null:
+					return u.place_at(c + Vector2i(dx, dy))
+	return false
 
 
 func _gather_allies_near(u: GridUnit) -> void:
@@ -254,6 +284,13 @@ func _process(delta: float) -> void:
 		_update_camera(delta)
 	_update_helpers(delta)
 	_update_shots()
+	_debug_cd -= delta
+	if _debug_cd <= 0.0 and OS.get_cmdline_user_args().has("--debug"):
+		_debug_cd = 2.0
+		var w := _first_wounded()
+		print("[demo] t=%.0f ch=%d ulisse=(%.1f,%.1f) speed=%.2f wounded0=%s" % [clock, chapter + 1, _ulisse_pos().x, _ulisse_pos().z,
+			ulisse.speed_multiplier if ulisse else 0.0,
+			("%d@(%.1f,%.1f)" % [w.state, w.global_position.x, w.global_position.z]) if w else "-"])
 	if _arg_auto_quit and clock >= END_TIME + 6.0:
 		_quit()
 
@@ -287,10 +324,10 @@ func _enter_chapter(idx: int) -> void:
 	match idx:
 		0:
 			_cam_keys = [
-				_key(t0, Vector3(0, 0, -5), 32, -52, 78, 28),
-				_key(t0 + 8, Vector3(-2, 0, -4), 18, -46, 66, 28),
-				_key(t0 + 14, Vector3(-6, 0, 0), 4, -38, 56, 28),
-				_key(t0 + 20.5, Vector3(-8, 0, 2), -6, -32, 48, 30),
+				_key(t0, Vector3(0, 0, -3), 32, -50, 56, 28),
+				_key(t0 + 8, Vector3(-2, 0, -2), 18, -45, 50, 28),
+				_key(t0 + 14, Vector3(-6, 0, 1), 4, -38, 44, 28),
+				_key(t0 + 20.5, Vector3(-8, 0, 3), -6, -32, 38, 30),
 			]
 			_blend = 1.0
 			director.hud.show_banner(OPENING_TEXT, 11.0)
@@ -307,18 +344,18 @@ func _enter_chapter(idx: int) -> void:
 		2:
 			_set_trojans_halted(false)
 			director._next_wave_at = clock + 9.0
-			_follow(func() -> Vector3: return _ulisse_pos(), 18, -24, 7.0, 44, 1.0)
+			_follow(func() -> Vector3: return _ulisse_pos(), 30, -36, 9.0, 42, 1.0)
 			_captions = [
 				[t0 + 0.5, "Odysseus races through the tall grass, vaults a crate and slips under an olive tree.", 10.0],
 				[t0 + 14.0, "Side by side with his comrades, he fights the Trojans.", 9.0],
 			]
 			_run_chapter_run(gen)
 		3:
-			_follow(func() -> Vector3: return _ulisse_pos(), 24, -30, 7.5, 40, 1.0)
+			_follow(func() -> Vector3: return _ulisse_pos(), 24, -40, 9.0, 40, 1.0)
 			_captions = [[t0 + 0.5, "A wounded comrade! Odysseus lifts him up and helps him back to camp.", 6.0]]
 			_run_chapter_rescue(gen)
 		4:
-			_follow(func() -> Vector3: return _ulisse_pos(), 24, -30, 7.5, 40, 1.0)
+			_follow(func() -> Vector3: return _ulisse_pos(), 24, -40, 9.0, 40, 1.0)
 			_captions = [
 				[t0 + 0.5, "Badly wounded men are carried on a stretcher by four soldiers.", 9.0],
 				[t0 + 10.0, "A rowing boat takes the wounded to the ships.", 9.0],
@@ -352,6 +389,12 @@ func _run_chapter_run(gen: int) -> void:
 			return
 	# Verso nord contro la cassa: Ulisse la scavalca con il balzo.
 	await _walk_to(gen, Vector2(-0.5, 9.2), 0.6, 8.0, false)
+	if gen != _gen:
+		return
+	# Lo scontro avviene davanti alla camera: quattro troiani escono davanti a Ulisse.
+	for i in 4:
+		director.wave = maxi(director.wave, 1)
+		director._spawn_trojan(Vector2(-0.5 + (i - 1.5) * 2.0, 3.0 - (i % 2) * 1.5))
 	await _fight_until(gen, end_t)
 
 
@@ -369,7 +412,8 @@ func _run_chapter_rescue(gen: int) -> void:
 	_live_caption = func() -> String:
 		var pct := roundi(ulisse.speed_multiplier * 100.0)
 		return "Supporting a wounded comrade: %d%% speed%s" % [pct, " (alone)" if pct <= 56 else " (a comrade is helping)"]
-	await _walk_to(gen, Vector2(-6.5, 6.0), 1.0, 8.0, false)
+	await _walk_to(gen, Vector2(-0.6, 7.0), 1.0, 8.0, false)
+	await _walk_to(gen, Vector2(-2.5, 9.6), 1.0, 8.0, false)
 	if gen != _gen:
 		return
 	_set_allies_busy(false)
@@ -379,7 +423,7 @@ func _run_chapter_rescue(gen: int) -> void:
 		return
 	_stop_input()
 	_live_caption = Callable()
-	await _fight_until(gen, CHAPTER_START[4] - 5.0)
+	await _fight_until(gen, CHAPTER_START[4] - 5.0, Vector2(-8.0, 8.0))
 
 
 ## Capitolo 4: Ulisse raggiunge il ferito grave, la squadra alza la barella.
@@ -392,7 +436,7 @@ func _run_chapter_stretcher(gen: int) -> void:
 	if gen != _gen:
 		return
 	_stop_input()
-	await _fight_until(gen, CHAPTER_START[5])
+	await _fight_until(gen, CHAPTER_START[5], Vector2(-9.0, 7.0))
 
 
 func _run_chapter_retreat(gen: int) -> void:
@@ -421,9 +465,9 @@ func _set_allies_busy(on: bool) -> void:
 
 
 ## Combatte i troiani vicini finché non arriva `until` (tempo della demo).
-func _fight_until(gen: int, until: float) -> void:
+func _fight_until(gen: int, until: float, anchor := Vector2(-2.0, 9.0)) -> void:
 	while gen == _gen and clock < until:
-		var foe := _nearest_trojan(14.0)
+		var foe := _nearest_trojan(14.0, anchor, 9.0)
 		if foe == null:
 			_stop_input()
 			await get_tree().physics_frame
@@ -442,7 +486,7 @@ func _fight_until(gen: int, until: float) -> void:
 	_stop_input()
 
 
-func _nearest_trojan(max_dist: float) -> GridUnit:
+func _nearest_trojan(max_dist: float, anchor := Vector2.INF, anchor_radius := 0.0) -> GridUnit:
 	var best: GridUnit = null
 	var best_d := max_dist
 	var up := _ulisse_pos()
@@ -451,6 +495,8 @@ func _nearest_trojan(max_dist: float) -> GridUnit:
 		if t == null or t.health <= 0:
 			continue
 		var d := Vector2(t.global_position.x - up.x, t.global_position.z - up.z).length()
+		if anchor != Vector2.INF and Vector2(t.global_position.x, t.global_position.z).distance_to(anchor) > anchor_radius:
+			continue
 		if d < best_d:
 			best_d = d
 			best = t
@@ -532,10 +578,10 @@ func _attack_pulse() -> void:
 	if _attack_down:
 		return
 	_attack_down = true
-	Input.action_press(&"attack")
-	await get_tree().physics_frame
-	await get_tree().physics_frame
-	Input.action_release(&"attack")
+	if ulisse and is_instance_valid(ulisse) and ulisse.has_method(&"_melee_attack"):
+		ulisse.action_requested.emit(&"attack")   # animazione di attacco
+		ulisse.call(&"_melee_attack")
+	await get_tree().create_timer(0.55).timeout
 	_attack_down = false
 
 
@@ -606,9 +652,9 @@ func _chapter4_camera_override(delta: float) -> void:
 		dist = 10.0
 	elif stretcher != null:
 		focus = stretcher.global_position
-		yaw = 35.0
-		pitch = -24.0
-		dist = 8.0
+		yaw = -40.0
+		pitch = -36.0
+		dist = 10.0
 	var k := 1.0 - exp(-1.5 * delta)
 	_cam_follow["focus"] = func() -> Vector3: return focus
 	_cam_follow["yaw"] = lerpf(float(_cam_follow["yaw"]), yaw, k)
@@ -700,8 +746,8 @@ func _build_ui() -> void:
 	_ui.layer = 50
 	add_child(_ui)
 	_caption = _label(30, Control.PRESET_CENTER_BOTTOM)
-	_caption.offset_top = -120
-	_caption.offset_bottom = -30
+	_caption.offset_top = -170
+	_caption.offset_bottom = -80
 	_caption.offset_left = -520
 	_caption.offset_right = 520
 	_caption.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

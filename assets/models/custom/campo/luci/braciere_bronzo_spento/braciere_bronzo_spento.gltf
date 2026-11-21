@@ -1,0 +1,270 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "braciere_bronzo_spento"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "M_ash",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "M_bronze",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "braciere_bronzo_spento",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "ash_n",
+   "uri": "../../_tex/ash_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "ash_c",
+   "uri": "../../_tex/ash_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "ash_r",
+   "uri": "../../_tex/ash_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_n",
+   "uri": "../../_tex/bronze_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_c",
+   "uri": "../../_tex/bronze_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_r",
+   "uri": "../../_tex/bronze_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 310,
+   "max": [
+    0.2667684853076935,
+    1.1776835918426514,
+    0.21835733950138092
+   ],
+   "min": [
+    -0.256523072719574,
+    0.9376835823059082,
+    -0.32909560203552246
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 310,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 310,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 870,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 1271,
+   "max": [
+    0.45500001311302185,
+    1.107683539390564,
+    0.40716516971588135
+   ],
+   "min": [
+    -0.45500001311302185,
+    0,
+    -0.40716516971588135
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 1271,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 1271,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 4752,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 3720,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3720,
+   "byteOffset": 3720,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 2480,
+   "byteOffset": 7440,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 1740,
+   "byteOffset": 9920,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 15252,
+   "byteOffset": 11660,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 15252,
+   "byteOffset": 26912,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 10168,
+   "byteOffset": 42164,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 9504,
+   "byteOffset": 52332,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 61836,
+   "uri": "braciere_bronzo_spento.bin"
+  }
+ ]
+}

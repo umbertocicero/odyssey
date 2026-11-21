@@ -1,5 +1,5 @@
 {
- "_comment": "Props Poly Haven del livello 1 (pianura di Troia). Coordinate mondo in metri (X, Z); height = altezza finale; sink = quanto affonda nel terreno. Alberi: id pesanti hanno un 'fallback' per qualit\u00e0 bassa.",
+ "_comment": "Props Poly Haven del livello 1 (pianura di Troia). Coordinate mondo in metri (X, Z); height = altezza finale; sink = quanto affonda nel terreno. Alberi: id pesanti hanno un 'fallback' per qualità bassa.",
  "level": "level1",
  "items": [
   {
@@ -197,19 +197,21 @@
    "id": "wooden_bucket_02",
    "pos": [
     -13.5,
-    10.5
+    14.6
    ],
-   "height": 0.4
+   "height": 0.4,
+   "blocking": false
   },
   {
    "name": "SgabelloCampo",
    "id": "wooden_stool_02",
    "pos": [
     -10.5,
-    11.5
+    14.4
    ],
    "height": 0.5,
-   "yaw": 30
+   "yaw": 30,
+   "blocking": false
   },
   {
    "name": "RattoCampo",

@@ -40,6 +40,7 @@ Opzioni, dopo `--`:
 | `--shot-times=5,30,60` | secondi in cui fare gli screenshot (default: ogni ~10 s) |
 | `--quality=low\|medium\|high` | qualità grafica del gioco |
 | `--timescale=N` | accelera il tempo (solo per prove veloci) |
+| `--debug` | stampa ogni 2 s posizione di Ulisse e stato del ferito |
 
 Esempio per registrare un video (frame fissi, deterministico):
 
@@ -72,3 +73,16 @@ Tutto è in `scripts/demo/level_demo.gd`:
 - testi: le liste `_captions` in `_enter_chapter()`.
 
 Durante la demo Ulisse, i compagni e i feriti vengono tenuti in vita (niente sconfitte in scena).
+
+## Demo 2 (per registrare il video)
+
+`scenes/demo/demo2.tscn` è la stessa regia senza aiuti a schermo né tasti, che si
+chiude da sola. Registra a 30 fps fissi (tempo deterministico, niente scatti):
+
+```bash
+scenes/demo/run_demo2.sh            # scrive out/demo2.avi
+scenes/demo/run_demo2.sh /tmp/v.avi # percorso a scelta
+```
+
+Se `--write-movie` non va col renderer, alternativa: `--shots=DIR --shot-times=...`
+della demo normale e poi `ffmpeg`.

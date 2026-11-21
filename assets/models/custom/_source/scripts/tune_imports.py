@@ -6,6 +6,7 @@ VRAM molto piu' alta e moire' sui tessuti. Regole (lette dai .gltf, che dicono a
   - normal map: compress/normal_map=1 (abilita);
   - texture a carte con alpha (foglie, fiamme, crini): VRAM compressed + mipmap + process/fix_alpha_border=true.
 Se un .import non esiste ancora, lancia prima 'godot --headless --import' per farlo generare; alla fine reimporta.
+Imposta process/size_limit=512 per le texture dei props secondari (SECONDARY_MODELS) e delle famiglie generiche (SMALL_TEXTURES).
 Include anche terreno_costa/ e le textures_2k delle rocce (polyhaven): quando servono vanno compresse come le altre.
 
 Uso: python3 tune_imports.py [campo|polyhaven|sketchfab ...]      (default: campo)
@@ -16,6 +17,11 @@ from PIL import Image
 
 CUSTOM = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 PROJECT = os.path.abspath(os.path.join(CUSTOM, "..", "..", ".."))
+# Props secondari: le loro texture (se usate SOLO da loro) e queste famiglie di texture generiche stanno a 512 px (process/size_limit=512)
+SECONDARY_MODELS = ("campo/giare_panche/panca_", "campo/giare_panche/pithos_medio", "campo/luci/torcia_", "campo/luci/braciere_",
+                    "polyhaven/oggetti/wooden_ladder_02", "polyhaven/oggetti/wooden_stool_02", "polyhaven/oggetti/wooden_bucket_02",
+                    "polyhaven/oggetti/wooden_crate_01", "polyhaven/oggetti/wooden_barrels_01", "polyhaven/attrezzi/", "polyhaven/attrezzi_fuori_epoca/", "campo/personaggi/masse/")
+SMALL_TEXTURES = ("rope_", "bark_", "hoof_", "ash_", "charcoal_", "bronze_", "iron_", "cloak_")
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
 roots = args or ["campo"]
 use_godot = "--no-godot" not in sys.argv
@@ -25,10 +31,10 @@ def classify():
     """Percorso assoluto della texture -> 'normal' | 'alpha' | 'color' | 'data'."""
     kinds = {}
     for r in roots:
-        for g in glob.glob(os.path.join(CUSTOM, r, "*", "*", "*.gltf")):
+        for g in glob.glob(os.path.join(CUSTOM, r, "**", "*.gltf"), recursive=True):
             d = json.load(open(g)); base = os.path.dirname(g)
             def path_of(tex):
-                return os.path.join(base, d["images"][d["textures"][tex["index"]]["source"]]["uri"])
+                return os.path.normpath(os.path.join(base, d["images"][d["textures"][tex["index"]]["source"]]["uri"]))
             for m in d.get("materials", []):
                 pbr = m.get("pbrMetallicRoughness", {})
                 if "normalTexture" in m:
@@ -71,7 +77,29 @@ def set_key(text, key, value):
     return text.replace("[params]\n", "[params]\n\n%s=%s\n" % (key, value), 1)
 
 
+# .import orfani (la texture sorgente non esiste piu', es. PNG sostituiti da JPEG condivisi): vanno tolti, risultano valid=false
+orphans = 0
+for r in roots:
+    for imp in glob.glob(os.path.join(CUSTOM, r, "**", "*.import"), recursive=True):
+        if not os.path.exists(imp[:-7]):
+            os.remove(imp); orphans += 1
+if orphans:
+    print("rimossi %d .import orfani" % orphans)
 kinds = classify()
+# quali modelli usano ciascuna texture (per decidere il limite a 512)
+users = {}
+for r in roots:
+    for g in glob.glob(os.path.join(CUSTOM, r, "**", "*.gltf"), recursive=True):
+        d = json.load(open(g)); base = os.path.dirname(g)
+        for im in d.get("images", []):
+            users.setdefault(os.path.normpath(os.path.join(base, im["uri"])), set()).add(os.path.relpath(g, CUSTOM).replace(os.sep, "/"))
+
+
+def wants_512(p):
+    if os.path.basename(p).startswith(SMALL_TEXTURES):
+        return True
+    u = users.get(p)
+    return bool(u) and all(any(m in x for m in SECONDARY_MODELS) for x in u)
 missing = [p for p in kinds if not os.path.exists(p + ".import")]
 if missing:
     print("%d texture senza .import: lancio un import di Godot per generarli" % len(missing))
@@ -89,6 +117,7 @@ for p, kind in sorted(kinds.items()):
         t = set_key(t, "compress/normal_map", "1")
     if kind == "alpha":
         t = set_key(t, "process/fix_alpha_border", "true")
+    t = set_key(t, "process/size_limit", "512" if wants_512(p) else "0")
     if t != o:
         open(imp, "w").write(t)
         changed += 1

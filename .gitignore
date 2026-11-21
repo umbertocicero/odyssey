@@ -67,3 +67,4 @@ Desktop.ini
 
 # Schermate generate dai test
 tests/screenshots/
+/out/

@@ -181,32 +181,32 @@
   {
    "mimeType": "image/jpeg",
    "name": "bronze_n",
-   "uri": "textures/bronze_n.jpg"
+   "uri": "../../_tex/bronze_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_c",
-   "uri": "textures/bronze_c.jpg"
+   "uri": "../../_tex/bronze_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_r",
-   "uri": "textures/bronze_r.jpg"
+   "uri": "../../_tex/bronze_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hide_n",
-   "uri": "textures/hide_n.jpg"
+   "uri": "../../_tex/hide_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hide_c",
-   "uri": "textures/hide_c.jpg"
+   "uri": "../../_tex/hide_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hide_r",
-   "uri": "textures/hide_r.jpg"
+   "uri": "../../_tex/hide_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
@@ -226,17 +226,17 @@
   {
    "mimeType": "image/jpeg",
    "name": "rope_n",
-   "uri": "textures/rope_n.jpg"
+   "uri": "../../_tex/rope_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_c",
-   "uri": "textures/rope_c.jpg"
+   "uri": "../../_tex/rope_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_r",
-   "uri": "textures/rope_r.jpg"
+   "uri": "../../_tex/rope_r.jpg"
   }
  ],
  "accessors": [

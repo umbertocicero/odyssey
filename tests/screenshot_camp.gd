@@ -27,6 +27,8 @@ func _run() -> void:
 	cam.set_process(false)
 	var views := {
 		"camp_obliqua_mare": [Vector3(-3.5, 1.7, 13.0), Vector3(-20.0, 1.6, 9.5), 55.0],
+		"camp_costa": [Vector3(-3.0, 4.2, 11.6), Vector3(-21.0, 0.3, 11.6), 48.0],
+		"camp_comandanti": [Vector3(-12.6, 1.7, 3.6), Vector3(-13.0, 1.2, 7.4), 44.0],
 		"camp_obliqua_nord": [Vector3(-10.0, 1.8, 18.5), Vector3(-14.0, 1.2, 8.0), 50.0],
 	}
 	for v: String in views:

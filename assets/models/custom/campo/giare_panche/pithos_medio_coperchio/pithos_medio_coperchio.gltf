@@ -144,47 +144,47 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "clay_n",
-   "uri": "textures/clay_n.jpg"
+   "uri": "../../_tex/clay_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "clay_c",
-   "uri": "textures/clay_c.jpg"
+   "uri": "../../_tex/clay_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "clay_r",
-   "uri": "textures/clay_r.jpg"
+   "uri": "../../_tex/clay_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "stone_n",
-   "uri": "textures/stone_n.jpg"
+   "uri": "../../_tex/stone_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "stone_c",
-   "uri": "textures/stone_c.jpg"
+   "uri": "../../_tex/stone_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "stone_r",
-   "uri": "textures/stone_r.jpg"
+   "uri": "../../_tex/stone_r.jpg"
   }
  ],
  "accessors": [

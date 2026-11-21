@@ -107,32 +107,32 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_n",
-   "uri": "textures/planks_n.jpg"
+   "uri": "../../_tex/planks_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_c",
-   "uri": "textures/planks_c.jpg"
+   "uri": "../../_tex/planks_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_r",
-   "uri": "textures/planks_r.jpg"
+   "uri": "../../_tex/planks_r.jpg"
   }
  ],
  "accessors": [

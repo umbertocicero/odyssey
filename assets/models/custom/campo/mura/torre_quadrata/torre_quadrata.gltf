@@ -181,62 +181,62 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "iron_n",
-   "uri": "textures/iron_n.jpg"
+   "uri": "../../_tex/iron_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "iron_c",
-   "uri": "textures/iron_c.jpg"
+   "uri": "../../_tex/iron_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "iron_r",
-   "uri": "textures/iron_r.jpg"
+   "uri": "../../_tex/iron_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "limestone_n",
-   "uri": "textures/limestone_n.jpg"
+   "uri": "../../_tex/limestone_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "limestone_c",
-   "uri": "textures/limestone_c.jpg"
+   "uri": "../../_tex/limestone_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "limestone_r",
-   "uri": "textures/limestone_r.jpg"
+   "uri": "../../_tex/limestone_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_n",
-   "uri": "textures/planks_n.jpg"
+   "uri": "../../_tex/planks_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_c",
-   "uri": "textures/planks_c.jpg"
+   "uri": "../../_tex/planks_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_r",
-   "uri": "textures/planks_r.jpg"
+   "uri": "../../_tex/planks_r.jpg"
   }
  ],
  "accessors": [

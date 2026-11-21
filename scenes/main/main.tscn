@@ -47,6 +47,7 @@ rules = ExtResource("6_rules")
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Hint" type="Label" parent="UI"]
+visible = false
 offset_left = 16.0
 offset_top = 12.0
 offset_right = 640.0
@@ -58,6 +59,7 @@ Your soldiers will take him to the ships.
 Red and orange tiles: incoming fire from the walls, move!"
 
 [node name="HUD" type="Control" parent="UI"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_left = 16.0

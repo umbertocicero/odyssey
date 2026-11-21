@@ -220,77 +220,77 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "eye_n",
-   "uri": "textures/eye_n.jpg"
+   "uri": "../../_tex/mane_dark_n.jpg"
   },
   {
    "mimeType": "image/png",
    "name": "eye_c",
-   "uri": "textures/eye_c.png"
+   "uri": "../../_tex/eye_c.png"
   },
   {
    "mimeType": "image/jpeg",
    "name": "eye_r",
-   "uri": "textures/eye_r.jpg"
+   "uri": "../../_tex/eye_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hull_band_n",
-   "uri": "textures/hull_band_n.jpg"
+   "uri": "../../_tex/hull_band_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hull_band_c",
-   "uri": "textures/hull_band_c.jpg"
+   "uri": "../../_tex/hull_band_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hull_band_r",
-   "uri": "textures/hull_band_r.jpg"
+   "uri": "../../_tex/hull_band_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_n",
-   "uri": "textures/planks_n.jpg"
+   "uri": "../../_tex/planks_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_c",
-   "uri": "textures/planks_c.jpg"
+   "uri": "../../_tex/planks_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "planks_r",
-   "uri": "textures/planks_r.jpg"
+   "uri": "../../_tex/planks_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_n",
-   "uri": "textures/rope_n.jpg"
+   "uri": "../../_tex/rope_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_c",
-   "uri": "textures/rope_c.jpg"
+   "uri": "../../_tex/rope_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_r",
-   "uri": "textures/rope_r.jpg"
+   "uri": "../../_tex/rope_r.jpg"
   }
  ],
  "accessors": [

@@ -265,3 +265,31 @@ L'erba (`GrassField`) cresce solo dove la maschera `GrassMask` lo consente, per 
 
 ## Crediti dei modelli di terzi (Sketchfab, CC-BY)
 - Tenda degli ufficiali (`assets/models/custom/sketchfab/tende/`): "Tent" di Gajk.Mv (https://sketchfab.com/Gajk.Mv), licenza CC-BY-4.0, modificata (colori, pelli e rami aggiunti). Testi completi in `assets/models/custom/sketchfab/CREDITI.md` (da mostrare nei crediti del gioco).
+
+## Stato attuale del prototipo (livello 1)
+
+Riassunto aggiornato; i dettagli stanno in `docs/` (ASSET_INTEGRATION.md, TERRENO_FOTOREALISTICO.md, SOSTITUZIONE_PROPS.md) e in `STYLE.md`.
+
+### Movimento libero
+Ulisse e le unità si muovono liberamente sul rilievo (non a scatti di casella): i tronchi e i pali sono cerchi sottili (`GridProp.thin_shape`, `trunk_radius`), le chiome si attraversano e diventano semitrasparenti, gli oggetti bassi si scavalcano. La collisione resta sulla griglia (`DioramaGrid`) e su `TerrainRelief`, che aggiunge alle quote a gradini le colline della mesh (±12 cm, `PhotoTerrain`). Test: `test_free_movement`, `test_vault`, `test_grid_movement`, `test_relief`.
+
+### Terreno ed erba fotorealistici
+`PhotoTerrain` (mesh `terreno_pianura` a 2K a qualità alta, mobile a 1K), `GrassCards` (cards alpha-cutout in MultiMesh a blocchi, 3.000 / 10.000 / 30.000 ciuffi per qualità, tinta steppa secca ocra), `DirtRoad` (strada di terra con solchi, sassi e cumuli). `--terrain=procedural` riporta il vecchio terreno. Dettagli: `docs/TERRENO_FOTOREALISTICO.md`.
+
+### Props e modelli
+Il livello usa i modelli originali dell'agente Blender (`assets/models/custom/campo/`: tende, focolare, pithoi, panche, palizzate, mura, torri, porta, colonne doriche, arco, cavalli, carri, macchine da guerra, navi, equipaggiamento, masse di opliti), Poly Haven CC0 (alberi, rocce, piante), i personaggi riggati e pochi Sketchfab. `PropBatcher` unisce i ripetuti in MultiMesh; `GridProp.low_quality_model`, `lazy_model_path` e `min_quality` tengono leggeri low e medium. Elenco completo in `docs/ASSET_INTEGRATION.md`.
+
+### Atmosfera e cielo
+Cielo di tramonto procedurale (`assets/shaders/sky_dusk.gdshader`), sole basso a 22°, luce di riempimento viola, foschia calda (`fog_density` 0,6), saturazione globale 0,8; polvere, fumo basso e frecce infuocate decorative (`BattleAtmosphere`), colonne di fumo (`SmokeColumns`), fiamme e scintille (`LevelAtmosphere`). Il piano per vento, foglie, notte e pioggia è in `todo.md` (non iniziato).
+
+### HUD
+`scripts/ui/level_hud.gd` e `hud_widgets.gd`: cornici di bronzo con greca, ritratti e icone da `assets/ui/hud/`, minimappa a pergamena, contatori dei feriti, schede degli alleati, sottotitoli, comandi; scalabile e con margini sicuri per i telefoni. Tutti i testi in inglese. `tests/screenshot_hud.gd` genera desktop e telefono.
+
+### Qualità e budget VRAM
+`Quality` (LOW web, MEDIUM mobile, HIGH PC): erba, particelle, ombre del sole (1024/2048/4096), glow, modelli leggeri. Obiettivi VRAM 250 / 280 / 350 MB; misura attuale (`tests/perf_level1.gd`): low 163 MB, medium 197 MB, high 272 MB; 9,9 / 12,1 / 18,3 ms su GTX 860M. Personaggi: versioni `_lod` a bassa e media. Le texture dei modelli sono VRAM-compressed con mipmap (`assets/models/custom/_source/scripts/tune_imports.py`).
+
+### Riferimenti di stile
+`ispirazione/` contiene le immagini di riferimento; le regole estratte (Età del bronzo, accampamento, sentiero, mura, battaglia, achei, mare, cielo, HUD) sono in `STYLE.md` (sezioni 5-11) e in memoria. Alcune foto non sono mai arrivate sul PC: le regole vengono dalle descrizioni testuali.
+
+### Demo e test
+`scenes/demo/run_demo.sh` e `run_demo2.sh` (demo automatiche, ~2 min; `--auto-quit`, `--shots=DIR`). Test headless: `godot --headless --path . -s res://tests/test_<nome>.gd`. Screenshot e misure: `tests/screenshot_*.gd`, `tests/perf_level1.gd`.

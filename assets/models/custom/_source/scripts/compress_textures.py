@@ -7,7 +7,7 @@ terreno_costa/): il loader di Godot 4.7 rifiuta le JPEG con profilo ICC (import 
 Dopo un'importazione nuova di modelli lanciare SEMPRE questo script. Se Godot ha gia' segnato valid=false un file,
 cancellare il suo .import prima di rifare l'import (altrimenti non lo riprova).
 
-Per la cartella campo/ lancia anche tune_imports.py: import Godot con VRAM compressed e mipmap (NO_TUNE=1 per saltarlo).
+Per la cartella campo/ lancia anche share_textures.py (una sola copia per texture identica, in campo/_tex/) e tune_imports.py: import Godot con VRAM compressed e mipmap (NO_TUNE=1 per saltarlo).
 Uso: python3 compress_textures.py [cartella]      (default: polyhaven/)
 """
 import json, os, sys, glob
@@ -18,7 +18,7 @@ HERE_ = os.path.dirname(os.path.abspath(__file__))
 CUSTOM = os.path.abspath(os.path.join(HERE_, "..", ".."))
 root = sys.argv[1] if len(sys.argv) > 1 else os.path.join(CUSTOM, "polyhaven")
 saved = 0
-for tdir in sorted(set(os.path.dirname(f) for f in glob.glob(os.path.join(root, "*", "*", "textures", "*.png")))):
+for tdir in sorted(set(os.path.dirname(f) for f in glob.glob(os.path.join(root, "**", "textures", "*.png"), recursive=True))):
     mapping = {}
     for png in sorted(glob.glob(os.path.join(tdir, "*.png"))):
         im = Image.open(png)
@@ -45,7 +45,7 @@ for tdir in sorted(set(os.path.dirname(f) for f in glob.glob(os.path.join(root, 
         if ch:
             json.dump(d, open(g, "w"), indent=1)
 # allinea ogni .gltf ai file realmente presenti (anche dopo un'esecuzione interrotta)
-for g in glob.glob(os.path.join(root, "*", "*", "*.gltf")):
+for g in glob.glob(os.path.join(root, "**", "*.gltf"), recursive=True):
     d = json.load(open(g)); ch = False
     for img in d.get("images", []):
         u = img.get("uri", "")
@@ -106,4 +106,8 @@ print("risparmiati %.0f MB" % (saved / 1048576))
 # --- parametri di import Godot (VRAM compressed + mipmap) per i modelli del campo ---
 if os.path.basename(os.path.normpath(root)) == "campo" and not os.environ.get("NO_TUNE"):
     import subprocess, sys as _sys
+    subprocess.run([_sys.executable, os.path.join(HERE_, "share_textures.py"), "campo"], check=False)   # una sola copia per texture identica
+    for d_ in glob.glob(os.path.join(root, "**", "textures"), recursive=True):
+        if not os.listdir(d_):
+            os.rmdir(d_)
     subprocess.run([_sys.executable, os.path.join(HERE_, "tune_imports.py"), "campo"], check=False)

@@ -19,22 +19,22 @@ static func apply(unit: GridUnit) -> void:
 	var holder := Node3D.new()
 	holder.name = "WoundedLook"
 	skeleton.add_child(holder)
-	# Il modello ha proporzioni "chibi" (testa grande, arti corti): misure generose.
-	# Testa: benda attorno alla fronte, sotto l'elmo, con sangue sul lato.
-	_band(skeleton, "head", Vector3(0, 0.02, 0.0), 0.235, 0.075)
-	_blot(skeleton, "head", Vector3(0.17, 0.04, -0.10), Vector3(0.10, 0.13, 0.07), 0.85)
-	_blot(skeleton, "head", Vector3(-0.08, 0.03, -0.20), Vector3(0.08, 0.09, 0.05), 0.85)
-	# Torace: fasciatura e sangue che trasuda sul fianco e davanti.
-	_band(skeleton, "spine", Vector3(0, 0.10, 0), 0.265, 0.15)
-	_blot(skeleton, "spine", Vector3(-0.22, 0.12, -0.12), Vector3(0.12, 0.16, 0.10), 0.85)
-	_blot(skeleton, "spine", Vector3(0.10, 0.12, -0.25), Vector3(0.14, 0.15, 0.06), 0.85)
+	# Misure per i personaggi riggati attuali (alti circa 1,52 m, 17 ossa): ogni fascia sta sull'osso,
+	# l'offset corre lungo l'osso (asse y locale) verso la sua punta.
+	# Testa: benda attorno alla fronte, con sangue sul lato.
+	_band(skeleton, "head", Vector3(0, 0.15, 0.0), 0.125, 0.05)
+	_blot(skeleton, "head", Vector3(0.10, 0.15, -0.07), Vector3(0.06, 0.07, 0.04), 0.85)
+	# Torace: fasciatura e sangue che trasuda.
+	_band(skeleton, "spine", Vector3(0, 0.18, 0), 0.20, 0.13)
+	_blot(skeleton, "spine", Vector3(-0.12, 0.2, -0.13), Vector3(0.07, 0.09, 0.05), 0.85)
+	_blot(skeleton, "spine", Vector3(0.06, 0.18, -0.15), Vector3(0.08, 0.08, 0.04), 0.85)
 	# Braccio sinistro fasciato.
-	_band(skeleton, "forearm.L", Vector3(0, 0.0, 0), 0.095, 0.14)
-	_blot(skeleton, "forearm.L", Vector3(-0.08, 0.02, 0), Vector3(0.06, 0.09, 0.06), 0.85)
-	# Gamba destra e stinco sinistro: bende macchiate.
-	_band(skeleton, "thigh.R", Vector3(0, -0.04, 0), 0.135, 0.15)
-	_blot(skeleton, "thigh.R", Vector3(0.10, -0.04, -0.05), Vector3(0.07, 0.10, 0.07), 0.85)
-	_band(skeleton, "shin.L", Vector3(0, 0.0, 0), 0.12, 0.12)
+	_band(skeleton, "forearm.L", Vector3(0, 0.10, 0), 0.06, 0.10)
+	_blot(skeleton, "forearm.L", Vector3(0.0, 0.10, -0.05), Vector3(0.04, 0.05, 0.04), 0.85)
+	# Coscia destra e stinco sinistro: bende macchiate.
+	_band(skeleton, "thigh.R", Vector3(0, 0.18, 0), 0.10, 0.11)
+	_blot(skeleton, "thigh.R", Vector3(0.0, 0.18, -0.08), Vector3(0.05, 0.06, 0.04), 0.85)
+	_band(skeleton, "shin.L", Vector3(0, 0.16, 0), 0.07, 0.09)
 
 
 static func _attach(skeleton: Skeleton3D, bone: String) -> BoneAttachment3D:

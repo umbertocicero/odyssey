@@ -183,62 +183,62 @@
   {
    "mimeType": "image/jpeg",
    "name": "hoof_n",
-   "uri": "textures/hoof_n.jpg"
+   "uri": "../../_tex/hoof_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hoof_c",
-   "uri": "textures/hoof_c.jpg"
+   "uri": "../../_tex/hoof_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hoof_r",
-   "uri": "textures/hoof_r.jpg"
+   "uri": "../../_tex/hoof_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_bay_n",
-   "uri": "textures/horse_bay_n.jpg"
+   "uri": "../../_tex/horse_bay_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_bay_c",
-   "uri": "textures/horse_bay_c.jpg"
+   "uri": "../../_tex/horse_bay_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_bay_r",
-   "uri": "textures/horse_bay_r.jpg"
+   "uri": "../../_tex/horse_bay_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_dark_n",
-   "uri": "textures/horse_dark_n.jpg"
+   "uri": "../../_tex/horse_dark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_dark_c",
-   "uri": "textures/horse_dark_c.jpg"
+   "uri": "../../_tex/horse_dark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_dark_r",
-   "uri": "textures/horse_dark_r.jpg"
+   "uri": "../../_tex/horse_dark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "mane_dark_n",
-   "uri": "textures/mane_dark_n.jpg"
+   "uri": "../../_tex/mane_dark_n.jpg"
   },
   {
    "mimeType": "image/png",
    "name": "mane_dark_c",
-   "uri": "textures/mane_dark_c.png"
+   "uri": "../../_tex/mane_dark_c.png"
   },
   {
    "mimeType": "image/jpeg",
    "name": "mane_dark_r",
-   "uri": "textures/mane_dark_r.jpg"
+   "uri": "../../_tex/mane_dark_r.jpg"
   }
  ],
  "accessors": [

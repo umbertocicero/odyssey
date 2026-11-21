@@ -208,3 +208,8 @@ Allo scadere del tempo suonano i corni della ritirata: gli Achei non espugnano T
 Parametri
 Tutti i valori si regolano da `data/level1/rules.tres` (resource LevelRules): durata, ritmo delle ondate, numero e forza dei troiani, intensificazione delle difese, numero e posizione dei feriti, area dell'accampamento e punteggio.
 
+
+## Stato di implementazione (novembre 2026)
+- Il livello 1 è giocabile: sopravvivere fino al segnale di ritirata, portare i feriti al campo e alle navi (barella, traghetto), ondate di troiani, arcieri, balista e catapulta sulle mura (WallShooter), HUD in inglese.
+- Ambiente: accampamento acheo in stile Età del bronzo (tende di tela e pelli, focolare con calderone, pithoi, panche, palizzate), strada di terra verso la porta di Troia, mura merlate con torri, porta di legno, colonne doriche e arco in rovina, acropoli con colle, navi scure con vela quadra, cavalli e carri da guerra, masse di opliti, polvere e frecce infuocate.
+- Mancano: ritratti e luci reali dei bracieri, soldati lontani come modelli diversi (le masse sono due blocchi), nave in secca con vela, scelte di narrativa e dialoghi in gioco, audio, piano atmosfera (vento, foglie, notte, pioggia: `todo.md`).

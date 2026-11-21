@@ -29,6 +29,13 @@ func _run() -> void:
 	var views := {
 		"strada_verso_troia": [Vector3(6.6, 1.5, 10.5), Vector3(6.5, 3.2, -22.0), 48.0],
 		"strada_curva": [Vector3(-4.0, 1.6, 12.4), Vector3(8.0, 1.8, -4.0), 55.0],
+		"mura_balista": [Vector3(-15.5, 6.6, -16.0), Vector3(-20.0, 5.6, -21.6), 52.0],
+		"mura_catapulta": [Vector3(-6.5, 8.0, -15.5), Vector3(-12.0, 4.6, -25.0), 55.0],
+		"battaglia_pianura": [Vector3(2.0, 1.7, -1.0), Vector3(-1.0, 2.0, -17.0), 62.0],
+		"battaglia_carro": [Vector3(13.8, 2.3, 2.0), Vector3(9.4, 0.9, -4.5), 55.0],
+		"battaglia_barricate": [Vector3(6.4, 2.6, -9.8), Vector3(6.4, 0.7, -16.5), 62.0],
+		"battaglia_ovest": [Vector3(-14.0, 1.7, -4.0), Vector3(-9.0, 1.4, -14.0), 58.0],
+		"colle_acropoli": [Vector3(-2.0, 11.0, -8.0), Vector3(-3.0, 3.0, -31.0), 62.0],
 		"porta_da_vicino": [Vector3(6.6, 2.0, -18.6), Vector3(7.0, 3.8, -21.6), 62.0],
 	}
 	for v: String in views:

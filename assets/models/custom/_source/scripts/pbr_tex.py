@@ -495,8 +495,93 @@ def eye(size=512, seed=43):
 def navi_set():
     hull_dark(); hull_band(); sail(); eye()
 
+def earth(size=SIZE, seed=50):
+    """Terra secca ocra con zolle, sassolini e fili d'erba paglierini (colle dell'acropoli, terreno)."""
+    g = fbm(size, seed, cells=3, octaves=6)
+    col = colorize(g, (108, 84, 56), (156, 126, 86), (196, 168, 122))
+    rnd = random.Random(seed)
+    d = ImageDraw.Draw(col)
+    for _ in range(1400):                                      # sassolini chiari e scuri
+        x, y = rnd.randrange(size), rnd.randrange(size)
+        r = rnd.choice((2, 3, 4, 6))
+        c = rnd.choice(((196, 180, 152), (134, 114, 88), (168, 150, 120), (92, 76, 58)))
+        d.ellipse([x - r, y - r // 2 - 1, x + r, y + r // 2 + 1], fill=c)
+    for _ in range(1500):                                      # fili d'erba secca
+        x, y = rnd.randrange(size), rnd.randrange(size)
+        a = rnd.uniform(-1.2, 1.2) - math.pi / 2
+        L = rnd.randrange(10, 26)
+        d.line([x, y, x + math.cos(a) * L, y + math.sin(a) * L], fill=rnd.choice(((176, 158, 104), (150, 140, 90), (120, 112, 70))), width=1)
+    col = ImageChops.multiply(col, fbm(size, seed + 4, cells=6, octaves=4).point(lambda v: 200 + v // 5).convert("RGB"))
+    h = ImageChops.blend(g, noise(size, 180, 180, seed + 2), 0.35)
+    save_set("earth", col, rough_map(size, seed + 1, 0.9, 1.0), normal_from_height(h, 2.0))
 
-ALL = [canvas, hide, bark, planks, stone, bronze, clay, rope, charcoal, leaves, flame, limestone, iron, tile, horse_set, hoplon_set, navi_set]
+
+def ash(size=512, seed=51):
+    """Carbone spento e cenere, senza emissiva (bracieri spenti)."""
+    g = fbm(size, seed, cells=5, octaves=5)
+    col = colorize(g, (26, 24, 23), (58, 54, 51), (118, 112, 104))
+    pale = fbm(size, seed + 3, cells=4, octaves=4).point(lambda v: 255 if v > 190 else 0).filter(ImageFilter.GaussianBlur(5))
+    col = Image.composite(Image.new("RGB", (size, size), (150, 146, 138)), col, pale.point(lambda v: v * 4 // 10))
+    save_set("ash", col, rough_map(size, seed + 1, 0.88, 1.0), normal_from_height(g, 2.2))
+
+
+def terra_set():
+    earth(); ash()
+
+def leather(size=512, seed=60):
+    """Cuoio scuro consumato, con pieghe e usura."""
+    g = fbm(size, seed, cells=3, octaves=5)
+    r = ridged(fbm(size, seed + 3, cells=7, octaves=3))
+    col = colorize(g, (44, 28, 18), (84, 56, 36), (126, 88, 58))
+    col = ImageChops.multiply(col, r.point(lambda v: 200 + v * 55 // 255).convert("RGB"))
+    save_set("leather", col, rough_map(size, seed + 1, 0.5, 0.78), normal_from_height(ImageChops.add(g, r, scale=2), 1.6))
+
+def skin(size=512, seed=61):
+    g = fbm(size, seed, cells=3, octaves=5)
+    col = colorize(g, (134, 92, 66), (172, 124, 90), (204, 156, 118))
+    save_set("skin", col, rough_map(size, seed + 1, 0.55, 0.75), normal_from_height(noise(size, 220, 220, seed + 2), 0.7))
+
+
+def wool(size=512, seed=62):
+    """Lana tessuta di tunica: rosso/ocra smorzato con trama visibile."""
+    tile = Image.new("L", (12, 12), 0)
+    d = ImageDraw.Draw(tile)
+    for i in range(0, 12, 3):
+        d.rectangle([i, 0, i + 1, 11], fill=170)
+    for j in range(0, 12, 3):
+        d.rectangle([0, j + 1, 11, j + 2], fill=235)
+    weave = Image.new("L", (size, size))
+    for x in range(0, size, 12):
+        for y in range(0, size, 12):
+            weave.paste(tile, (x, y))
+    g = fbm(size, seed, cells=3, octaves=5)
+    col = colorize(g, (92, 52, 38), (130, 80, 56), (168, 116, 82))
+    col = ImageChops.multiply(col, weave.point(lambda v: 170 + v // 3).convert("RGB"))
+    save_set("wool", col, rough_map(size, seed + 1, 0.85, 0.98), normal_from_height(ImageChops.blend(weave, g, 0.3), 1.6))
+
+def cloak(name, dark, mid, light, size=512, seed=70):
+    """Lana tinta e consumata per mantelli e scudi dipinti (a 512 px: per masse lontane)."""
+    tile = Image.new("L", (8, 8), 0)
+    d = ImageDraw.Draw(tile)
+    for i in range(0, 8, 2):
+        d.rectangle([i, 0, i, 7], fill=180)
+    weave = Image.new("L", (size, size))
+    for x in range(0, size, 8):
+        for y in range(0, size, 8):
+            weave.paste(tile, (x, y))
+    g = fbm(size, seed, cells=3, octaves=5)
+    col = colorize(g, dark, mid, light)
+    col = ImageChops.multiply(col, weave.point(lambda v: 190 + v // 4).convert("RGB"))
+    save_set(name, col, rough_map(size, seed + 1, 0.85, 0.98), normal_from_height(ImageChops.blend(weave, g, 0.3), 1.3))
+
+
+def cloaks():
+    cloak("cloak_red", (74, 30, 26), (118, 52, 42), (156, 84, 66), seed=71)
+    cloak("cloak_blue", (34, 46, 66), (56, 76, 104), (88, 112, 142), seed=72)
+    cloak("cloak_brown", (66, 48, 32), (104, 78, 52), (144, 112, 80), seed=73)
+
+
+ALL = [canvas, hide, bark, planks, stone, bronze, clay, rope, charcoal, leaves, flame, limestone, iron, tile, horse_set, hoplon_set, navi_set, terra_set, leather, skin, wool, cloaks]
 
 if __name__ == "__main__":
     import sys

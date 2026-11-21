@@ -289,102 +289,102 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_n",
-   "uri": "textures/bronze_n.jpg"
+   "uri": "../../_tex/bronze_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_c",
-   "uri": "textures/bronze_c.jpg"
+   "uri": "../../_tex/bronze_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_r",
-   "uri": "textures/bronze_r.jpg"
+   "uri": "../../_tex/bronze_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "charcoal_e",
-   "uri": "textures/charcoal_e.jpg"
+   "uri": "../../_tex/charcoal_e.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "charcoal_n",
-   "uri": "textures/charcoal_n.jpg"
+   "uri": "../../_tex/charcoal_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "charcoal_c",
-   "uri": "textures/charcoal_c.jpg"
+   "uri": "../../_tex/charcoal_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "charcoal_r",
-   "uri": "textures/charcoal_r.jpg"
+   "uri": "../../_tex/charcoal_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "flame_e",
-   "uri": "textures/flame_e.jpg"
+   "uri": "../../_tex/flame_e.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "flame_n",
-   "uri": "textures/flame_n.jpg"
+   "uri": "../../_tex/mane_dark_n.jpg"
   },
   {
    "mimeType": "image/png",
    "name": "flame_c",
-   "uri": "textures/flame_c.png"
+   "uri": "../../_tex/flame_c.png"
   },
   {
    "mimeType": "image/jpeg",
    "name": "flame_r",
-   "uri": "textures/flame_r.jpg"
+   "uri": "../../_tex/flame_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_n",
-   "uri": "textures/rope_n.jpg"
+   "uri": "../../_tex/rope_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_c",
-   "uri": "textures/rope_c.jpg"
+   "uri": "../../_tex/rope_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_r",
-   "uri": "textures/rope_r.jpg"
+   "uri": "../../_tex/rope_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "stone_n",
-   "uri": "textures/stone_n.jpg"
+   "uri": "../../_tex/stone_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "stone_c",
-   "uri": "textures/stone_c.jpg"
+   "uri": "../../_tex/stone_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "stone_r",
-   "uri": "textures/stone_r.jpg"
+   "uri": "../../_tex/stone_r.jpg"
   }
  ],
  "accessors": [

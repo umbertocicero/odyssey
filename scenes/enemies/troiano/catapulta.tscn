@@ -1,5 +1,6 @@
 [gd_scene format=3]
 
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/macchine/catapulta_contrappeso/catapulta_contrappeso.gltf" id="9_glb"]
 [ext_resource type="Script" path="res://scripts/combat/wall_shooter.gd" id="1_shooter"]
 [ext_resource type="Resource" path="res://data/combat/catapulta.tres" id="2_profile"]
 
@@ -25,14 +26,5 @@ muzzle_height = 2.0
 
 [node name="Model" type="Node3D" parent="."]
 
-[node name="Base" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
-mesh = SubResource("mesh_base")
-
-[node name="Braccio" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 0.5, -0.866, 0, 0.866, 0.5, 0, 1.2, -0.2)
-mesh = SubResource("mesh_beam")
-
-[node name="Traverso" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("mesh_arms")
+[node name="Mesh" parent="Model" instance=ExtResource("9_glb")]
+transform = Transform3D(-0.600, 0, 0, 0, 0.600, 0, 0, 0, -0.600, 0, 0, 0)

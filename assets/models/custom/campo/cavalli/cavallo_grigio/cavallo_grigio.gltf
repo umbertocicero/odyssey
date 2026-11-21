@@ -146,17 +146,17 @@
   {
    "mimeType": "image/jpeg",
    "name": "hoof_n",
-   "uri": "textures/hoof_n.jpg"
+   "uri": "../../_tex/hoof_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hoof_c",
-   "uri": "textures/hoof_c.jpg"
+   "uri": "../../_tex/hoof_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hoof_r",
-   "uri": "textures/hoof_r.jpg"
+   "uri": "../../_tex/hoof_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
@@ -176,7 +176,7 @@
   {
    "mimeType": "image/jpeg",
    "name": "mane_light_n",
-   "uri": "textures/mane_light_n.jpg"
+   "uri": "../../_tex/mane_dark_n.jpg"
   },
   {
    "mimeType": "image/png",
@@ -186,7 +186,7 @@
   {
    "mimeType": "image/jpeg",
    "name": "mane_light_r",
-   "uri": "textures/mane_light_r.jpg"
+   "uri": "../../_tex/mane_dark_r.jpg"
   }
  ],
  "accessors": [

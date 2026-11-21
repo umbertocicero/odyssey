@@ -1,0 +1,160 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "rocchio_colonna_caduto"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": false,
+   "name": "M_limestone",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "rocchio_colonna_caduto",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "limestone_n",
+   "uri": "../../_tex/limestone_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "limestone_c",
+   "uri": "../../_tex/limestone_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "limestone_r",
+   "uri": "../../_tex/limestone_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 2240,
+   "max": [
+    0.8847272396087646,
+    0.9122909307479858,
+    0.8320006132125854
+   ],
+   "min": [
+    -0.8847272396087646,
+    0,
+    -0.8320006132125854
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 2240,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 2240,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 3360,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 26880,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 26880,
+   "byteOffset": 26880,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 17920,
+   "byteOffset": 53760,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 6720,
+   "byteOffset": 71680,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 78400,
+   "uri": "rocchio_colonna_caduto.bin"
+  }
+ ]
+}

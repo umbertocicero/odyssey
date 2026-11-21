@@ -220,77 +220,77 @@
   {
    "mimeType": "image/jpeg",
    "name": "bark_n",
-   "uri": "textures/bark_n.jpg"
+   "uri": "../../_tex/bark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_c",
-   "uri": "textures/bark_c.jpg"
+   "uri": "../../_tex/bark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bark_r",
-   "uri": "textures/bark_r.jpg"
+   "uri": "../../_tex/bark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "canvas_n",
-   "uri": "textures/canvas_n.jpg"
+   "uri": "../../_tex/canvas_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "canvas_c",
-   "uri": "textures/canvas_c.jpg"
+   "uri": "../../_tex/canvas_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "canvas_r",
-   "uri": "textures/canvas_r.jpg"
+   "uri": "../../_tex/canvas_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hide_n",
-   "uri": "textures/hide_n.jpg"
+   "uri": "../../_tex/hide_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hide_c",
-   "uri": "textures/hide_c.jpg"
+   "uri": "../../_tex/hide_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "hide_r",
-   "uri": "textures/hide_r.jpg"
+   "uri": "../../_tex/hide_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "leaves_n",
-   "uri": "textures/leaves_n.jpg"
+   "uri": "../../_tex/mane_dark_n.jpg"
   },
   {
    "mimeType": "image/png",
    "name": "leaves_c",
-   "uri": "textures/leaves_c.png"
+   "uri": "../../_tex/leaves_c.png"
   },
   {
    "mimeType": "image/jpeg",
    "name": "leaves_r",
-   "uri": "textures/leaves_r.jpg"
+   "uri": "../../_tex/leaves_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_n",
-   "uri": "textures/rope_n.jpg"
+   "uri": "../../_tex/rope_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_c",
-   "uri": "textures/rope_c.jpg"
+   "uri": "../../_tex/rope_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "rope_r",
-   "uri": "textures/rope_r.jpg"
+   "uri": "../../_tex/rope_r.jpg"
   }
  ],
  "accessors": [

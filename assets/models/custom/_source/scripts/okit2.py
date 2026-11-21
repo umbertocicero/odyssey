@@ -35,6 +35,9 @@ class G:
     # ---- inserimento generico (le UV a scatola si calcolano dopo la trasformazione, cosi' sono in metri)
     def _add(self, verts, faces, mat, mtx=None, uvs=None, smooth=True, tile=1.0, long_u=True):
         base = len(self.v)
+        root = getattr(self, "root", None)
+        if root is not None:
+            mtx = root if mtx is None else root @ mtx
         pts = [(mtx @ Vector(p)) if mtx is not None else Vector(p) for p in verts]
         self.v += [tuple(p) for p in pts]
         for fi, fc in enumerate(faces):

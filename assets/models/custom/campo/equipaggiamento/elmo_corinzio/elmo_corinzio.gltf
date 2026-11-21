@@ -146,47 +146,47 @@
   {
    "mimeType": "image/jpeg",
    "name": "bronze_n",
-   "uri": "textures/bronze_n.jpg"
+   "uri": "../../_tex/bronze_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_c",
-   "uri": "textures/bronze_c.jpg"
+   "uri": "../../_tex/bronze_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "bronze_r",
-   "uri": "textures/bronze_r.jpg"
+   "uri": "../../_tex/bronze_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_dark_n",
-   "uri": "textures/horse_dark_n.jpg"
+   "uri": "../../_tex/horse_dark_n.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_dark_c",
-   "uri": "textures/horse_dark_c.jpg"
+   "uri": "../../_tex/horse_dark_c.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "horse_dark_r",
-   "uri": "textures/horse_dark_r.jpg"
+   "uri": "../../_tex/horse_dark_r.jpg"
   },
   {
    "mimeType": "image/jpeg",
    "name": "mane_dark_n",
-   "uri": "textures/mane_dark_n.jpg"
+   "uri": "../../_tex/mane_dark_n.jpg"
   },
   {
    "mimeType": "image/png",
    "name": "mane_dark_c",
-   "uri": "textures/mane_dark_c.png"
+   "uri": "../../_tex/mane_dark_c.png"
   },
   {
    "mimeType": "image/jpeg",
    "name": "mane_dark_r",
-   "uri": "textures/mane_dark_r.jpg"
+   "uri": "../../_tex/mane_dark_r.jpg"
   }
  ],
  "accessors": [

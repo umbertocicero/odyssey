@@ -1,6 +1,7 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="PackedScene" path="res://assets/models/custom/personaggi/oplita_acheo.glb" id="9_glb"]
+[ext_resource type="Script" path="res://scripts/units/unit_gear.gd" id="9_gear"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/equipaggiamento/hoplon_chevron/hoplon_chevron.gltf" id="9_hoplon"]
 [ext_resource type="Script" path="res://scripts/units/character_model.gd" id="9_model"]
 [ext_resource type="Script" path="res://scripts/units/ally_soldier.gd" id="1_script"]
 
@@ -42,4 +43,10 @@ shape = SubResource("CapsuleShape3D_body")
 
 [node name="Model" type="Node3D" parent="."]
 script = ExtResource("9_model")
-model_scene = ExtResource("9_glb")
+variant_paths = PackedStringArray("res://assets/models/custom/personaggi_nuovi/elpenore/elpenore.gltf", "res://assets/models/custom/personaggi_nuovi/euriloco/euriloco.gltf", "res://assets/models/custom/personaggi_nuovi/polite/polite.gltf", "res://assets/models/custom/personaggi_nuovi/euribate/euribate.gltf")
+variant_names = PackedStringArray("ELPENOR", "EURYLOCHUS", "POLITES", "EURYBATES")
+
+[node name="Equipaggiamento" type="Node" parent="Model"]
+script = ExtResource("9_gear")
+shield = ExtResource("9_hoplon")
+shield_scale = 0.5

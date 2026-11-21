@@ -7,6 +7,15 @@ extends Node3D
 
 ## Scena glb da istanziare.
 @export var model_scene: PackedScene
+## Varianti del modello (per esempio Elpenore ed Euriloco): se ci sono, se ne sceglie una dal numero
+## finale del nome dell'unità (SoldatoAcheo1 -> la seconda...). `variant_names` sono i nomi mostrati (HUD).
+@export var model_variants: Array[PackedScene] = []
+## Versioni leggere (5-8k triangoli) usate a qualità bassa e media (stesso ordine di model_variants / model_scene).
+@export_file("*.gltf", "*.glb") var lod_scene_path := ""
+@export var lod_variant_paths: PackedStringArray = PackedStringArray()
+## Come model_variants ma per percorso (caricati solo quando servono; a qualità bassa e media si usa il file "<nome>_lod" se esiste).
+@export var variant_paths: PackedStringArray = PackedStringArray()
+@export var variant_names: PackedStringArray = PackedStringArray()
 ## Scala uniforme del modello (1 = misure native, 1 m = 1 casella).
 @export_range(0.2, 3.0) var model_scale := 1.0
 ## Rotazione aggiuntiva attorno a Y: serve se nel glb il "davanti" non è -Z.
@@ -23,6 +32,8 @@ extends Node3D
 @export var sync_walk_to_step := true
 
 var instance: Node3D
+## Nome della variante scelta (vuoto se il modello è unico).
+var variant_name := ""
 var player: AnimationPlayer
 var unit: GridUnit
 var dead := false
@@ -34,6 +45,10 @@ var _last_health := -1
 
 func _ready() -> void:
 	unit = get_parent() as GridUnit
+	_pick_variant()
+	if int(Quality.current()) < 2:
+		if lod_scene_path != "" and model_variants.is_empty():
+			model_scene = load(lod_scene_path) as PackedScene
 	if model_scene == null:
 		return
 	instance = model_scene.instantiate() as Node3D
@@ -134,3 +149,31 @@ func _on_died() -> void:
 func _on_action(action: StringName) -> void:
 	if action == &"attack":
 		play_attack()
+
+
+func _pick_variant() -> void:
+	if model_variants.is_empty() and variant_paths.is_empty():
+		return
+	var digits := ""
+	var n := String(unit.name if unit else name)
+	for i in range(n.length() - 1, -1, -1):
+		if n[i].is_valid_int():
+			digits = n[i] + digits
+		else:
+			break
+	var count := model_variants.size() if not model_variants.is_empty() else variant_paths.size()
+	var index := (int(digits) if digits != "" else 0) % count
+	if model_variants.is_empty():
+		var path := variant_paths[index]
+		if int(Quality.current()) < 2:
+			var base := path.get_file().get_basename()
+			var lod := path.get_base_dir() + "_lod/" + base + "_lod.gltf"
+			if ResourceLoader.exists(lod):
+				path = lod
+		model_scene = load(path) as PackedScene
+		variant_name = variant_names[index] if index < variant_names.size() else ""
+		return
+	model_scene = model_variants[index]
+	if int(Quality.current()) < 2 and index < lod_variant_paths.size() and lod_variant_paths[index] != "":
+		model_scene = load(lod_variant_paths[index]) as PackedScene
+	variant_name = variant_names[index] if index < variant_names.size() else ""

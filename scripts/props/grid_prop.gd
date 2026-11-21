@@ -16,6 +16,8 @@ extends Node3D
 ## Percorso del modello caricato solo se serve (alta qualità, o sempre se non c'è `low_quality_model`,
 ## e solo da `min_quality` in su): le texture di ciò che non si vede non finiscono in VRAM.
 @export_file("*.gltf", "*.glb", "*.tscn") var lazy_model_path := ""
+## Come `lazy_model_path` ma per il modello leggero: si carica solo a qualità bassa e media.
+@export_file("*.gltf", "*.glb", "*.tscn") var lazy_low_model_path := ""
 
 ## Nome di un singolo pezzo dentro un modello "pack" (vuoto = tutto il modello).
 @export var piece := "":
@@ -153,11 +155,15 @@ func is_vaultable() -> bool:
 
 ## Il modello da mostrare: quello leggero a qualità bassa e media, se c'è.
 func _load_lazy() -> void:
-	if model != null or lazy_model_path == "" or int(Quality.current()) < min_quality:
+	if int(Quality.current()) < min_quality:
 		return
-	if low_quality_model != null and Quality.current() != Quality.Level.HIGH:
-		return
-	model = load(lazy_model_path) as PackedScene
+	var high := Quality.current() == Quality.Level.HIGH
+	# Modello leggero: solo se non siamo a qualità alta.
+	if low_quality_model == null and lazy_low_model_path != "" and not high:
+		low_quality_model = load(lazy_low_model_path) as PackedScene
+	# Modello pieno: a qualità alta, o sempre se non c'è un modello leggero.
+	if model == null and lazy_model_path != "" and (high or low_quality_model == null):
+		model = load(lazy_model_path) as PackedScene
 
 
 func _active_model() -> PackedScene:
