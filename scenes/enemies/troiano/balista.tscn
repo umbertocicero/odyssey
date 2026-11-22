@@ -1,6 +1,5 @@
 [gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://assets/models/custom/campo/macchine/balista_telaio/balista_telaio.gltf" id="9_glb"]
 [ext_resource type="Script" path="res://scripts/combat/wall_shooter.gd" id="1_shooter"]
 [ext_resource type="Resource" path="res://data/combat/balista.tres" id="2_profile"]
 
@@ -22,9 +21,9 @@ size = Vector3(1.6, 0.1, 0.12)
 [node name="Balista" type="Node3D"]
 script = ExtResource("1_shooter")
 profile = ExtResource("2_profile")
-muzzle_height = 0.8
+model_path = "res://assets/models/custom/campo/macchine/balista/balista.gltf"
+model_lod_path = "res://assets/models/custom/campo/macchine/balista/balista_lod.gltf"
+muzzle_height = 1.0
 
 [node name="Model" type="Node3D" parent="."]
 
-[node name="Mesh" parent="Model" instance=ExtResource("9_glb")]
-transform = Transform3D(-0.550, 0, 0, 0, 0.550, 0, 0, 0, -0.550, 0, 0, 0)

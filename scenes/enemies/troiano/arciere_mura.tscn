@@ -31,3 +31,7 @@ script = ExtResource("9_fig")
 model_path = "res://assets/models/custom/personaggi_nuovi/troiano_arciere/troiano_arciere.gltf"
 lod_path = "res://assets/models/custom/personaggi_nuovi/troiano_arciere_lod/troiano_arciere_lod.gltf"
 min_quality = 0
+sway = true
+weapon_path = "res://assets/models/custom/armi/arco/arco.gltf"
+weapon_lod_path = "res://assets/models/custom/armi/arco/arco_lod.gltf"
+weapon_kind = 2

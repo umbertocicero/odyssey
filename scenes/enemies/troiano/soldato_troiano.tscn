@@ -1,5 +1,6 @@
 [gd_scene load_steps=8 format=3]
 
+[ext_resource type="Script" path="res://scripts/units/unit_gear.gd" id="9_gear"]
 [ext_resource type="Script" path="res://scripts/units/character_model.gd" id="9_model"]
 [ext_resource type="Script" path="res://scripts/units/grid_unit.gd" id="1_script"]
 
@@ -40,5 +41,12 @@ shape = SubResource("CapsuleShape3D_body")
 
 [node name="Model" type="Node3D" parent="."]
 script = ExtResource("9_model")
-variant_paths = PackedStringArray("res://assets/models/custom/personaggi_nuovi/troiano_1/troiano_1.gltf", "res://assets/models/custom/personaggi_nuovi/troiano_2/troiano_2.gltf")
-variant_names = PackedStringArray("TROJAN SOLDIER", "TROJAN SPEARMAN")
+variant_paths = PackedStringArray("res://assets/models/custom/personaggi_nuovi/troiano_fanteria/troiano_fanteria.gltf")
+variant_names = PackedStringArray("TROJAN INFANTRY")
+
+[node name="Equipaggiamento" type="Node" parent="Model"]
+script = ExtResource("9_gear")
+shield_aligned = false
+weapon_path = "res://assets/models/custom/armi/lancia/lancia.gltf"
+weapon_lod_path = "res://assets/models/custom/armi/lancia/lancia_lod.gltf"
+weapon_kind = 1

@@ -13,6 +13,8 @@ Rigenerare (un Blender alla volta): `blender -b --factory-startup art_source/cha
 | `troiano_2/troiano_2.gltf` | troiano2.blend | soldato troiano, variante | thrust |
 | `troiano_arciere/troiano_arciere.gltf` | traoiano3_con_arco.blend | troiano con faretra e frecce | shoot (arco: non c'e' l'arco nel modello) |
 
+| `troiano_fanteria/troiano_fanteria.gltf` | troiano_fanteria.blend | fanteria troiana (Trojan Infantry): elmo con cresta blu, corazza di cuoio e bronzo, mantello blu. Sostituisce troiano_1/2 nel livello 1 | thrust |
+| `troiano_capitano/troiano_capitano.gltf` | troaino_capitano.blend | capitano troiano (Lochagos): barba, corazza decorata con pteruges, cresta; mini-boss vicino alla porta | slash |
 | `euribate/euribate.gltf` | Euribate.blend | Euribate | slash |
 | `filotete/filotete.gltf`, `filotete_no_elmo/filotete_no_elmo.gltf` | Filotete.blend, Filotete_no_elmo.blend | Filotete (con elmo / senza elmo, fascia e bende) | slash |
 | `polite/polite.gltf` | polite.blend | Polite (fascia sulla fronte) | slash |
@@ -20,7 +22,7 @@ Rigenerare (un Blender alla volta): `blender -b --factory-startup art_source/cha
 | `menelao/menelao.gltf` | Menelao.blend | Menelao | slash |
 | `agamennone/agamennone.gltf` | Agamennone.blend | Agamennone | slash |
 
-**Versioni leggere**: ogni cartella ha la gemella `<nome>_lod/<nome>_lod.gltf` (~6.500 tri, texture 512, stesso rig e stesse animazioni). 13 personaggi x 2 versioni.
+**Versioni leggere**: ogni cartella ha la gemella `<nome>_lod/<nome>_lod.gltf` (~6.500 tri, texture 512, stesso rig e stesse animazioni). 15 personaggi x 2 versioni.
 
 - ~25.000 tri ciascuno, 1 materiale PBR (base, ORM con G=roughness B=metallo, normale) a 1024 px, JPEG senza ICC, import Godot VRAM compressed + mipmap.
 - Altezza ~1,52 m (i sorgenti sono 1,9 m, scalati 0,8 come le figurine di `personaggi/`), piedi a z=0, origine tra i piedi, fronte verso -Z in Godot.
