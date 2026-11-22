@@ -18,6 +18,8 @@ P = {
     "agamennone": ("Agamennone.jpeg", (40, 190, 620, 770)),
     "pandaro": ("Trojan.jpeg", (60, 80, 640, 660)),
     "deifobo": ("Trojan_2.jpeg", (60, 80, 640, 660)),
+    "fanteria_troiana": ("triano_fanteria.jpeg", (60, 80, 640, 660)),
+    "capitano_troiano": ("troaino_capitano.jpeg", (60, 80, 640, 660)),
     "pandaro_arciere": ("Trojan_arco.jpeg", (60, 80, 640, 660)),
 }
 ALIAS = {"oplita_acheo": "euriloco", "ufficiale_troiano": "deifobo", "arciere_troiano": "pandaro_arciere"}   # nomi dei file del primo gruppo

@@ -581,7 +581,55 @@ def cloaks():
     cloak("cloak_brown", (66, 48, 32), (104, 78, 52), (144, 112, 80), seed=73)
 
 
-ALL = [canvas, hide, bark, planks, stone, bronze, clay, rope, charcoal, leaves, flame, limestone, iron, tile, horse_set, hoplon_set, navi_set, terra_set, leather, skin, wool, cloaks]
+def wood_ash(size=512, seed=90):
+    """Frassino per l'asta della lancia: fibre lunghe, anelli chiari, lucidata dall'uso (v = lungo l'asta)."""
+    g = fbm(size, seed, cells=3, octaves=5, stretch=(6, 1))
+    r = ridged(fbm(size, seed + 8, cells=2, octaves=4, stretch=(9, 1)))
+    col = colorize(g, (118, 86, 54), (166, 128, 86), (206, 170, 120))
+    col = ImageChops.multiply(col, r.point(lambda v: 190 + v * 65 // 255).convert("RGB"))
+    save_set("wood_ash", col, rough_map(size, seed + 1, 0.45, 0.7), normal_from_height(ImageChops.add(g, r, scale=2), 1.8))
+
+
+def wood_bow(size=512, seed=91):
+    """Legno scuro laccato con tendine per l'arco: venature fini e riflesso setoso."""
+    g = fbm(size, seed, cells=3, octaves=5, stretch=(8, 1))
+    r = ridged(fbm(size, seed + 8, cells=2, octaves=4, stretch=(10, 1)))
+    col = colorize(g, (52, 32, 20), (90, 58, 36), (132, 92, 58))
+    col = ImageChops.multiply(col, r.point(lambda v: 200 + v * 55 // 255).convert("RGB"))
+    save_set("wood_bow", col, rough_map(size, seed + 1, 0.32, 0.55), normal_from_height(ImageChops.add(g, r, scale=2), 1.4))
+
+
+def bronze_blade(size=512, seed=92):
+    """Bronzo di lama: lucido, con affilatura, graffi e un velo di patina verde ai bordi."""
+    g = fbm(size, seed, cells=3, octaves=5, stretch=(1, 4))
+    col = colorize(g, (96, 74, 42), (146, 114, 64), (188, 154, 98))
+    sc = Image.new("L", (size, size), 128)
+    d = ImageDraw.Draw(sc)
+    rnd = random.Random(seed)
+    for _ in range(320):
+        x, y = rnd.randrange(size), rnd.randrange(size)
+        a = math.pi / 2 + rnd.uniform(-0.25, 0.25)
+        d.line([x, y, x + math.cos(a) * rnd.randrange(30, 140), y + math.sin(a) * rnd.randrange(30, 140)], fill=rnd.choice((70, 190)), width=1)
+    patina = fbm(size, seed + 3, cells=4, octaves=4).point(lambda v: 255 if v > 205 else 0).filter(ImageFilter.GaussianBlur(7))
+    col = Image.composite(Image.new("RGB", (size, size), (74, 104, 80)), col, patina.point(lambda v: v * 5 // 10))
+    save_set("bronze_blade", col, rough_map(size, seed + 1, 0.22, 0.48), normal_from_height(ImageChops.blend(g, sc, 0.5), 1.2))
+
+
+def cord(size=256, seed=93):
+    """Corda di lino ritorto per la corda dell'arco (u = giro, v = lungo la corda)."""
+    d_img = Image.new("L", (size, size), 120)
+    d = ImageDraw.Draw(d_img)
+    for k in range(-size, size * 2, 32):
+        d.line([k, 0, k + size // 4, size], fill=230, width=12)
+    col = colorize(d_img, (150, 128, 96), (190, 168, 128), (222, 204, 164))
+    save_set("cord", col, rough_map(size, seed, 0.85, 0.97), normal_from_height(d_img, 2.2))
+
+
+def armi_set():
+    wood_ash(); wood_bow(); bronze_blade(); cord()
+
+
+ALL = [canvas, hide, bark, planks, stone, bronze, clay, rope, charcoal, leaves, flame, limestone, iron, tile, horse_set, hoplon_set, navi_set, terra_set, leather, skin, wool, cloaks, armi_set]
 
 if __name__ == "__main__":
     import sys

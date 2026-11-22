@@ -20,7 +20,8 @@ PROJECT = os.path.abspath(os.path.join(CUSTOM, "..", "..", ".."))
 # Props secondari: le loro texture (se usate SOLO da loro) e queste famiglie di texture generiche stanno a 512 px (process/size_limit=512)
 SECONDARY_MODELS = ("campo/giare_panche/panca_", "campo/giare_panche/pithos_medio", "campo/luci/torcia_", "campo/luci/braciere_",
                     "polyhaven/oggetti/wooden_ladder_02", "polyhaven/oggetti/wooden_stool_02", "polyhaven/oggetti/wooden_bucket_02",
-                    "polyhaven/oggetti/wooden_crate_01", "polyhaven/oggetti/wooden_barrels_01", "polyhaven/attrezzi/", "polyhaven/attrezzi_fuori_epoca/", "campo/personaggi/masse/")
+                    "polyhaven/oggetti/wooden_crate_01", "polyhaven/oggetti/wooden_barrels_01", "polyhaven/attrezzi/", "polyhaven/attrezzi_fuori_epoca/", "campo/personaggi/masse/",
+                    "animali/maiale_", "animali/pecora/", "animali/montone_", "animali/cervo/", "animali/ghepardo/", "animali/cavallo_bardato/")
 SMALL_TEXTURES = ("rope_", "bark_", "hoof_", "ash_", "charcoal_", "bronze_", "iron_", "cloak_")
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
 roots = args or ["campo"]

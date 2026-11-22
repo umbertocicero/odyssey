@@ -1,0 +1,270 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "xiphos_lod"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "M_bronze_blade",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicFactor": 0.9200000166893005,
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  },
+  {
+   "doubleSided": false,
+   "name": "M_leather",
+   "normalTexture": {
+    "index": 3
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 4
+    },
+    "metallicFactor": 0,
+    "metallicRoughnessTexture": {
+     "index": 5
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "xiphos_lod",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    },
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "sampler": 0,
+   "source": 3
+  },
+  {
+   "sampler": 0,
+   "source": 4
+  },
+  {
+   "sampler": 0,
+   "source": 5
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_blade_n",
+   "uri": "textures/bronze_blade_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_blade_c",
+   "uri": "textures/bronze_blade_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "bronze_blade_r",
+   "uri": "textures/bronze_blade_r.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "leather_n",
+   "uri": "textures/leather_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "leather_c",
+   "uri": "textures/leather_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "leather_r",
+   "uri": "textures/leather_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 416,
+   "max": [
+    0.03500000014901161,
+    0.430400013923645,
+    0.014999999664723873
+   ],
+   "min": [
+    -0.03500000014901161,
+    -0.07150000333786011,
+    -0.014999999664723873
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 416,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 416,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 816,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 63,
+   "max": [
+    0.012500000186264515,
+    0.04749999940395355,
+    0.012500000186264515
+   ],
+   "min": [
+    -0.012500000186264515,
+    -0.04749999940395355,
+    -0.012500000186264515
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 63,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 63,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 288,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 4992,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 4992,
+   "byteOffset": 4992,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 3328,
+   "byteOffset": 9984,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 1632,
+   "byteOffset": 13312,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 756,
+   "byteOffset": 14944,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 756,
+   "byteOffset": 15700,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 504,
+   "byteOffset": 16456,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 576,
+   "byteOffset": 16960,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 17536,
+   "uri": "xiphos_lod.bin"
+  }
+ ]
+}

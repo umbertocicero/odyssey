@@ -1,0 +1,283 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0,
+    1
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "flame"
+  },
+  {
+   "mesh": 1,
+   "name": "Mesh_0"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "M_flame",
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 3
+    },
+    "metallicFactor": 0.0,
+    "roughnessFactor": 1.0
+   },
+   "emissiveFactor": [
+    1,
+    1,
+    1
+   ],
+   "emissiveTexture": {
+    "index": 4
+   },
+   "extensions": {
+    "KHR_materials_emissive_strength": {
+     "emissiveStrength": 2
+    }
+   },
+   "alphaMode": "MASK",
+   "alphaCutoff": 0.3
+  },
+  {
+   "doubleSided": true,
+   "name": "Material_0",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "flame_m",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  },
+  {
+   "name": "Mesh_0",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  },
+  {
+   "source": 3,
+   "sampler": 0
+  },
+  {
+   "source": 4,
+   "sampler": 0
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "torcia_achea_n",
+   "uri": "torcia_achea_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "torcia_achea_c",
+   "uri": "torcia_achea_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "torcia_achea_r",
+   "uri": "torcia_achea_r.jpg"
+  },
+  {
+   "uri": "../../_tex/flame_c.png",
+   "mimeType": "image/png",
+   "name": "flame_c"
+  },
+  {
+   "uri": "../../_tex/flame_e.jpg",
+   "mimeType": "image/jpeg",
+   "name": "flame_e"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 12,
+   "max": [
+    0.10000000149011612,
+    0.5268000364303589,
+    0.08660253882408142
+   ],
+   "min": [
+    -0.10000000149011612,
+    0.22680000960826874,
+    -0.08660253882408142
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 12,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 12,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 18,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 7574,
+   "max": [
+    0.061717212200164795,
+    0.39364317059516907,
+    0.062252674251794815
+   ],
+   "min": [
+    -0.06240411102771759,
+    -0.22401896119117737,
+    -0.06198154017329216
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 7574,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 7574,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 14985,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 144,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 96,
+   "byteOffset": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 36,
+   "byteOffset": 384,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 90888,
+   "byteOffset": 420,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 90888,
+   "byteOffset": 91308,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 60592,
+   "byteOffset": 182196,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 29970,
+   "byteOffset": 242788,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 272760,
+   "uri": "torcia_achea.bin"
+  }
+ ],
+ "extensionsUsed": [
+  "KHR_materials_emissive_strength"
+ ]
+}

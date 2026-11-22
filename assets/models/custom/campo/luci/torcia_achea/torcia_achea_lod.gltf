@@ -1,0 +1,250 @@
+{
+ "asset": {
+  "generator": "Khronos glTF Blender I/O v5.3.43",
+  "version": "2.0"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "name": "Scene",
+   "nodes": [
+    0,
+    1
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "mesh": 0,
+   "name": "flame"
+  },
+  {
+   "mesh": 1,
+   "name": "Mesh_0"
+  }
+ ],
+ "materials": [
+  {
+   "doubleSided": true,
+   "name": "M_flame.001",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     0.800000011920929,
+     0.800000011920929,
+     0.800000011920929,
+     1
+    ],
+    "metallicFactor": 0,
+    "roughnessFactor": 0.5
+   }
+  },
+  {
+   "doubleSided": true,
+   "name": "Material_0",
+   "normalTexture": {
+    "index": 0
+   },
+   "pbrMetallicRoughness": {
+    "baseColorTexture": {
+     "index": 1
+    },
+    "metallicRoughnessTexture": {
+     "index": 2
+    }
+   }
+  }
+ ],
+ "meshes": [
+  {
+   "name": "flame_m.001",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  },
+  {
+   "name": "Mesh_0",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 4,
+      "NORMAL": 5,
+      "TEXCOORD_0": 6
+     },
+     "indices": 7,
+     "material": 1
+    }
+   ]
+  }
+ ],
+ "textures": [
+  {
+   "sampler": 0,
+   "source": 0
+  },
+  {
+   "sampler": 0,
+   "source": 1
+  },
+  {
+   "sampler": 0,
+   "source": 2
+  }
+ ],
+ "images": [
+  {
+   "mimeType": "image/jpeg",
+   "name": "torcia_achea_lod_n",
+   "uri": "torcia_achea_lod_n.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "torcia_achea_lod_c",
+   "uri": "torcia_achea_lod_c.jpg"
+  },
+  {
+   "mimeType": "image/jpeg",
+   "name": "torcia_achea_lod_r",
+   "uri": "torcia_achea_lod_r.jpg"
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 12,
+   "max": [
+    0.10000000149011612,
+    0.5268000364303589,
+    0.08660253882408142
+   ],
+   "min": [
+    -0.10000000149011612,
+    0.22680000960826874,
+    -0.08660253882408142
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 12,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 12,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 18,
+   "type": "SCALAR"
+  },
+  {
+   "bufferView": 4,
+   "componentType": 5126,
+   "count": 5410,
+   "max": [
+    0.056335896253585815,
+    0.3880109190940857,
+    0.055325210094451904
+   ],
+   "min": [
+    -0.0563596747815609,
+    -0.219961017370224,
+    -0.04934133589267731
+   ],
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 5,
+   "componentType": 5126,
+   "count": 5410,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 6,
+   "componentType": 5126,
+   "count": 5410,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 7,
+   "componentType": 5123,
+   "count": 10239,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 0,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 144,
+   "byteOffset": 144,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 96,
+   "byteOffset": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 36,
+   "byteOffset": 384,
+   "target": 34963
+  },
+  {
+   "buffer": 0,
+   "byteLength": 64920,
+   "byteOffset": 420,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 64920,
+   "byteOffset": 65340,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 43280,
+   "byteOffset": 130260,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteLength": 20478,
+   "byteOffset": 173540,
+   "target": 34963
+  }
+ ],
+ "samplers": [
+  {
+   "magFilter": 9729,
+   "minFilter": 9987
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 194020,
+   "uri": "torcia_achea_lod.bin"
+  }
+ ]
+}

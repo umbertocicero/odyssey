@@ -79,3 +79,22 @@ Ogni build salva il sorgente in `_source/blend/<categoria>/<nome>.blend` ed espo
 
 - [`polyhaven/`](polyhaven/README.md): 96 modelli CC0 di Poly Haven e 2 materiali del terreno, con [catalogo](polyhaven/CATALOGO.md) e piano d'uso per i livelli 1 e 2.
 - [`sketchfab/`](sketchfab/README.md): 3 modelli da Sketchfab con **licenza da verificare** (edificio greco, colonna corinzia, rovina).
+
+## Nave achea e torcia (mesh.ai)
+
+- `navi/nave_achea/nave_achea[_lod].gltf`: lunga 12 m (in scena `fit_size` 8-8,5), prua verso -Z, origine al centro con il punto più basso a y=0; ~32.000 / 7.000 tri, texture 1024 / 512. Usata dalle 4 navi ormeggiate e da `NaveInSecca` (tirata in secca sulla riva, fuori dal corridoio camp-costa) in `level1.tscn`.
+- `campo/luci/torcia_achea/torcia_achea[_lod].gltf`: lunga 0,62 m, origine nel punto di presa, testa verso +Y, con fiamma emissiva a carte; ~5.000 / 3.400 tri, texture 512. Usata da `night_cycle.gd` in mano sinistra (`hand.L`) di Ulisse e degli alleati di notte.
+- Rigenerare: `blender -b art_source/models/<nave_achea|torcia>.blend --factory-startup -P _source/scripts/build_nave_torcia.py -- <nave|torcia>`, poi `tune_imports.py navi campo/luci`.
+
+## Catapulta, balista, carro e barella (mesh.ai)
+
+Cartella `campo/macchine/<nome>/<nome>[_lod].gltf`, fronte verso -Z, origine al centro con il punto più basso a y=0 (barella: origine sull'asse delle stanghe, lunga 2,5 m lungo Z, assi delle stanghe a x=±0,36).
+
+| Modello | Dimensioni (X×Y×Z m) | Triangoli (normale / lod) | Texture | Uso |
+|---|---|---|---|---|
+| `catapulta` | 1,7 × 2,4 × 2,6 | 24.000 / 6.000 | 1024 / 512 | `scenes/enemies/troiano/catapulta.tscn` |
+| `balista` | 1,2 × 1,6 × 1,7 | 24.000 / 6.000 | 1024 / 512 | `scenes/enemies/troiano/balista.tscn` |
+| `carro` | 1,75 × 1,5 × 3,0 | 24.000 / 6.000 | 1024 / 512 | prop `n_carro_guerra` di `level1.tscn` (timone verso -Z) |
+| `barella` | 0,83 × 0,23 × 2,5 | 12.000 / 3.000 | 1024 / 512 | `scripts/units/stretcher.gd` |
+
+Catapulta e balista sono caricate da `WallShooter` (`model_path` / `model_lod_path`): alta qualità il modello pieno, bassa e media il `_lod`. Rigenerare: `blender -b art_source/models/<nome>.blend --factory-startup -P _source/scripts/build_macchine.py -- <nome>`, poi `tune_imports.py campo`. Vecchi `catapulta_contrappeso`, `balista_telaio` e `carro_da_guerra` non più usati nel livello 1.
