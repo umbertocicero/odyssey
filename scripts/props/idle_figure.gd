@@ -31,7 +31,7 @@ func _ready() -> void:
 	if int(Quality.current()) < min_quality or model_path == "":
 		return
 	var path := model_path
-	if lod_path != "" and Quality.current() != Quality.Level.HIGH:
+	if lod_path != "":
 		path = lod_path
 	var scene := load(path) as PackedScene
 	if scene == null:

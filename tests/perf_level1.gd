@@ -51,6 +51,11 @@ func _run() -> void:
 		if arg == "--hide=sunshadow":
 			for n in level.find_children("*", "DirectionalLight3D", true, false):
 				(n as Light3D).shadow_enabled = false
+		if arg.begins_with("--shadowdist="):
+			for n in level.find_children("*", "DirectionalLight3D", true, false):
+				(n as DirectionalLight3D).directional_shadow_max_distance = float(arg.substr(13))
+		if arg.begins_with("--lodthr="):
+			main.get_node("GameView/GameViewport").mesh_lod_threshold = float(arg.substr(9))
 		if arg == "--hide=terrain":
 			for n in level.find_children("TerrenoFoto", "Node3D", true, false):
 				(n as Node3D).visible = false

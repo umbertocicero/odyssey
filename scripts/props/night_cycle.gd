@@ -197,6 +197,7 @@ func _hand_torch_for(unit: Node3D) -> Node3D:
 	var aim := Basis(Vector3.RIGHT, Vector3(0.0, 1.0, 0.08).normalized(), Vector3.RIGHT.cross(Vector3(0.0, 1.0, 0.08).normalized())).orthonormalized()
 	torch.transform = Transform3D(rest.basis.inverse() * aim * Basis.from_scale(Vector3.ONE), rest.affine_inverse() * (rest.origin + Vector3(0.0, 0.0, 0.02)))
 	attachment.add_child(torch)
+	torch.add_child(_flame_sparks())
 	attachment.visible = false
 	_hand_torches[unit] = attachment
 	return attachment
@@ -232,3 +233,35 @@ func _update_torches(night: float) -> void:
 		else:
 			l.visible = false
 			l.light_energy = 0.0
+
+
+## Scintille e fumo leggero sopra la fiamma della torcia in mano (punta a circa 0,6 m dall'impugnatura).
+func _flame_sparks() -> CPUParticles3D:
+	var p := CPUParticles3D.new()
+	p.name = "ScintilleTorcia"
+	p.position = Vector3(0.0, 0.62, 0.0)
+	p.amount = 6
+	p.lifetime = 0.9
+	p.local_coords = false
+	p.direction = Vector3.UP
+	p.spread = 25.0
+	p.initial_velocity_min = 0.3
+	p.initial_velocity_max = 0.8
+	p.gravity = Vector3(0.0, 0.4, 0.0)
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.03, 0.03)
+	p.mesh = quad
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	m.vertex_color_use_as_albedo = true
+	p.material_override = m
+	var ramp := Gradient.new()
+	ramp.offsets = PackedFloat32Array([0.0, 1.0])
+	ramp.colors = PackedColorArray([Color(1.0, 0.75, 0.3, 1.0), Color(0.9, 0.25, 0.05, 0.0)])
+	p.color_ramp = ramp
+	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	p.emitting = true
+	return p

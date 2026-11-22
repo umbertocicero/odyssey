@@ -611,7 +611,7 @@ func _pick_variant() -> void:
 		# Gli achei sono pochi e sempre vicini alla camera: modello pieno (il _lod decimato da vicino
 		# mostra calotta frastagliata e texture a blocchi).
 		var near_camera := unit != null and unit.team == GridUnit.Team.ACHEI
-		if int(Quality.current()) < 2 and not near_camera:
+		if (int(Quality.current()) < 2 or (unit != null and unit.team == GridUnit.Team.TROIANI)) and not near_camera:
 			var base := path.get_file().get_basename()
 			var lod := path.get_base_dir() + "_lod/" + base + "_lod.gltf"
 			if ResourceLoader.exists(lod):

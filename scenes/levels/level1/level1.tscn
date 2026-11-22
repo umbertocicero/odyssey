@@ -232,7 +232,7 @@ shadow_bias = 0.12
 shadow_normal_bias = 3.0
 shadow_blur = 1.5
 directional_shadow_mode = 0
-directional_shadow_max_distance = 45.0
+directional_shadow_max_distance = 28.0
 
 [node name="Riempimento" type="DirectionalLight3D" parent="." unique_id=1497155660]
 transform = Transform3D(0.748075, -0.366938, 0.552938, 0, 0.833222, 0.552938, -0.663615, -0.413639, 0.623312, 0, 12, 0)

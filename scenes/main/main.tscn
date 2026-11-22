@@ -35,6 +35,7 @@ stretch = true
 [node name="GameViewport" type="SubViewport" parent="GameView"]
 handle_input_locally = false
 audio_listener_enable_3d = true
+mesh_lod_threshold = 5.0
 size = Vector2i(1280, 720)
 render_target_update_mode = 4
 

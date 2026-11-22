@@ -54,7 +54,7 @@ func _process(delta: float) -> void:
 
 ## Istanzia il modello giusto per la qualità sotto Model, davanti verso +Z (il tiratore lo gira verso il bersaglio).
 func _load_model() -> void:
-	var path := model_path if (Quality.current() == Quality.Level.HIGH or model_lod_path == "") else model_lod_path
+	var path := model_path if model_lod_path == "" else model_lod_path
 	var model := get_node_or_null(^"Model") as Node3D
 	if path == "" or model == null:
 		return
