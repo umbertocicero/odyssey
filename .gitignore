@@ -68,3 +68,10 @@ Desktop.ini
 # Schermate generate dai test
 tests/screenshots/
 /out/
+
+# Sorgenti pesanti di lavoro (centinaia di MB): restano solo in locale
+/art_source/animals/
+/art_source/models/
+/art_source/characters/atena.blend
+/art_source/characters/troaino_capitano.blend
+/art_source/characters/troiano_fanteria.blend
