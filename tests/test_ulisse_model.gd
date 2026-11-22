@@ -27,7 +27,9 @@ func _initialize() -> void:
 	var sk := model.instance.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
 	var cape := sk.find_bone("cape")
 	var hips := sk.find_bone("hips")
-	var dz := sk.get_bone_global_rest(cape).origin.z - sk.get_bone_global_rest(hips).origin.z
+	var dz := 0.0
+	if cape >= 0 and hips >= 0:
+		dz = sk.get_bone_global_rest(cape).origin.z - sk.get_bone_global_rest(hips).origin.z
 	print("INFO  cape - hips lungo Z = ", dz, " (positivo: il davanti è -Z)")
 
 	# Passo: walk.

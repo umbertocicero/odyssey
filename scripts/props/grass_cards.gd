@@ -159,6 +159,8 @@ func _build() -> void:
 	var cz := int(ceil(map_size.y / cell))
 	for iz in cz:
 		for ix in cx:
+			if placed >= target:
+				break
 			var x := origin.x + (ix + rng.randf()) * cell
 			var z := origin.y + (iz + rng.randf()) * cell
 			var d := _density(x, z, mask, m1)
