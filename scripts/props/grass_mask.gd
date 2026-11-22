@@ -16,17 +16,24 @@ var fade := 0.6
 var ground: Array[Rect2] = []
 var deny: Array[Rect2] = []
 var solid_cells := {}   # Vector2i -> true
+## Rientro (m) del rettangolo di una casella solida sui lati senza vicini solidi.
+var solid_inset := 0.0
 var grid: DioramaGrid
 
 
-static func from_tree(tree: SceneTree, fade_distance := 0.6) -> GrassMask:
+## skip_hidden_areas: ignora i nodi ad area (lastricati, piazzali) spenti con visible = false.
+## inset: vedi solid_inset.
+static func from_tree(tree: SceneTree, fade_distance := 0.6, skip_hidden_areas := false, inset := 0.0) -> GrassMask:
 	var m := GrassMask.new()
 	m.fade = maxf(fade_distance, 0.01)
+	m.solid_inset = inset
 	for node in tree.get_nodes_in_group(&"grass_ground"):
 		var r := _rect_of(node)
 		if r.size != Vector2.ZERO:
 			m.ground.append(r)
 	for node in tree.get_nodes_in_group(&"grass_exclude"):
+		if skip_hidden_areas and not node is MeshInstance3D and node is Node3D and not (node as Node3D).visible:
+			continue
 		var r := _rect_of(node)
 		if r.size != Vector2.ZERO:
 			m.deny.append(r)
@@ -65,12 +72,23 @@ func weight(world_xz: Vector2) -> float:
 					var centre := grid.cell_to_world(cc)
 					var half := grid.cell_size * 0.5
 					var rect := Rect2(centre.x - half, centre.z - half, grid.cell_size, grid.cell_size)
+					if solid_inset > 0.0:
+						rect = _inset_cell(rect, cc)
 					var d := _distance(world_xz, rect)
 					if d < s:
 						w = minf(w, d / s)
 						if w <= 0.0:
 							return 0.0
 	return w
+
+
+## Rettangolo della casella rientrato di solid_inset sui lati che non confinano con altre caselle solide.
+func _inset_cell(rect: Rect2, c: Vector2i) -> Rect2:
+	var left := 0.0 if solid_cells.has(c + Vector2i(-1, 0)) else solid_inset
+	var right := 0.0 if solid_cells.has(c + Vector2i(1, 0)) else solid_inset
+	var top := 0.0 if solid_cells.has(c + Vector2i(0, -1)) else solid_inset
+	var bottom := 0.0 if solid_cells.has(c + Vector2i(0, 1)) else solid_inset
+	return Rect2(rect.position.x + left, rect.position.y + top, rect.size.x - left - right, rect.size.y - top - bottom)
 
 
 ## Vero se in quel punto cresce erba (densità piena o sfumata).

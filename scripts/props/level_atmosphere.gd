@@ -35,6 +35,8 @@ extends Node
 const GROUND_PROPS := ["shield", "spear", "crate", "barrel", "box", "sword", "helmet", "bucket", "sack", "chest", "amphora", "vase", "jar"]
 
 var level: Node3D
+## Moltiplicatore dell'energia dei fuochi (cresce di notte: lo imposta NightCycle).
+var fire_boost := 1.0
 var grid: DioramaGrid
 var fire_lights: Array[OmniLight3D] = []
 var fire_base: Array[float] = []
@@ -64,7 +66,7 @@ func _process(delta: float) -> void:
 		var l := fire_lights[i]
 		if is_instance_valid(l):
 			var n := _noise.get_noise_1d(_t * flicker_speed + i * 17.0)
-			l.light_energy = fire_base[i] * (1.0 + flicker_amount * (n * 1.6 + 0.4 * sin(_t * flicker_speed * 1.7 + i)))
+			l.light_energy = fire_base[i] * fire_boost * (1.0 + flicker_amount * (n * 1.6 + 0.4 * sin(_t * flicker_speed * 1.7 + i)))
 
 
 # --- Luce, cielo, ambiente --------------------------------------------------
@@ -87,7 +89,7 @@ func _setup_light() -> void:
 		# Memoria video per qualità: shadow map del sole e atlante delle luci puntiformi più piccoli
 		# a bassa e media, glow spento a bassa (l'alta resta com'era).
 		var level_quality := int(Quality.current())
-		RenderingServer.directional_shadow_atlas_set_size([1024, 2048, 4096][level_quality], true)
+		RenderingServer.directional_shadow_atlas_set_size([1024, 2048, 3072][level_quality], true)
 		if level_quality < 2:
 			get_viewport().positional_shadow_atlas_size = [512, 1024][level_quality]
 		if level_quality == 0:

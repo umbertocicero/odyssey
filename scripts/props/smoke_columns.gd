@@ -16,7 +16,7 @@ var column_count := 0
 
 func _ready() -> void:
 	var columns: int = [1, 3, 6][int(Quality.current())]
-	var amount: int = [10, 20, 34][int(Quality.current())]
+	var amount: int = [10, 14, 16][int(Quality.current())]
 	var texture := _soft_texture()
 	for i in mini(columns, bases.size()):
 		var p := CPUParticles3D.new()

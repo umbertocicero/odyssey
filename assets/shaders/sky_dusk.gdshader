@@ -16,6 +16,10 @@ uniform vec3 cloud_rim : source_color = vec3(1.0, 0.6, 0.35);
 uniform float cloud_cover : hint_range(0.0, 1.0) = 0.55;
 uniform float cloud_scale = 1.6;
 uniform float cloud_speed = 0.004;
+// Notte (NightCycle): 0 = tramonto, 1 = notte. Stelle, luna piena fredda tra le nuvole.
+uniform float night : hint_range(0.0, 1.0) = 0.0;
+uniform vec3 moon_dir = vec3(0.5, 0.6, 0.4);
+uniform float rain_amount : hint_range(0.0, 1.0) = 0.0;
 uniform int octaves : hint_range(1, 6) = 4;
 
 float hash(vec2 p) {
@@ -77,5 +81,24 @@ void sky() {
 	}
 	// Sotto l'orizzonte: terra calda (la scena la copre quasi sempre).
 	col = mix(col, ground_color, smoothstep(0.0, -0.15, dir.y));
+	if (night > 0.001 || rain_amount > 0.001) {
+		float lum = dot(col, vec3(0.33));
+		// Tramonto spento e freddo: blu ardesia, un residuo caldo all'orizzonte.
+		vec3 dark = mix(vec3(0.02, 0.03, 0.07), vec3(0.08, 0.1, 0.19), pow(1.0 - clamp(dir.y, 0.0, 1.0), 2.0));
+		vec3 ncol = dark + col * vec3(0.10, 0.11, 0.17) + vec3(0.9, 0.35, 0.12) * pow(max(sun_amount, 0.0), 12.0) * 0.06;
+		if (dir.y > 0.02) {
+			// Stelle: celle di rumore, solo dove non ci sono nuvole spesse.
+			vec2 sp = dir.xz / (dir.y + 0.3) * 60.0;
+			float h = hash(floor(sp));
+			float star = step(0.985, h) * smoothstep(0.05, 0.3, dir.y) * (0.5 + 0.5 * hash(floor(sp) + 7.0));
+			ncol += vec3(0.85, 0.9, 1.0) * star * (1.0 - clamp(lum * 2.0, 0.0, 1.0)) * 0.8;
+		}
+		vec3 md = normalize(moon_dir);
+		float md_dot = max(dot(dir, md), 0.0);
+		ncol += vec3(0.75, 0.82, 1.0) * pow(md_dot, 400.0) * 3.0 + vec3(0.35, 0.42, 0.7) * pow(md_dot, 18.0) * 0.35;
+		col = mix(col, ncol, night);
+		// Pioggia: cielo coperto e grigio.
+		col = mix(col, vec3(lum) * vec3(0.8, 0.85, 0.95) * 0.7, rain_amount * 0.7);
+	}
 	COLOR = col;
 }

@@ -73,6 +73,12 @@ extends Node3D
 ## Qualità minima per mostrare il modello (0 = sempre, 1 = media e alta, 2 = solo alta): i decori
 ## lontani (cavalli, carri) spariscono a bassa qualità. Le collisioni non cambiano.
 @export_range(0, 2) var min_quality := 0
+## Animale di scena: "horse", "sheep" o "pig" (vedi AnimalIdle); vuoto = oggetto fermo. Gli animali non si uniscono nel PropBatcher.
+@export var animal := ""
+## Raggio massimo (m) dei passi dell'animale attorno al punto di partenza (0 = resta fermo, solo respiro).
+@export_range(0.0, 3.0) var animal_wander := 1.0
+## Rotazione massima dell'animale rispetto all'orientamento iniziale, in gradi.
+@export_range(0.0, 180.0) var animal_turn_limit := 180.0
 @export var foliage_gain := Color(1, 1, 1):
 	set(value):
 		foliage_gain = value
@@ -93,6 +99,11 @@ func _ready() -> void:
 	_load_lazy()
 	_rebuild()
 	set_process(not Engine.is_editor_hint() and is_tree())
+	if animal != "" and not Engine.is_editor_hint():
+		var idle := AnimalIdle.new()
+		idle.name = "AnimalIdle"
+		add_child(idle)
+		idle.setup(self, animal, animal_wander, animal_turn_limit)
 
 
 ## Chioma semitrasparente quando un personaggio ci passa sotto, così non
@@ -137,9 +148,14 @@ func take_visual() -> Array[Dictionary]:
 	return result
 
 
+## Il nodo con le mesh (per AnimalIdle); null se il modello non è mostrato.
+func visual_node() -> Node3D:
+	return _visual
+
+
 ## Una chiave uguale per oggetti con lo stesso aspetto (stesso modello, pezzo, misura): solo quelli si uniscono.
 func visual_key() -> String:
-	if _active_model() == null or is_tree():
+	if _active_model() == null or is_tree() or animal != "":
 		return ""
 	return "%s|%s|%s|%d|%s|%s|%s|%s" % [_active_model().resource_path, piece, model_rotation_degrees, fit_axis, fit_size, cast_shadows, tint, desaturate]
 

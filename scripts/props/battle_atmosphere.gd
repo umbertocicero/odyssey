@@ -4,7 +4,7 @@ extends Node3D
 ## le mura, fumo scuro basso vicino al campo, frecce infuocate decorative che attraversano il cielo
 ## dalle mura verso il campo (pool riusabile, non fanno danni: quelle vere sono WallShooter/Projectile)
 ## e frecce conficcate a terra (un MultiMesh). Tutto con particelle CPU a quad morbidi e budget per
-## qualità: low ~56 particelle, medium ~260, high ~770; frecce in volo 2 / 4 / 10.
+## qualità: low ~30, medium ~85, high ~215 (con fumo, meteo e fuochi il totale resta sotto 60 / 250 / 600: tests/test_budgets.gd); frecce in volo 2 / 4 / 10.
 
 const DUST_POINTS := [
 	Vector3(-8.0, 0.5, 11.6), Vector3(0.0, 0.5, 11.4), Vector3(6.2, 0.5, 5.0), Vector3(6.6, 0.5, -3.0),
@@ -39,9 +39,9 @@ func _ready() -> void:
 	var q := int(Quality.current())
 	_trail_texture = _soft_texture()
 	var dust_emitters: int = [0, 6, 7][q]
-	var dust_amount: int = [0, 35, 90][q]
+	var dust_amount: int = [0, 8, 22][q]
 	var smoke_emitters: int = [2, 3, 3][q]
-	var smoke_amount: int = [16, 22, 40][q]
+	var smoke_amount: int = [10, 12, 20][q]
 	active_arrow_limit = [2, 4, 10][q]
 	for i in dust_emitters:
 		_add_cloud("Polvere%d" % (i + 1), DUST_POINTS[i], dust_amount, Color(0.74, 0.58, 0.38, 0.32), 2.2, 4.6, 6.0, Vector3(4.0, 0.0, 3.0))
@@ -50,7 +50,7 @@ func _ready() -> void:
 	_build_arrow_pool()
 	if q > 0:
 		_build_stuck_arrows([0, 8, 16][q])
-	particle_budget = dust_emitters * dust_amount + smoke_emitters * smoke_amount + active_arrow_limit * 12
+	particle_budget = dust_emitters * dust_amount + smoke_emitters * smoke_amount + active_arrow_limit * 5
 
 
 func _ground(x: float, z: float) -> float:
@@ -153,7 +153,7 @@ func _build_arrow_pool() -> void:
 		root.add_child(head)
 		var trail := CPUParticles3D.new()
 		trail.name = "Scia"
-		trail.amount = 12
+		trail.amount = [4, 4, 5][int(Quality.current())]
 		trail.lifetime = 0.7
 		trail.local_coords = false
 		trail.emitting = false
