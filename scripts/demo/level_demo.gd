@@ -479,7 +479,25 @@ func _fight_until(gen: int, until: float, anchor := Vector2(-2.0, 9.0)) -> void:
 		var guard := 0
 		while gen == _gen and is_instance_valid(foe) and foe.health > 0 and clock < until and guard < 30:
 			guard += 1
+			var fp := Vector2(foe.global_position.x, foe.global_position.z)
+			var up2 := _ulisse_pos()
+			var to_foe := fp - Vector2(up2.x, up2.z)
+			# Il nemico sta per colpire: Ulisse para con lo scudo o schiva di lato, come un vero duello.
+			var incoming := "_attack_cd" in foe and float(foe.get("_attack_cd")) < 0.45 and to_foe.length() < 1.9
+			if incoming and randf() < 0.7:
+				if randf() < 0.55:
+					_stop_input()
+					ulisse.action_requested.emit(&"parry")
+				else:
+					ulisse.action_requested.emit(&"dodge")
+					_steer(to_foe.rotated(PI * 0.5 * (1.0 if randf() < 0.5 else -1.0)))
+				for i in 16:
+					await get_tree().physics_frame
+				_stop_input()
+				continue
 			_stop_input()
+			if to_foe.length() > 1.4:
+				_steer(to_foe)   # il nemico arretra o gira attorno: Ulisse lo segue
 			_attack_pulse()
 			for i in 12:
 				await get_tree().physics_frame

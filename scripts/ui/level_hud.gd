@@ -18,7 +18,7 @@ const FONT_BOLD_OUTLINE := 5
 const PORTRAITS := {
 	"ELPENOR": "portrait_elpenore", "EURYLOCHUS": "portrait_euriloco", "EURYBATES": "portrait_euribate",
 	"PHILOCTETES": "portrait_filotete", "POLITES": "portrait_polite", "DEIPHOBUS": "portrait_deifobo",
-	"AGAMEMNON": "portrait_agamennone", "MENELAUS": "portrait_menelao", "PERIMEDES": "portrait_perimede", "PANDARUS": "portrait_pandaro", "TROJAN SOLDIER": "portrait_ufficiale_troiano", "TROJAN SPEARMAN": "portrait_ufficiale_troiano",
+	"AGAMEMNON": "portrait_agamennone", "MENELAUS": "portrait_menelao", "PERIMEDES": "portrait_perimede", "PANDARUS": "portrait_pandaro", "TROJAN SOLDIER": "portrait_ufficiale_troiano", "TROJAN INFANTRY": "portrait_fanteria_troiana", "TROJAN CAPTAIN": "portrait_capitano_troiano", "TROJAN SPEARMAN": "portrait_ufficiale_troiano",
 }
 
 var _seconds_left := 0.0

@@ -86,3 +86,24 @@ scenes/demo/run_demo2.sh /tmp/v.avi # percorso a scelta
 
 Se `--write-movie` non va col renderer, alternativa: `--shots=DIR --shot-times=...`
 della demo normale e poi `ffmpeg`.
+
+## Demo 3 (speedrun senza cheat)
+
+`scenes/demo/demo3.tscn` (**F6**) fa giocare il livello 1 a un bot, nel minor tempo possibile.
+Nessun cheat: usa `main.tscn` con le regole vere (`data/level1/rules.tres`), nessuna modifica a
+vita, danni, tempo, velocità o posizioni; il bot muove Ulisse e attacca con gli stessi input del
+giocatore (camera di gioco). Feriti, barella (4 soldati liberi, altrimenti trascinamento da 2 o 1),
+barche e ondate sono i sistemi del gioco. A schermo: tempo, contatori, stato del bot e riepilogo finale.
+Il livello finisce quando ogni ferito è in salvo sulle navi o perso.
+
+```bash
+scenes/demo/run_demo3.sh                      # finestra, F6 equivalente
+scenes/demo/run_demo3.sh --record             # video in out/demo3.avi (30 fps fissi, esce da solo)
+scenes/demo/run_demo3.sh --record=/tmp/v.avi
+```
+
+Opzioni: `--seed=N` (default 1207), `--plan=5,6,2,4,C,3,1,W` (visite in ordine: numero = ferito,
+`C` = porta in accampamento chi ti segue, `W` = idem dal lato della riva), `--trace`, `--auto-quit`,
+`--clean`. Tasti: `R` ricomincia, `Space` pausa, `Esc` esce. Prove veloci senza finestra:
+`godot --headless --path . --fixed-fps 60 res://scenes/demo/demo3.tscn -- --auto-quit`
+(stampa `[demo3] RESULT time=...`). Codice: `scripts/demo/level_demo3.gd`.

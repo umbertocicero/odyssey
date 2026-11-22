@@ -21,7 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://dg030g7ch11v3" path="res://assets/models/custom/polyhaven/rocce/namaqualand_boulder_03/namaqualand_boulder_03.gltf" id="n_boulder3"]
 [ext_resource type="PackedScene" uid="uid://brxnb77nhpasa" path="res://assets/models/custom/polyhaven/oggetti/wooden_bucket_02/wooden_bucket_02.gltf" id="n_bucket"]
 [ext_resource type="PackedScene" uid="uid://baalqulgu5yhr" path="res://assets/models/custom/accampamento/carro_coperto.glb" id="n_carro"]
-[ext_resource type="PackedScene" uid="uid://brh6vv4x54jv5" path="res://assets/models/custom/campo/carri/carro_da_guerra/carro_da_guerra.gltf" id="n_carro_guerra"]
+[ext_resource type="PackedScene" path="res://assets/models/custom/campo/macchine/carro/carro.gltf" id="n_carro_guerra"]
 [ext_resource type="PackedScene" uid="uid://bhv58j5brjaxc" path="res://assets/models/custom/polyhaven/vegetazione/celandine_01/celandine_01_a.gltf" id="n_celandine"]
 [ext_resource type="PackedScene" uid="uid://dqwyr5gycorhq" path="res://assets/models/custom/polyhaven/oggetti/treasure_chest/treasure_chest.gltf" id="n_chest"]
 [ext_resource type="PackedScene" uid="uid://dblevyhmfkdyu" path="res://assets/models/custom/campo/difese/barricata_cheval_de_frise/barricata_cheval_de_frise.gltf" id="n_cheval"]
@@ -63,9 +63,10 @@
 [ext_resource type="PackedScene" path="res://assets/models/custom/campo/terreno/colle_acropoli_modulare/colle_acropoli_modulare.gltf" id="n_colle"]
 [ext_resource type="PackedScene" path="res://assets/models/custom/campo/carri/carro_rotto/carro_rotto.gltf" id="n_carro_rotto"]
 [ext_resource type="Script" path="res://scripts/props/battle_atmosphere.gd" id="s_battle_atmo"]
-[ext_resource type="Script" path="res://scripts/props/hoplite_masses.gd" id="s_masses"]
 [ext_resource type="Script" path="res://scripts/props/idle_figure.gd" id="s_figure"]
 [ext_resource type="Script" path="res://scripts/level/level_clock.gd" id="s_clock"]
+[ext_resource type="Script" path="res://scripts/props/night_cycle.gd" id="s_night"]
+[ext_resource type="Script" path="res://scripts/props/weather_fx.gd" id="s_weather"]
 [ext_resource type="Shader" uid="uid://8yw050aib4ol" path="res://assets/shaders/sea.gdshader" id="sh_sea"]
 [ext_resource type="Shader" uid="uid://bmqa5xxpnwykj" path="res://assets/shaders/sky_dusk.gdshader" id="sh_sky"]
 [ext_resource type="Script" uid="uid://cfl1ue5s4q3o0" path="res://scripts/props/level_atmosphere.gd" id="s_atmo"]
@@ -74,7 +75,6 @@
 [ext_resource type="Script" uid="uid://jsry7v3yniv3" path="res://scripts/props/grass_field.gd" id="s_grass"]
 [ext_resource type="Script" uid="uid://djokjf75qdj86" path="res://scripts/props/grass_cards.gd" id="s_grass_cards"]
 [ext_resource type="Script" uid="uid://dmpitw1pggkmr" path="res://scripts/grid/diorama_grid.gd" id="s_grid"]
-[ext_resource type="Script" uid="uid://dn48lq81b8gqq" path="res://scripts/grid/move_hints.gd" id="s_hints"]
 [ext_resource type="Script" uid="uid://epmerfwconu" path="res://scripts/props/photo_terrain.gd" id="s_photo_terrain"]
 [ext_resource type="Script" uid="uid://ciin3ixcgk66m" path="res://scripts/props/grid_prop.gd" id="s_prop"]
 [ext_resource type="Script" uid="uid://c6yl6xuuxy2b4" path="res://scripts/props/terrain_relief.gd" id="s_relief"]
@@ -86,6 +86,7 @@
 [ext_resource type="Script" uid="uid://c72j4xseqimq7" path="res://scripts/props/smoke_columns.gd" id="s_smoke"]
 [ext_resource type="PackedScene" path="res://scenes/characters/achei/soldato_acheo.tscn" id="u_acheo"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/troiano/soldato_troiano.tscn" id="u_troiano"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/troiano/capitano_troiano.tscn" id="u_capitano"]
 [ext_resource type="PackedScene" path="res://scenes/characters/ulisse/ulisse.tscn" id="u_ulisse"]
 
 [sub_resource type="ShaderMaterial" id="sky_mat"]
@@ -868,22 +869,34 @@ fit_size = 1.1
 blocking = false
 
 [node name="CavalloCampo1" type="Node3D" parent="Scenario/Accampamento" unique_id=964616945]
-transform = Transform3D(-0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, -0.9397, -9.4, 0, 17.4)
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -4.5, 0, 21.5)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_castagno/cavallo_castagno.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_castagno_lod/cavallo_castagno_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
-blocking = false
+fit_size = 1.9
+footprint = Vector2i(1, 2)
+blocking = true
 min_quality = 1
+animal = "horse"
+animal_wander = 0.3
+animal_turn_limit = 12.0
+
 
 [node name="CavalloCampo2" type="Node3D" parent="Scenario/Accampamento" unique_id=1015217302]
-transform = Transform3D(0.342, 0, -0.9397, 0, 1, 0, 0.9397, 0, 0.342, -8.2, 0, 6.2)
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, -15.0, 0, 16.0)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_grigio/cavallo_grigio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_da_tiro/cavallo_da_tiro.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_da_tiro_lod/cavallo_da_tiro_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
-blocking = false
+fit_size = 1.95
+footprint = Vector2i(1, 2)
+blocking = true
 min_quality = 1
+animal = "horse"
+animal_wander = 0.3
+animal_turn_limit = 12.0
+
 
 [node name="Staccionata1" type="Node3D" parent="Scenario/Accampamento" unique_id=987463435]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -7.5, 0, 4.5)
@@ -1059,6 +1072,7 @@ script = ExtResource("s_figure")
 model_path = "res://assets/models/custom/personaggi_nuovi/agamennone/agamennone.gltf"
 lod_path = "res://assets/models/custom/personaggi_nuovi/agamennone_lod/agamennone_lod.gltf"
 display_name = "AGAMEMNON"
+idle_animation = &"idle_talk"
 min_quality = 1
 
 [node name="Menelao" type="Node3D" parent="Scenario/Accampamento"]
@@ -1081,12 +1095,14 @@ blocking = false
 min_quality = 1
 
 [node name="Rocchio2" type="Node3D" parent="Scenario/Pianura"]
-transform = Transform3D(0.8660, 0, 0.5000, 0, 1, 0, -0.5000, 0, 0.8660, -6.40, 0.00, 10.00)
+transform = Transform3D(0.8660, 0, 0.5000, 0, 1, 0, -0.5000, 0, 0.8660, -7.50, 0.00, 7.80)
 script = ExtResource("s_prop")
 model = ExtResource("n_rocchio")
 fit_axis = 2
 fit_size = 0.9
-blocking = false
+blocking = true
+trunk_radius = 0.4
+vault_mode = 2
 min_quality = 1
 
 [node name="Rocchio3" type="Node3D" parent="Scenario/Pianura"]
@@ -1510,7 +1526,8 @@ script = ExtResource("s_prop")
 model = ExtResource("n_col_spezzata")
 fit_axis = 0
 fit_size = 3.2
-vault_mode = 1
+vault_mode = 2
+trunk_radius = 0.5
 
 [node name="CespuglioP1" type="Node3D" parent="Scenario/Pianura" unique_id=1587444300]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 8.5)
@@ -1684,15 +1701,17 @@ script = ExtResource("s_prop")
 model = ExtResource("n_col_spezzata")
 fit_axis = 0
 fit_size = 3.2
-vault_mode = 1
+vault_mode = 2
+trunk_radius = 0.5
 
 [node name="ColonnaSpezzata3" type="Node3D" parent="Scenario/Pianura" unique_id=1714705557]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 10.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.0, 0, 6.5)
 script = ExtResource("s_prop")
 model = ExtResource("n_col_spezzata")
 fit_axis = 0
 fit_size = 3.2
-vault_mode = 1
+vault_mode = 2
+trunk_radius = 0.5
 
 [node name="Mattoni2" type="Node3D" parent="Scenario/Pianura" unique_id=407044563]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 8.5)
@@ -2346,36 +2365,45 @@ blocking = false
 [node name="Navi" type="Node3D" parent="Scenario" unique_id=355167450]
 
 [node name="Nave1" type="Node3D" parent="Scenario/Navi" unique_id=1575863177]
-transform = Transform3D(0.997564, 0, 0.0697565, 0, 1, 0, -0.0697565, 0, 0.997564, -23.6, -0.2, 8)
+transform = Transform3D(0.997564, 0, 0.0697565, 0, 1, 0, -0.0697565, 0, 0.997564, -23.6, -0.55, 8)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/navi/nave_scura_occhio/nave_scura_occhio.gltf"
-lazy_low_model_path = "res://assets/models/custom/navi/trireme.glb"
-fit_size = 8.0
+lazy_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea.gltf"
+lazy_low_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea_lod.gltf"
+fit_size = 8.5
 blocking = false
 
 [node name="Nave2" type="Node3D" parent="Scenario/Navi" unique_id=150340164]
-transform = Transform3D(0.994522, 0, -0.104528, 0, 1, 0, 0.104528, 0, 0.994522, -23.8, -0.2, 16)
+transform = Transform3D(0.994522, 0, -0.104528, 0, 1, 0, 0.104528, 0, 0.994522, -23.8, -0.5, 16)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/navi/nave_scura_occhio/nave_scura_occhio.gltf"
-lazy_low_model_path = "res://assets/models/custom/navi/trireme.glb"
+lazy_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea.gltf"
+lazy_low_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea_lod.gltf"
 fit_size = 8.0
 blocking = false
 
 [node name="Drakkar1" type="Node3D" parent="Scenario/Navi" unique_id=1419254528]
-transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, -23.9, -0.15, -2)
+transform = Transform3D(0.984808, 0, 0.173648, 0, 1, 0, -0.173648, 0, 0.984808, -23.9, -0.5, -2)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/navi/nave_scura_occhio/nave_scura_occhio.gltf"
-lazy_low_model_path = "res://assets/models/custom/navi/trireme.glb"
-fit_size = 7.0
+lazy_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea.gltf"
+lazy_low_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea_lod.gltf"
+fit_size = 8.0
 blocking = false
 
 [node name="Drakkar2" type="Node3D" parent="Scenario/Navi" unique_id=621464698]
-transform = Transform3D(0.990268, 0, -0.139173, 0, 1, 0, 0.139173, 0, 0.990268, -23.8, -0.15, -11)
+transform = Transform3D(0.990268, 0, -0.139173, 0, 1, 0, 0.139173, 0, 0.990268, -23.8, -0.5, -11)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/navi/nave_scura_occhio/nave_scura_occhio.gltf"
-lazy_low_model_path = "res://assets/models/custom/navi/trireme.glb"
-fit_size = 7.0
+lazy_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea.gltf"
+lazy_low_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea_lod.gltf"
+fit_size = 8.0
 blocking = false
+
+[node name="NaveInSecca" type="Node3D" parent="Scenario/Navi"]
+transform = Transform3D(0.990268, 0, 0.139173, 0, 1, 0, -0.139173, 0, 0.990268, -18.9, 0.02, -4)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea.gltf"
+lazy_low_model_path = "res://assets/models/custom/navi/nave_achea/nave_achea_lod.gltf"
+fit_size = 8.5
+footprint = Vector2i(1, 7)
+vault_mode = 2
 
 [node name="MuraDiTroia" type="Node3D" parent="Scenario" unique_id=1983488785]
 
@@ -2573,20 +2601,28 @@ min_quality = 1
 [node name="Scenario_Pianura#CavalloStrada1" type="Node3D" parent="." unique_id=749697575]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0, -5.9)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_castagno/cavallo_castagno.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_castagno_lod/cavallo_castagno_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
+fit_size = 1.9
 blocking = false
 min_quality = 1
+animal = "horse"
+animal_wander = 1.2
+
 
 [node name="Scenario_Pianura#CavalloStrada2" type="Node3D" parent="." unique_id=2032093183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9, 0, -5.9)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_grigio/cavallo_grigio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_castagno/cavallo_castagno.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_castagno_lod/cavallo_castagno_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
+fit_size = 1.9
 blocking = false
 min_quality = 1
+animal = "horse"
+animal_wander = 1.2
+
 
 [node name="Scenario_Pianura#CarroBattaglia" type="Node3D" parent="." unique_id=506935544]
 transform = Transform3D(0.8192, 0, 0.5736, 0, 1, 0, -0.5736, 0, 0.8192, -9.5, 0, -11.5)
@@ -2599,35 +2635,50 @@ min_quality = 2
 [node name="Scenario_Pianura#CavalloBattaglia1" type="Node3D" parent="." unique_id=172583507]
 transform = Transform3D(0.8192, 0, 0.5736, 0, 1, 0, -0.5736, 0, 0.8192, -10.6, 0, -14.2)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_castagno/cavallo_castagno.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_castagno_lod/cavallo_castagno_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
+fit_size = 1.9
 blocking = false
 min_quality = 2
+animal = "horse"
+animal_wander = 0.8
+
 
 [node name="Scenario_Pianura#CavalloBattaglia2" type="Node3D" parent="." unique_id=1291718421]
 transform = Transform3D(0.8192, 0, 0.5736, 0, 1, 0, -0.5736, 0, 0.8192, -9.6, 0, -14.9)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_grigio/cavallo_grigio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_castagno/cavallo_castagno.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_castagno_lod/cavallo_castagno_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
+fit_size = 1.9
 blocking = false
 min_quality = 2
+animal = "horse"
+animal_wander = 0.8
+
 
 [node name="Scenario_Pianura#CavalloBattaglia3" type="Node3D" parent="." unique_id=330390296]
 transform = Transform3D(0.5, 0, -0.866, 0, 1, 0, 0.866, 0, 0.5, 14.5, 0, -10.5)
 script = ExtResource("s_prop")
-lazy_model_path = "res://assets/models/custom/campo/cavalli/cavallo_baio/cavallo_baio.gltf"
+lazy_model_path = "res://assets/models/custom/animali/cavallo_castagno/cavallo_castagno.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_castagno_lod/cavallo_castagno_lod.gltf"
 fit_axis = 2
-fit_size = 2.0
+fit_size = 1.9
 blocking = false
 min_quality = 2
+animal = "horse"
+animal_wander = 0.8
 
-[node name="MasseOpliti" type="Node3D" parent="."]
-script = ExtResource("s_masses")
 
 [node name="OrologioLivello" type="Node" parent="."]
 script = ExtResource("s_clock")
+
+[node name="MeteoFx" type="Node" parent="."]
+script = ExtResource("s_weather")
+
+[node name="CicloNotte" type="Node" parent="."]
+script = ExtResource("s_night")
 
 [node name="AtmosferaBattaglia" type="Node3D" parent="."]
 script = ExtResource("s_battle_atmo")
@@ -2763,9 +2814,6 @@ unit_radius = 1.3
 [node name="Atmosfera" type="Node" parent="." unique_id=1101922969]
 script = ExtResource("s_atmo")
 
-[node name="MosseUlisse" type="Node3D" parent="." unique_id=1984510598]
-script = ExtResource("s_hints")
-
 [node name="Unita" type="Node3D" parent="." unique_id=53068328]
 
 [node name="Ulisse" parent="Unita" unique_id=1677496036 instance=ExtResource("u_ulisse")]
@@ -2779,6 +2827,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5, 0, 12.5)
 
 [node name="SoldatoAcheo3" parent="Unita" unique_id=1681403878 instance=ExtResource("u_acheo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, 11.5)
+
+[node name="SoldatoAcheo4" parent="Unita" instance=ExtResource("u_acheo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0, 7.5)
+
+[node name="SoldatoAcheo5" parent="Unita" instance=ExtResource("u_acheo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, 7.5)
+
+[node name="SoldatoAcheo6" parent="Unita" instance=ExtResource("u_acheo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0, 15.5)
+
+[node name="SoldatoAcheo7" parent="Unita" instance=ExtResource("u_acheo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, 15.5)
 
 [node name="SoldatoTroiano1" parent="Unita" unique_id=1277055653 instance=ExtResource("u_troiano")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 2.5)
@@ -2801,49 +2861,156 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, -16.5)
 [node name="SoldatoTroiano7" parent="Unita" unique_id=54381651 instance=ExtResource("u_troiano")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -16.5)
 
+[node name="CapitanoTroiano" parent="Unita" instance=ExtResource("u_capitano")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, -18.5)
+
 [node name="DifeseSulleMura" type="Node3D" parent="." unique_id=1207953956]
 
 [node name="Arciere1" parent="DifeseSulleMura" unique_id=1326000805 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 4.5, -21.95)
 
 [node name="Arciere2" parent="DifeseSulleMura" unique_id=399606891 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 4.5, -21.95)
 
 [node name="Arciere3" parent="DifeseSulleMura" unique_id=666093901 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 4.5, -21.95)
 
 [node name="Arciere4" parent="DifeseSulleMura" unique_id=369874408 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 4.5, -21.95)
 
 [node name="Arciere5" parent="DifeseSulleMura" unique_id=953765329 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 4.5, -21.95)
 
 [node name="Arciere6" parent="DifeseSulleMura" unique_id=362599104 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 4.5, -21.95)
 
 [node name="Arciere7" parent="DifeseSulleMura" unique_id=2014525749 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 4.5, -21.95)
 
 [node name="Arciere8" parent="DifeseSulleMura" unique_id=2146617443 instance=ExtResource("d_arciere")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23, 4.5, -21.95)
 
 [node name="ArciereFuoco1" parent="DifeseSulleMura" unique_id=1905954187 instance=ExtResource("d_fuoco")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4.5, -21.95)
 
 [node name="ArciereFuoco2" parent="DifeseSulleMura" unique_id=1661306598 instance=ExtResource("d_fuoco")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -21.95)
 
 [node name="ArciereFuoco3" parent="DifeseSulleMura" unique_id=1889669112 instance=ExtResource("d_fuoco")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 4.5, -21.95)
 
 [node name="ArciereFuoco4" parent="DifeseSulleMura" unique_id=1381550934 instance=ExtResource("d_fuoco")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 4.5, -21.95)
 
 [node name="Balista1" parent="DifeseSulleMura" unique_id=159997753 instance=ExtResource("d_balista")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 4.5, -21.95)
 
 [node name="Balista2" parent="DifeseSulleMura" unique_id=784560946 instance=ExtResource("d_balista")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 5.3, -21.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 4.5, -21.95)
 
 [node name="Catapulta" parent="DifeseSulleMura" unique_id=550563913 instance=ExtResource("d_catapulta")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 4.1, -26)
+
+[node name="TiroCarro1" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 14.4, 0, -1.9)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/cavallo_da_tiro/cavallo_da_tiro.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_da_tiro_lod/cavallo_da_tiro_lod.gltf"
+fit_axis = 2
+fit_size = 1.95
+blocking = false
+min_quality = 1
+animal = "horse"
+animal_wander = 0.0
+
+
+[node name="TiroCarro2" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(1.0000, 0, -0.0000, 0, 1, 0, 0.0000, 0, 1.0000, 15.6, 0, -1.9)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/cavallo_da_tiro/cavallo_da_tiro.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/cavallo_da_tiro_lod/cavallo_da_tiro_lod.gltf"
+fit_axis = 2
+fit_size = 1.95
+blocking = false
+min_quality = 1
+animal = "horse"
+animal_wander = 0.0
+
+
+[node name="GreggeCarro1" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.3420, 0, -0.9397, 0, 1, 0, 0.9397, 0, 0.3420, 11.0, 0, 4.0)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/pecora/pecora.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/pecora_lod/pecora_lod.gltf"
+fit_axis = 2
+fit_size = 0.8
+blocking = false
+min_quality = 1
+animal = "sheep"
+animal_wander = 0.7
+
+
+[node name="GreggeCarro2" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.9397, 0, -0.3420, 0, 1, 0, 0.3420, 0, 0.9397, 10.2, 0, 5.2)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/pecora/pecora.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/pecora_lod/pecora_lod.gltf"
+fit_axis = 2
+fit_size = 0.8
+blocking = false
+min_quality = 1
+animal = "sheep"
+animal_wander = 0.7
+
+
+[node name="GreggeCarro3" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.7660, 0, 0.6428, 0, 1, 0, -0.6428, 0, 0.7660, 11.6, 0, 5.6)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/pecora/pecora.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/pecora_lod/pecora_lod.gltf"
+fit_axis = 2
+fit_size = 0.78
+blocking = false
+min_quality = 1
+animal = "sheep"
+animal_wander = 0.7
+
+
+[node name="GreggeMontone" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(-0.3420, 0, -0.9397, 0, 1, 0, 0.9397, 0, -0.3420, 12.6, 0, 3.4)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/montone_lana/montone_lana.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/montone_lana_lod/montone_lana_lod.gltf"
+fit_axis = 2
+fit_size = 0.95
+blocking = false
+min_quality = 1
+animal = "sheep"
+animal_wander = 0.7
+
+
+[node name="MaialeCarro1" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(0.5000, 0, 0.8660, 0, 1, 0, -0.8660, 0, 0.5000, 18.4, 0, 4.8)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/maiale_rosa/maiale_rosa.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/maiale_rosa_lod/maiale_rosa_lod.gltf"
+fit_axis = 2
+fit_size = 0.72
+blocking = false
+min_quality = 1
+animal = "pig"
+animal_wander = 0.7
+
+
+[node name="MaialeCarro2" type="Node3D" parent="Scenario/Pianura"]
+transform = Transform3D(-0.9397, 0, 0.3420, 0, 1, 0, -0.3420, 0, -0.9397, 19.4, 0, 6.2)
+script = ExtResource("s_prop")
+lazy_model_path = "res://assets/models/custom/animali/maiale_macchiato/maiale_macchiato.gltf"
+lazy_low_model_path = "res://assets/models/custom/animali/maiale_macchiato_lod/maiale_macchiato_lod.gltf"
+fit_axis = 2
+fit_size = 0.8
+blocking = false
+min_quality = 1
+animal = "pig"
+animal_wander = 0.7
+

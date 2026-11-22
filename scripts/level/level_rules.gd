@@ -5,7 +5,7 @@ extends Resource
 
 @export_group("Tempo")
 ## Secondi da sopravvivere prima del segnale di ritirata.
-@export_range(10.0, 900.0) var duration := 180.0
+@export_range(10.0, 3600.0) var duration := 1800.0
 ## Secondi prima della prima ondata.
 @export_range(0.0, 120.0) var first_wave_delay := 8.0
 ## Secondi tra un'ondata e la successiva.

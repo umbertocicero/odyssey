@@ -99,6 +99,12 @@ func _process(delta: float) -> void:
 	if elapsed >= _next_wave_at:
 		_start_wave()
 		_next_wave_at += rules.wave_interval
+	_resolve_check -= delta
+	if _resolve_check <= 0.0:
+		_resolve_check = 0.5
+		if all_wounded_resolved():
+			finish()
+			return
 	if left <= 0.0:
 		finish()
 
@@ -122,6 +128,19 @@ func _on_player_died() -> void:
 	attempt_changed.emit(attempt, max_attempts)
 	if hud:
 		hud.show_banner("Attempt %d of %d" % [attempt, max_attempts], 2.5)
+
+
+var _resolve_check := 1.0
+
+
+## Tutti i feriti sono stati portati sulle navi o sono morti: il livello finisce (non c'è un timer visibile).
+func all_wounded_resolved() -> bool:
+	if wounded.is_empty():
+		return false
+	for w in wounded:
+		if w.state != WoundedSoldier.State.EVACUATED and w.state != WoundedSoldier.State.LOST:
+			return false
+	return true
 
 
 func alive_trojans() -> int:
@@ -255,7 +274,12 @@ func _on_wounded_state(new_state: int, w: WoundedSoldier) -> void:
 			if ferry:
 				ferry.request_stretcher(w)
 			if hud:
-				hud.show_banner("Four soldiers lift the stretcher - escort them to camp!", 2.4)
+				if ferry == null or ferry.last_bearers >= 4:
+					hud.show_banner("Four soldiers lift the stretcher - escort them to camp!", 2.4)
+				elif ferry.last_bearers == 2:
+					hud.show_banner("Not enough men for the stretcher: two soldiers drag him to camp!", 2.4)
+				else:
+					hud.show_banner("Not enough men for the stretcher: a lone soldier drags him to camp!", 2.4)
 			return
 		_:
 			return
