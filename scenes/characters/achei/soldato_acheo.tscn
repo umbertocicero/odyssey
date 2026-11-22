@@ -50,3 +50,6 @@ variant_names = PackedStringArray("ELPENOR", "EURYLOCHUS", "POLITES", "EURYBATES
 script = ExtResource("9_gear")
 shield = ExtResource("9_hoplon")
 shield_scale = 0.5
+weapon_path = "res://assets/models/custom/armi/xiphos/xiphos.gltf"
+weapon_lod_path = "res://assets/models/custom/armi/xiphos/xiphos_lod.gltf"
+weapon_adjust_degrees = Vector3(62, 35, 0)

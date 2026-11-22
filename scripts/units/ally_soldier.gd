@@ -19,7 +19,17 @@ var _think_timer := 0.0
 var _attack_cd := 0.0
 
 
+## Chiamato dal ferito che questo soldato accompagna alla riva: andatura di scorta.
+func set_carrying(on: bool, _helped := false) -> void:
+	var model := get_node_or_null(^"Model") as CharacterModel
+	if model:
+		model.set_stance(&"support" if on else &"normal")
+
+
 func _ready() -> void:
+	# Passi concatenati: il passo dura quanto la pausa di ragionamento, così il soldato cammina con
+	# continuità (stessa velocità media di prima) invece di scattare e fermarsi a ogni casella.
+	step_duration += think_interval
 	super._ready()
 	leader = get_tree().get_first_node_in_group(&"player") as GridUnit
 
@@ -30,9 +40,9 @@ func _physics_process(delta: float) -> void:
 		return
 	if _fight():
 		return
+	_think_timer -= delta
 	if leader == null or is_moving:
 		return
-	_think_timer -= delta
 	if _think_timer > 0.0:
 		return
 	_think_timer = think_interval
@@ -60,6 +70,6 @@ func _fight() -> bool:
 				var m := get_node_or_null(^"Model") as CharacterModel
 				if m:
 					m.play_attack()
-				unit.take_damage(attack_damage)
+				unit.take_melee(attack_damage, self)
 			return true
 	return false

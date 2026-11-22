@@ -60,6 +60,9 @@ func set_carrying(on: bool, helped := false) -> void:
 		speed_multiplier = 1.0
 	else:
 		speed_multiplier = carry_speed_helped if helped else carry_speed_alone
+	var model := get_node_or_null(^"Model") as CharacterModel
+	if model:
+		model.set_stance(&"support" if on else &"normal")
 
 
 ## Ulisse non sparisce: nel prototipo riappare all'accampamento con la vita piena.

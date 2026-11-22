@@ -129,14 +129,24 @@ func place_at(target: Vector2i) -> bool:
 	return true
 
 
+## Colpo corpo a corpo da `attacker`: il modello può parare o schivare (CharacterModel.defend),
+## poi passa il danno rimasto.
+func take_melee(amount: int, attacker: Node3D) -> void:
+	var m := _model as CharacterModel
+	if m and health > 0:
+		amount = m.defend(amount, attacker.global_position if attacker else global_position)
+	if amount > 0:
+		take_damage(amount)
+
+
 ## Toglie punti vita; a zero l'unità muore.
 func take_damage(amount: int) -> void:
 	if health <= 0 or amount <= 0:
 		return
 	health = maxi(health - amount, 0)
 	_on_health_changed()
-	if _model:
-		# Piccolo sussulto quando viene colpita.
+	if _model and not _model is CharacterModel:
+		# Piccolo sussulto quando viene colpita (i personaggi riggati hanno l'animazione "hit").
 		var tween := create_tween()
 		tween.tween_property(_model, "scale", Vector3(1.15, 0.85, 1.15), 0.06)
 		tween.tween_property(_model, "scale", Vector3.ONE, 0.12)
@@ -202,7 +212,8 @@ func _vault(direction: Vector2i) -> void:
 	if _model:
 		# Si china in avanti durante il balzo.
 		var lean := create_tween()
-		lean.tween_property(_model, "rotation:x", -0.45, vault_duration * 0.4)
+		var amount := -0.12 if _model is CharacterModel else -0.45   # i riggati si chinano con l'animazione
+		lean.tween_property(_model, "rotation:x", amount, vault_duration * 0.4)
 		lean.tween_property(_model, "rotation:x", 0.0, vault_duration * 0.6)
 
 

@@ -15,9 +15,13 @@ var _model_node: CharacterModel
 
 
 func _ready() -> void:
+	step_duration += think_interval   # passi concatenati, vedi AllySoldier
 	super._ready()
 	_model_node = get_node_or_null(^"Model") as CharacterModel
 	_think = randf_range(0.0, think_interval)
+
+
+const MAX_CORPSES := 40
 
 
 func halt() -> void:
@@ -28,9 +32,9 @@ func _physics_process(delta: float) -> void:
 	if _halted or health <= 0:
 		return
 	_attack_cd -= delta
+	_think -= delta
 	if is_moving:
 		return
-	_think -= delta
 	if _think > 0.0:
 		return
 	_think = think_interval
@@ -44,7 +48,7 @@ func _physics_process(delta: float) -> void:
 			_attack_cd = attack_interval
 			if _model_node:
 				_model_node.play_attack()
-			target.take_damage(attack_damage)
+			target.take_melee(attack_damage, self)
 		return
 	var primary := Vector2i(signi(diff.x), 0) if absi(diff.x) >= absi(diff.y) else Vector2i(0, signi(diff.y))
 	var secondary := Vector2i(0, signi(diff.y)) if primary.x != 0 else Vector2i(signi(diff.x), 0)
@@ -90,6 +94,8 @@ func _on_died() -> void:
 		_model_node.play_death()
 	remove_from_group(&"units")
 	remove_from_group(&"troiani")
-	await get_tree().create_timer(1.6).timeout
-	if is_inside_tree():
-		queue_free()
+	# Il caduto resta a terra (senza collisioni): se ce ne sono troppi, sparisce il più vecchio.
+	add_to_group(&"corpses")
+	var corpses := get_tree().get_nodes_in_group(&"corpses")
+	if corpses.size() > MAX_CORPSES:
+		(corpses[0] as Node).queue_free()

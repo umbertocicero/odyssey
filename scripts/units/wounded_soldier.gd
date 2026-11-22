@@ -17,8 +17,9 @@ enum State { LYING, FOLLOWING, SAVED, LOST, CARRIED, EVACUATED, STRETCHER }
 ## Velocità massima (m/s) quando viene trascinato.
 @export var drag_speed := 2.6
 ## Distanza (m) a cui sta dietro a chi lo sorregge.
-@export var drag_offset := 0.8
-@export var lean_angle := 0.38
+@export var drag_offset := 0.72
+## Inclinazione in avanti dell'intero modello quando è sorretto (il resto lo fa l'animazione zoppa).
+@export var lean_angle := 0.06
 ## Un compagno entro questa distanza (m) da Ulisse lo aiuta a sorreggere il ferito.
 @export var helper_range := 6.0
 
@@ -38,14 +39,13 @@ func _ready() -> void:
 	super._ready()
 	_model_node = get_node_or_null(^"Model") as CharacterModel
 	if _model_node:
-		_model_node.sync_walk_to_step = false
+		_model_node.set_stance(&"limp")
 	# Un frame dopo, quando il modello è pronto, lo sdraia a terra e lo benda.
 	await get_tree().process_frame
 	if not is_inside_tree():
 		return
-	WoundedLook.apply(self)
 	if state == State.LYING and _model_node:
-		_model_node.play_death()
+		_model_node.play_lying(true)
 
 
 func is_targetable() -> bool:
@@ -107,10 +107,41 @@ func lie_down() -> void:
 		leader.call(&"set_carrying", false)
 	_set_dragging(false)
 	if _model_node:
-		_model_node.play_death()
+		_model_node.play_lying()
 
 
 ## Segue chi lo sorregge restando dietro di lui, a passo lento, quasi trascinato.
+var _stuck_time := 0.0
+var _last_pos := Vector2.ZERO
+var _detour_until := 0.0
+
+
+## Prossima casella di un percorso sulla griglia (BFS a 4 direzioni) da `from` a `goal`; Vector2i(-1,-1) se non c'è.
+func _next_cell_towards(from: Vector2i, goal: Vector2i) -> Vector2i:
+	if from == goal:
+		return goal
+	var prev := {from: from}
+	var queue: Array[Vector2i] = [from]
+	var head := 0
+	while head < queue.size() and prev.size() < 2500:
+		var cur: Vector2i = queue[head]
+		head += 1
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = cur + d
+			if prev.has(n) or not grid.is_inside(n):
+				continue
+			if n != goal and grid.is_blocked(n):
+				continue
+			prev[n] = cur
+			if n == goal:
+				var step := n
+				while prev[step] != from:
+					step = prev[step]
+				return step
+			queue.append(n)
+	return Vector2i(-1, -1)
+
+
 func _drag(delta: float) -> void:
 	if leader == null or not is_instance_valid(leader) or grid == null:
 		return
@@ -121,6 +152,19 @@ func _drag(delta: float) -> void:
 	var behind := Vector3(sin(yaw), 0.0, cos(yaw)) * drag_offset
 	var target := leader.global_position + behind
 	var to := Vector2(target.x - global_position.x, target.z - global_position.z)
+	# Se la linea retta lo blocca (muri, palizzate, ostacoli) cerca un percorso sulla griglia.
+	var here := Vector2(global_position.x, global_position.z)
+	_stuck_time = _stuck_time + delta if here.distance_to(_last_pos) < drag_speed * delta * 0.25 and to.length() > 1.2 else 0.0
+	_last_pos = here
+	var now := Time.get_ticks_msec() / 1000.0
+	if _stuck_time > 0.6:
+		_detour_until = now + 1.5
+		_stuck_time = 0.0
+	if now < _detour_until:
+		var next := _next_cell_towards(cell, leader.get("cell") if leader.get("cell") != null else cell)
+		if next != Vector2i(-1, -1):
+			var w := grid.cell_to_world(next)
+			to = Vector2(w.x - global_position.x, w.z - global_position.z)
 	var moving := to.length() > 0.12
 	if moving:
 		var step := to.normalized() * minf(to.length(), drag_speed * delta)
@@ -136,8 +180,6 @@ func _drag(delta: float) -> void:
 		if face_to.length() > 0.05:
 			_model.rotation.y = lerp_angle(_model.rotation.y, atan2(-face_to.x, -face_to.y), minf(1.0, 8.0 * delta))
 		_model.rotation.x = lerpf(_model.rotation.x, lean_angle, minf(1.0, 6.0 * delta))
-	if _model_node and _model_node.player:
-		_model_node.player.speed_scale = 0.55
 
 
 ## Cerca un compagno vivo e libero vicino a Ulisse: con il suo aiuto si va più veloci.

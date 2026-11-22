@@ -9,6 +9,9 @@ signal fired(target_cell: Vector2i)
 
 ## Arma usata: un file in data/combat/ (gittata, danno, ricarica...).
 @export var profile: AttackProfile
+## Modello della macchina (alta qualità) e versione leggera (bassa e media): si carica solo quello che serve.
+@export_file("*.gltf", "*.glb") var model_path := ""
+@export_file("*.gltf", "*.glb") var model_lod_path := ""
 ## Se disattivo tira solo quando glielo si chiede con fire_at() (test, eventi).
 @export var auto_fire := true
 ## Altezza da cui parte il proiettile, sopra il nodo.
@@ -25,6 +28,7 @@ var _rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
 	add_to_group(&"wall_shooters")
+	_load_model()
 	_rng.randomize()
 	grid = get_tree().get_first_node_in_group(&"diorama_grid") as DioramaGrid
 	if profile:
@@ -46,6 +50,21 @@ func _process(delta: float) -> void:
 		var offsets: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 		cell += offsets[_rng.randi() % offsets.size()]
 	fire_at(cell)
+
+
+## Istanzia il modello giusto per la qualità sotto Model, davanti verso +Z (il tiratore lo gira verso il bersaglio).
+func _load_model() -> void:
+	var path := model_path if (Quality.current() == Quality.Level.HIGH or model_lod_path == "") else model_lod_path
+	var model := get_node_or_null(^"Model") as Node3D
+	if path == "" or model == null:
+		return
+	var scene := load(path) as PackedScene
+	if scene == null:
+		return
+	var mesh := scene.instantiate() as Node3D
+	mesh.name = "Mesh"
+	mesh.rotation.y = PI   # i modelli sono esportati con il fronte verso -Z
+	model.add_child(mesh)
 
 
 ## Punto da cui parte il proiettile.
@@ -73,6 +92,9 @@ func pick_target() -> GridUnit:
 		if unit == null or unit.health <= 0 or not is_in_range(unit.cell):
 			continue
 		if unit.has_method(&"is_targetable") and not unit.is_targetable():
+			continue
+		# Un ferito grave a terra sotto le mura non va colpito prima che la barella lo raggiunga.
+		if unit is WoundedSoldier and (unit as WoundedSoldier).severe and (unit as WoundedSoldier).state == WoundedSoldier.State.LYING:
 			continue
 		# Il rilievo in mezzo può coprire il bersaglio: niente tiro.
 		if not grid.has_line_of_fire(muzzle_position(), unit.global_position + Vector3.UP * 0.8):

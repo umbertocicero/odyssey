@@ -27,3 +27,6 @@ lod_scene_path = "res://assets/models/custom/personaggi_nuovi/ulisse_lod/ulisse_
 [node name="Equipaggiamento" type="Node" parent="Model"]
 script = ExtResource("9_gear")
 shield = ExtResource("9_hoplon")
+weapon_path = "res://assets/models/custom/armi/xiphos/xiphos.gltf"
+weapon_lod_path = "res://assets/models/custom/armi/xiphos/xiphos_lod.gltf"
+weapon_adjust_degrees = Vector3(62, 35, 0)
