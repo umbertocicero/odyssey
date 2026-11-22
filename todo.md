@@ -1,6 +1,6 @@
 # TODO — Atmosfera del livello 1 (vento, foglie, particelle, tempo, pioggia)
 
-Stato: **solo piano, niente implementato.** Nessun commit. Un solo Godot alla volta (il PC si è bloccato con più render in parallelo).
+Stato: **implementati** LevelClock, NightCycle (notte, luna, torce), WeatherFx (pioggia overlay 2D, pozze, vento, foglie, polline); restano le misure su telefono/browser e la taratura. Il resto è il piano originale. Nessun commit. Un solo Godot alla volta (il PC si è bloccato con più render in parallelo).
 Regole: testi visibili nel gioco in **inglese**; commenti nel codice e questo documento in italiano.
 
 ## Punti di partenza nel codice
