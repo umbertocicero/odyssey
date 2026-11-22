@@ -11,11 +11,14 @@ func _run() -> void:
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	var hide_grass := false
 	var hide_particles := false
+	var hide_omni := false
 	for arg in OS.get_cmdline_user_args():
 		if arg == "--hide=grass":
 			hide_grass = true
 		if arg == "--hide=particles":
 			hide_particles = true
+		if arg == "--hide=omni":
+			hide_omni = true
 	var t0 := Time.get_ticks_msec()
 	var main: Node = load("res://scenes/main/main.tscn").instantiate()
 	root.add_child(main)
@@ -28,11 +31,29 @@ func _run() -> void:
 		level.get_node("Cespugli").visible = false
 		level.get_node("ErbaFotorealistica").visible = false
 	var parts := 0
+	if hide_omni:
+		for n in level.find_children("*", "OmniLight3D", true, false):
+			(n as Light3D).visible = false
+		print("omni spente: ", level.find_children("*", "OmniLight3D", true, false).size(), " ombre: ", level.find_children("*", "OmniLight3D", true, false).filter(func(l): return l.shadow_enabled).size())
 	if hide_particles:
 		for n in level.find_children("*", "CPUParticles3D", true, false):
 			(n as Node3D).visible = false
 			(n as CPUParticles3D).emitting = false
 			parts += 1
+	for arg in OS.get_cmdline_user_args():
+		if arg == "--hide=chars":
+			for n in level.find_children("*", "Skeleton3D", true, false):
+				(n as Node3D).visible = false
+		if arg == "--hide=mm":
+			for n in level.find_children("*", "MultiMeshInstance3D", true, false):
+				if not String(n.name).begins_with("Ciuffi") and not String(n.name).begins_with("Cesp"):
+					(n as Node3D).visible = false
+		if arg == "--hide=sunshadow":
+			for n in level.find_children("*", "DirectionalLight3D", true, false):
+				(n as Light3D).shadow_enabled = false
+		if arg == "--hide=terrain":
+			for n in level.find_children("TerrenoFoto", "Node3D", true, false):
+				(n as Node3D).visible = false
 	var settle := Time.get_ticks_msec()
 	while Time.get_ticks_msec() - settle < 3000:
 		await process_frame

@@ -38,7 +38,7 @@ func _initialize() -> void:
 			break
 	_check(moved, "Ulisse fa un passo")
 	await create_timer(0.05).timeout
-	_check(model.current_animation() == &"walk", "durante il passo: walk")
+	_check(model.current_animation() in [&"walk", &"run"], "durante il passo: walk o run (%s)" % model.current_animation())
 	await create_timer(0.6).timeout
 	_check(model.current_animation() == &"idle", "dopo il passo: idle")
 

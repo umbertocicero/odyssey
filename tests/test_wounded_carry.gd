@@ -24,7 +24,7 @@ func _initialize() -> void:
 	for n in get_nodes_in_group(&"wall_shooters"):
 		(n as WallShooter).auto_fire = false
 	var w: WoundedSoldier = director.wounded[0]
-	_check(w.find_child("WoundedLook", true, false) != null, "il ferito ha bende e sangue")
+	_check(w.find_child("WoundedLook", true, false) == null, "nessuna benda generata da codice (le bende sono nella texture dei modelli)")
 
 	# Ulisse in diagonale (Manhattan 2) deve svegliarlo; prima no.
 	var diag := w.cell + Vector2i(1, 1)

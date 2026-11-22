@@ -26,6 +26,14 @@ func _initialize() -> void:
 	var ulisse := get_first_node_in_group(&"player") as GridUnit
 	var grid := get_first_node_in_group(&"diorama_grid") as DioramaGrid
 	var camp := rules.camp_rect.position + Vector2i(2, 2)
+	# La casella scelta può essere occupata da un alleato che passeggia: serve una libera del campo.
+	var free_cell := func() -> Vector2i:
+		for dx in range(0, rules.camp_rect.size.x):
+			for dz in range(0, rules.camp_rect.size.y):
+				var c := rules.camp_rect.position + Vector2i(dx, dz)
+				if grid.is_walkable(c) and grid.is_walkable(c + Vector2i(1, 0)):
+					return c
+		return camp
 
 	# 1) Muore il primo mentre Ulisse lo sorregge: Ulisse torna normale, il secondo si rialza.
 	var a: WoundedSoldier = director.wounded[0]
@@ -40,7 +48,7 @@ func _initialize() -> void:
 	_near(ulisse, b)
 	await create_timer(0.5).timeout
 	_check(b.state == WoundedSoldier.State.FOLLOWING, "il secondo ferito si rialza dopo la morte del primo")
-	ulisse.place_at(camp)
+	ulisse.place_at(free_cell.call())
 	b.place_at(camp + Vector2i(1, 0))
 	await _wait_state(b, [WoundedSoldier.State.SAVED, WoundedSoldier.State.CARRIED, WoundedSoldier.State.EVACUATED], 5.0)
 	_check(b.state in [WoundedSoldier.State.SAVED, WoundedSoldier.State.CARRIED, WoundedSoldier.State.EVACUATED], "il secondo arriva al campo")
@@ -56,10 +64,10 @@ func _initialize() -> void:
 
 	# 3) Muore un ferito portato da un soldato alla barca: il soldato si libera e la coda va avanti.
 	var e: WoundedSoldier = director.wounded[4]
-	ulisse.place_at(camp)
+	ulisse.place_at(free_cell.call())
 	_near(ulisse, e)
 	await create_timer(0.4).timeout
-	ulisse.place_at(camp)
+	ulisse.place_at(free_cell.call())
 	e.place_at(camp + Vector2i(0, 1) if grid.is_walkable(camp + Vector2i(0, 1)) else camp + Vector2i(-1, 0))
 	await _wait_state(e, [WoundedSoldier.State.CARRIED], 10.0)
 	if e.state == WoundedSoldier.State.CARRIED:
