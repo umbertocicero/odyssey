@@ -285,3 +285,17 @@ func _write_uniform() -> void:
 			_uniform[i] = Vector4(p.x, p.y, p.z, entry["radius"] * radius_scale * entry["alpha"])
 		else:
 			_uniform[i] = Vector4.ZERO
+
+
+## Di notte il verde si smorza e vira al grigio-blu come il terreno (night = 0..1, vedi NightCycle).
+func set_night(night: float) -> void:
+	if material == null:
+		return
+	material.set_shader_parameter(&"base_color", _night_color(base_color, night))
+	material.set_shader_parameter(&"tip_color", _night_color(tip_color, night))
+
+
+static func _night_color(c: Color, night: float) -> Color:
+	var lum := c.r * 0.3 + c.g * 0.59 + c.b * 0.11
+	var cold := Color(lerpf(c.r, lum, 0.7) * 0.95, lerpf(c.g, lum, 0.7), lerpf(c.b, lum, 0.7) * 1.25)
+	return c.lerp(cold, night)

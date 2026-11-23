@@ -100,6 +100,12 @@ func _run() -> void:
 			right = HumanoidAnims.Hand.SWORD
 			sets.append("support")
 			sets.append("stretcher")
+		"torch":
+			gear.shield = load("res://assets/models/custom/campo/equipaggiamento/hoplon_tridente/hoplon_tridente.gltf")
+			gear.weapon_path = "res://assets/models/custom/armi/xiphos/xiphos.gltf"
+			right = HumanoidAnims.Hand.SWORD
+			shield = true
+			sets.append("torch")
 		"spear":
 			gear.weapon_path = "res://assets/models/custom/armi/lancia/lancia.gltf"
 			gear.weapon_kind = UnitGear.WeaponKind.SPEAR
@@ -118,6 +124,16 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var sk := inst.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
+	for m in inst.find_children("*", "MeshInstance3D", true, false):
+		(m as MeshInstance3D).mesh = HandFist.fisted((m as MeshInstance3D).mesh, sk)
+	if _cfg == "torch":
+		(gear.weapon_node if gear.weapon_node else Node3D.new()).visible = false
+		var att := BoneAttachment3D.new()
+		att.bone_name = "hand.L"
+		sk.add_child(att)
+		var tn := (load("res://assets/models/custom/campo/luci/torcia_achea/torcia_achea.gltf") as PackedScene).instantiate() as Node3D
+		tn.transform = HumanoidAnims.hand_item_transform(sk, &"hand.L", 0)
+		att.add_child(tn)
 	for p in inst.find_children("*", "AnimationPlayer", true, false):
 		(p as AnimationPlayer).stop()
 		(p as AnimationPlayer).active = false
@@ -153,6 +169,24 @@ func _run() -> void:
 			var st := Stretcher.new()
 			holder.add_child(st)
 			st.position = Vector3((Stretcher.WIDTH * 0.5 + 0.258) * (-1.0 if String(clip).begins_with("stretcher_r") else 1.0), 0, -(Stretcher.POLE_LENGTH * 0.5 - 0.2))
+		var climb_h := 0.0
+		for c in world.get_children():
+			if c.name == "ClimbBlock":
+				c.queue_free()
+		if String(clip).begins_with("climb_"):
+			# Blocco da scalare: faccia a 0,5 m, profondo 1 m; il corpo segue climb_profile().
+			climb_h = HumanoidAnims.CLIP_CLIMB_HEIGHTS[int(String(clip).substr(6))]
+			var blk := MeshInstance3D.new()
+			blk.name = "ClimbBlock"
+			var bm := BoxMesh.new()
+			bm.size = Vector3(1.2, climb_h, 1.0)
+			blk.mesh = bm
+			blk.position = Vector3(0, climb_h * 0.5, 1.0)
+			var bmat := StandardMaterial3D.new()
+			bmat.albedo_color = Color(0.55, 0.42, 0.3, 0.35)
+			bmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			blk.material_override = bmat
+			world.add_child(blk)
 		var gait := String(clip).contains("walk") or String(clip).contains("run")
 		var stride := HumanoidAnims.stride(clip)
 		var sheet := Image.create(CELL.x * _frames, CELL.y * _views.size(), false, Image.FORMAT_RGB8)
@@ -167,6 +201,9 @@ func _run() -> void:
 				# Andature: il personaggio avanza nel mondo come nel gioco (velocità = passo / ciclo).
 				var z := stride * (t - a.length * 0.5) if gait else 0.0
 				holder.position = Vector3(0, 0, z)
+				if climb_h > 0.0:
+					var cp := HumanoidAnims.climb_profile(t / a.length, climb_h, 0.0)
+					holder.position = Vector3(0, cp.y, cp.x * 2.0)
 				var focus := _focus
 				var dist := _dist if _dist > 0.0 else (4.4 if gait else 3.6)
 				match _views[vi]:

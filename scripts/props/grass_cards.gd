@@ -17,6 +17,15 @@ extends Node3D
 const MODEL := preload("res://assets/models/custom/terreno/erba_ciuffi.gltf")
 const SHADER := preload("res://assets/shaders/grass_cards.gdshader")
 const TEX_DIR := "res://assets/models/custom/terreno/textures/"
+## Prato a lame vere (Poly Haven grass_medium_01): ciuffi piccoli e fitti, al posto delle zolle a cards.
+const BLADE_SHADER := preload("res://assets/shaders/grass_blades.gdshader")
+const BLADE_DIR := "res://assets/models/custom/polyhaven/vegetazione/grass_medium_01/"
+## Varianti a lame: peso e scala d'altezza (le mesh originali sono 0.1-0.33 m, qui salgono a ~0.3-0.45 m).
+const BLADES := {
+	"tall_a": {"w": 3.2, "h": 1.5}, "tall_c": {"w": 3.2, "h": 2.0}, "small_b": {"w": 1.5, "h": 3.6},
+	"mid_b": {"w": 1.5, "h": 2.6}, "tiny_a": {"w": 2.0, "h": 3.8}, "large_b": {"w": 0.3, "h": 2.6},
+}
+const BLADES_LOW := ["tall_a", "tall_c", "small_b", "tiny_a"]
 ## Risoluzione della mappa di calpestio (texel sul lato di map_size: 128 = 0.4 m).
 const TRAMPLE_RES := 128
 
@@ -41,6 +50,14 @@ const LOW_VARIANTS := ["Prato_Denso_A", "Prato_Denso_B", "Prato_Denso_C", "Erba_
 ## Moltiplicatore del budget di ciuffi (1 = Quality.grass_budget()).
 @export_range(0.1, 4.0) var density_scale := 1.0
 @export var random_seed := 5
+## Lame vere di grass_medium_01 (true) oppure le vecchie zolle a cards (false).
+@export var use_blades := true
+## Frequenza (1/m) del rumore morbido che governa altezza e secchezza: più bassa = chiazze più ampie.
+@export_range(0.01, 0.3) var field_frequency := 0.05
+## Ampiezza della variazione morbida d'altezza (0.25 = ±25%).
+@export_range(0.0, 0.6) var field_height := 0.28
+## Quota di piante alte sparse (accenti, non zone).
+@export_range(0.0, 0.2) var tall_share := 0.04
 ## Larghezza della fascia in cui l'erba sfuma verso sabbia, sentieri e costruzioni (m).
 @export_range(0.05, 3.0) var mask_fade := 0.5
 ## Rientro della radura sui lati liberi delle caselle solide (alberi, casse, pali):
@@ -125,10 +142,25 @@ func _build() -> void:
 	var m1 := _image("T_terreno_maschere.png")
 	var m2 := _image("T_terreno_maschere2.png")
 	var meshes := {}
-	var root := MODEL.instantiate()
-	for node in root.find_children("*", "MeshInstance3D", true, false):
-		meshes[String(node.name)] = (node as MeshInstance3D).mesh
-	root.free()
+	if use_blades:
+		for k: String in BLADES:
+			var blade := (load(BLADE_DIR + "grass_medium_01_%s.gltf" % k) as PackedScene).instantiate()
+			for node in blade.find_children("*", "MeshInstance3D", true, false):
+				meshes[k] = (node as MeshInstance3D).mesh
+			blade.free()
+	else:
+		var root := MODEL.instantiate()
+		for node in root.find_children("*", "MeshInstance3D", true, false):
+			meshes[String(node.name)] = (node as MeshInstance3D).mesh
+		root.free()
+	var height_noise := FastNoiseLite.new()
+	height_noise.seed = random_seed
+	height_noise.frequency = field_frequency
+	height_noise.fractal_octaves = 2
+	var dry_noise := FastNoiseLite.new()
+	dry_noise.seed = random_seed + 11
+	dry_noise.frequency = field_frequency * 0.7
+	dry_noise.fractal_octaves = 2
 
 	var green := GREEN.duplicate()
 	var dry := DRY.duplicate()
@@ -168,25 +200,43 @@ func _build() -> void:
 				continue
 			var a := _sample(m1, x, z)
 			var b := _sample(m2, x, z)
-			var tall := b.r
-			var is_dry := rng.randf() < clampf(a.a, 0.0, 1.0) * dry_share
-			var variant := _pick(green if not is_dry else dry, tall, is_dry, low, rng, meshes)
-			if variant == "":
-				continue
+			var variant := ""
+			var scale := 1.0
+			var colour: Color
 			var y := _ground(x, z) - 0.02
-			# Altezza quasi uniforme: la maschera macro la sposta solo di ±macro_height/2;
-			# vicino a sentieri e bordi l'erba si accorcia (transizione naturale).
-			var scale := lerpf(1.0, 0.6 + 0.8 * tall, macro_height) * rng.randf_range(0.88, 1.12)
-			scale *= tuft_scale * lerpf(0.45, 1.0, smoothstep(0.0, 1.0, d))
-			if variant in ["Erba_Lunga", "Erba_Lunga_Secca", "Prato_Alto"]:
-				scale = minf(scale, 1.1)
-			if low:
-				scale *= 1.1
-			var dryness := rng.randf_range(0.45, 0.9) if is_dry else rng.randf_range(0.0, 0.2)
-			var colour := tint.lerp(dry_tint, dryness)
-			colour = colour.lerp(dry_tint, b.g * colour_patches)
-			var bright := rng.randf_range(0.92, 1.06)
-			colour = Color(colour.r * bright, colour.g * bright, colour.b * bright)
+			if use_blades:
+				# Altezza e secchezza dipendono dalla posizione con rumore morbido (non dal ciuffo):
+				# il prato cambia piano piano; vicino a sentieri e bordi si accorcia.
+				var hn := height_noise.get_noise_2d(x, z) * 0.5 + 0.5
+				var dn := dry_noise.get_noise_2d(x, z) * 0.5 + 0.5
+				var is_tall := rng.randf() < tall_share
+				variant = _pick_blade(is_tall, low, rng)
+				scale = (1.0 + (hn - 0.5) * 2.0 * field_height) * rng.randf_range(0.93, 1.07)
+				scale *= float(BLADES[variant]["h"]) * tuft_scale * lerpf(0.5, 1.0, smoothstep(0.0, 1.0, d))
+				if is_tall:
+					scale *= rng.randf_range(1.3, 1.6)
+				if low:
+					scale *= 1.1
+				var dryness := clampf(smoothstep(0.35, 0.8, dn * 0.75 + clampf(a.a, 0.0, 1.0) * dry_share * 0.5 + b.g * colour_patches) * 0.85 + rng.randf_range(-0.08, 0.08), 0.0, 1.0)
+				var bright := rng.randf_range(0.9, 1.08)
+				colour = Color(tint.r * bright, tint.g * bright, tint.b * bright, dryness)
+			else:
+				var tall := b.r
+				var is_dry := rng.randf() < clampf(a.a, 0.0, 1.0) * dry_share
+				variant = _pick(green if not is_dry else dry, tall, is_dry, low, rng, meshes)
+				if variant == "":
+					continue
+				scale = lerpf(1.0, 0.6 + 0.8 * tall, macro_height) * rng.randf_range(0.88, 1.12)
+				scale *= tuft_scale * lerpf(0.45, 1.0, smoothstep(0.0, 1.0, d))
+				if variant in ["Erba_Lunga", "Erba_Lunga_Secca", "Prato_Alto"]:
+					scale = minf(scale, 1.1)
+				if low:
+					scale *= 1.1
+				var dryness := rng.randf_range(0.45, 0.9) if is_dry else rng.randf_range(0.0, 0.2)
+				colour = tint.lerp(dry_tint, dryness)
+				colour = colour.lerp(dry_tint, b.g * colour_patches)
+				var bright := rng.randf_range(0.92, 1.06)
+				colour = Color(colour.r * bright, colour.g * bright, colour.b * bright)
 			var key := Vector3i(floori((x - origin.x) / block), floori((z - origin.y) / block), names.find(variant))
 			if not buckets.has(key):
 				buckets[key] = {"t": [], "c": [], "d": []}
@@ -199,10 +249,18 @@ func _build() -> void:
 			placed += 1
 
 	material = ShaderMaterial.new()
-	material.shader = SHADER
-	material.set_shader_parameter(&"albedo_alpha", load(TEX_DIR + "T_erba_cards_albedo_alpha.png"))
-	material.set_shader_parameter(&"card_normal", load(TEX_DIR + "T_erba_cards_normal.png"))
-	material.set_shader_parameter(&"sss_rough_ao", load(TEX_DIR + "T_erba_cards_sss_rough_ao.png"))
+	if use_blades:
+		var tex := BLADE_DIR.path_join("textures/")
+		material.shader = BLADE_SHADER
+		material.set_shader_parameter(&"albedo_alpha", load(tex + "PH_grass_medium_01_color-PH_grass_medium_01_alpha.png"))
+		material.set_shader_parameter(&"dry_albedo", load(tex + "PH_grass_medium_01_dry.jpg"))
+		material.set_shader_parameter(&"card_normal", load(tex + "PH_grass_medium_01_normal.jpg"))
+		material.set_shader_parameter(&"rough_map", load(tex + "PH_grass_medium_01_rough.jpg"))
+	else:
+		material.shader = SHADER
+		material.set_shader_parameter(&"albedo_alpha", load(TEX_DIR + "T_erba_cards_albedo_alpha.png"))
+		material.set_shader_parameter(&"card_normal", load(TEX_DIR + "T_erba_cards_normal.png"))
+		material.set_shader_parameter(&"sss_rough_ao", load(TEX_DIR + "T_erba_cards_sss_rough_ao.png"))
 	_apply_parameters()
 
 	var blocks := {}
@@ -244,6 +302,25 @@ func _build() -> void:
 		instance_count_by_variant[variant_name] = instance_count_by_variant.get(variant_name, 0) + n
 		triangle_count += n * (mesh.surface_get_arrays(0)[Mesh.ARRAY_INDEX].size() / 3)
 	block_count = blocks.size()
+
+
+## Variante a lame: i ciuffi alti solo come accento sparso, altrimenti ciuffi bassi e medi.
+func _pick_blade(is_tall: bool, low: bool, rng: RandomNumberGenerator) -> String:
+	if is_tall:
+		return "tall_a" if rng.randf() < 0.5 else "tall_c"
+	var total := 0.0
+	var keys: Array = BLADES.keys()
+	for k: String in keys:
+		if not low or k in BLADES_LOW:
+			total += float(BLADES[k]["w"])
+	var r := rng.randf() * total
+	for k: String in keys:
+		if low and not k in BLADES_LOW:
+			continue
+		r -= float(BLADES[k]["w"])
+		if r <= 0.0:
+			return k
+	return "small_b"
 
 
 func _pick(table: Dictionary, tall: float, is_dry: bool, low: bool, rng: RandomNumberGenerator, meshes: Dictionary) -> String:

@@ -35,7 +35,11 @@ const OBSTACLE_GROUP := &"grid_obstacle"
 
 var _blocked: Dictionary = {}   # Vector2i -> true
 var _vaultable: Dictionary = {} # Vector2i -> true se l'ostacolo è basso e si può scavalcare
+var _climbable: Dictionary = {} # Vector2i -> true se il blocco è più alto di uno scavalcabile ma si può scalare
+var _heights: Dictionary = {}   # Vector2i -> altezza (m) dell'ostacolo più alto sulla casella
 var _occupants: Dictionary = {} # Vector2i -> Node
+var _bodies: Dictionary = {}     # Node -> {"circles": PackedVector3Array (x, z, raggio), "cells": Array[Vector2i]}: ingombri dinamici (animali)
+var _body_cells: Dictionary = {} # Vector2i -> numero di corpi che toccano la casella
 var _tiles: MultiMeshInstance3D
 var _thin: Array = []            # cerchi {center: Vector2, radius: float} di tronchi e pali
 var _thin_cells: Dictionary = {} # caselle di tronchi/pali: per il movimento libero non sono quadrate
@@ -122,8 +126,94 @@ func is_inside(cell: Vector2i) -> bool:
 	return cell.x >= 0 and cell.y >= 0 and cell.x < size.x and cell.y < size.y
 
 
+## Casella bloccata da un ostacolo fisso o dal corpo di un animale (che si sposta di poco).
 func is_blocked(cell: Vector2i) -> bool:
+	return _blocked.has(cell) or _body_cells.has(cell)
+
+
+## Casella bloccata solo da ostacoli fissi.
+func is_static_blocked(cell: Vector2i) -> bool:
 	return _blocked.has(cell)
+
+
+## Registra (o aggiorna) il corpo di un ostacolo mobile come catena di cerchi (x, z, raggio) in
+## coordinate del mondo. Le caselle toccate diventano bloccate (anche per il pathfinding) e
+## resolve_circle() tiene fuori i personaggi dai cerchi.
+func set_body(owner: Node, circles: PackedVector3Array) -> void:
+	remove_body(owner)
+	if circles.is_empty():
+		return
+	var cells: Array[Vector2i] = []
+	for circle in circles:
+		var center := Vector2(circle.x, circle.y)
+		var c := world_to_cell(Vector3(center.x, 0.0, center.y))
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				var cc := c + Vector2i(dx, dy)
+				if not is_inside(cc) or cells.has(cc):
+					continue
+				var rect := _cell_rect(cc)
+				var closest := Vector2(clampf(center.x, rect.position.x, rect.end.x), clampf(center.y, rect.position.y, rect.end.y))
+				if center.distance_to(closest) < circle.z * 0.85:
+					cells.append(cc)
+	for cc in cells:
+		_body_cells[cc] = _body_cells.get(cc, 0) + 1
+	_bodies[owner] = {"circles": circles, "cells": cells}
+
+
+func remove_body(owner: Node) -> void:
+	var old: Dictionary = _bodies.get(owner, {})
+	if old.is_empty():
+		return
+	for cc: Vector2i in old["cells"]:
+		var n: int = _body_cells.get(cc, 0) - 1
+		if n <= 0:
+			_body_cells.erase(cc)
+		else:
+			_body_cells[cc] = n
+	_bodies.erase(owner)
+
+
+func get_body_cells(owner: Node) -> Array[Vector2i]:
+	var b: Dictionary = _bodies.get(owner, {})
+	var out: Array[Vector2i] = []
+	if not b.is_empty():
+		out.assign(b["cells"])
+	return out
+
+
+## True se il corpo (cerchi in coordinate del mondo) sta nella griglia senza toccare ostacoli
+## fissi, altri corpi o unità: serve agli animali per decidere se possono fare il passo.
+func body_fits(owner: Node, circles: PackedVector3Array) -> bool:
+	for circle in circles:
+		var center := Vector2(circle.x, circle.y)
+		var r := circle.z
+		var c := world_to_cell(Vector3(center.x, 0.0, center.y))
+		for dx in range(-1, 2):
+			for dy in range(-1, 2):
+				var cc := c + Vector2i(dx, dy)
+				var solid := _blocked.has(cc) and not _thin_cells.has(cc)  # fuori griglia: nessuna unità ci arriva
+				if not solid:
+					continue
+				var rect := _cell_rect(cc)
+				var closest := Vector2(clampf(center.x, rect.position.x, rect.end.x), clampf(center.y, rect.position.y, rect.end.y))
+				if center.distance_to(closest) < r:
+					return false
+		for thin: Dictionary in _thin:
+			if center.distance_to(thin["center"]) < float(thin["radius"]) + r:
+				return false
+		for other: Node in _bodies:
+			if other == owner:
+				continue
+			for oc: Vector3 in _bodies[other]["circles"]:
+				if center.distance_to(Vector2(oc.x, oc.y)) < (r + oc.z) * 0.95:
+					return false
+		for unit: Node in _occupants.values():
+			if unit is Node3D and (unit as Node3D).is_inside_tree():
+				var up := (unit as Node3D).global_position
+				if center.distance_to(Vector2(up.x, up.z)) < r + 0.4:
+					return false
+	return true
 
 
 func get_occupant(cell: Vector2i) -> Node:
@@ -143,6 +233,30 @@ func can_vault_over(from: Vector2i, dir: Vector2i) -> bool:
 	var over := from + dir
 	var landing := over + dir
 	if not is_inside(over) or not is_inside(landing) or not is_vaultable(over):
+		return false
+	if is_blocked(landing) or _occupants.has(landing):
+		return false
+	return step_allowed(from, over) and step_allowed(over, landing)
+
+
+## True se la casella è un blocco alto che si può scalare (non scavalcare): da un lato ci si
+## arrampica, dall'altro si scende.
+func is_climbable(cell: Vector2i) -> bool:
+	return _blocked.has(cell) and _climbable.get(cell, false) and not _vaultable.get(cell, false)
+
+
+## Altezza (m) dell'ostacolo sulla casella (0 se non è nota).
+func obstacle_height(cell: Vector2i) -> float:
+	return _heights.get(cell, 0.0)
+
+
+## True se da `from` ci si può arrampicare in direzione `dir`: davanti c'è un blocco scalabile e
+## subito dopo una casella libera dove scendere. Le mosse normali e lo scavalcamento restano
+## invariati: l'arrampicata aggiunge solo passaggi, non ne toglie (il corridoio campo-costa resta libero).
+func can_climb_over(from: Vector2i, dir: Vector2i) -> bool:
+	var over := from + dir
+	var landing := over + dir
+	if not is_inside(over) or not is_inside(landing) or not is_climbable(over):
 		return false
 	if is_blocked(landing) or _occupants.has(landing):
 		return false
@@ -189,14 +303,14 @@ func find_unreachable_cells(start: Vector2i) -> Array[Vector2i]:
 		var current: Vector2i = frontier.pop_back()
 		for direction: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
 			var next := current + direction
-			if is_inside(next) and not is_blocked(next) and not reached.has(next) and step_allowed(current, next):
+			if is_inside(next) and not _blocked.has(next) and not reached.has(next) and step_allowed(current, next):
 				reached[next] = true
 				frontier.append(next)
 	var unreachable: Array[Vector2i] = []
 	for y in size.y:
 		for x in size.x:
 			var c := Vector2i(x, y)
-			if not is_blocked(c) and not reached.has(c):
+			if not _blocked.has(c) and not reached.has(c):
 				unreachable.append(c)
 	return unreachable
 
@@ -204,7 +318,7 @@ func find_unreachable_cells(start: Vector2i) -> Array[Vector2i]:
 ## Controlla che da start si possano raggiungere tutte le caselle libere;
 ## altrimenti avvisa nel log quali caselle sono chiuse dagli ostacoli.
 func validate_connectivity(start: Vector2i) -> bool:
-	if is_blocked(start):
+	if _blocked.has(start):
 		push_warning("DioramaGrid: la casella di partenza %s è bloccata da un ostacolo." % start)
 		return false
 	var unreachable := find_unreachable_cells(start)
@@ -217,6 +331,8 @@ func validate_connectivity(start: Vector2i) -> bool:
 func _register_obstacles() -> void:
 	for node in get_tree().get_nodes_in_group(OBSTACLE_GROUP):
 		var low: bool = node.has_method(&"is_vaultable") and node.is_vaultable()
+		var climb: bool = node.has_method(&"is_climbable") and node.is_climbable()
+		var obj_h: float = node.visual_height() if node.has_method(&"visual_height") else 0.0
 		if node.has_method(&"get_blocked_cells"):
 			# Oggetti con un'impronta di più caselle (GridProp).
 			var thin: Dictionary = node.thin_shape() if node.has_method(&"thin_shape") else {}
@@ -225,12 +341,16 @@ func _register_obstacles() -> void:
 			for c: Vector2i in node.get_blocked_cells(self):
 				set_blocked(c, true)
 				_vaultable[c] = _vaultable.get(c, true) and low
+				_climbable[c] = _climbable.get(c, true) and climb
+				_heights[c] = maxf(_heights.get(c, 0.0), obj_h)
 				if not thin.is_empty():
 					_thin_cells[c] = true
 		elif node is Node3D:
 			var c := world_to_cell((node as Node3D).global_position)
 			set_blocked(c, true)
 			_vaultable[c] = _vaultable.get(c, true) and low
+			_climbable[c] = _climbable.get(c, true) and climb
+			_heights[c] = maxf(_heights.get(c, 0.0), obj_h)
 
 
 func _rebuild_tiles() -> void:
@@ -284,6 +404,7 @@ func _rebuild_tiles() -> void:
 ## e pareti di roccia. Restituisce {"pos": Vector2, "vault_cell": Vector2i o null}.
 func resolve_circle(pos: Vector2, radius: float, level_cell: Vector2i) -> Dictionary:
 	var vault_cell = null
+	var climb_cell = null
 	var base_level := get_level(level_cell)
 	for _iter in 2:
 		var c := world_to_cell(Vector3(pos.x, 0.0, pos.y))
@@ -313,6 +434,8 @@ func resolve_circle(pos: Vector2, radius: float, level_cell: Vector2i) -> Dictio
 					pos += delta / dist * (radius - dist)
 				if _vaultable.get(cc, false) and is_blocked(cc):
 					vault_cell = cc
+				elif is_climbable(cc):
+					climb_cell = cc
 		for thin: Dictionary in _thin:
 			var center: Vector2 = thin["center"]
 			var r: float = float(thin["radius"]) + radius
@@ -320,13 +443,21 @@ func resolve_circle(pos: Vector2, radius: float, level_cell: Vector2i) -> Dictio
 			var l := d.length()
 			if l < r:
 				pos = center + (d / l if l > 0.0001 else Vector2.RIGHT) * r
-	return {"pos": pos, "vault_cell": vault_cell}
+		for body: Dictionary in _bodies.values():
+			for bc: Vector3 in body["circles"]:
+				var bcenter := Vector2(bc.x, bc.y)
+				var br := bc.z + radius
+				var bd := pos - bcenter
+				var bl := bd.length()
+				if bl < br:
+					pos = bcenter + (bd / bl if bl > 0.0001 else Vector2.RIGHT) * br
+	return {"pos": pos, "vault_cell": vault_cell, "climb_cell": climb_cell}
 
 
 func _cell_solid_for_motion(c: Vector2i, base_level: int) -> bool:
 	if not is_inside(c):
 		return true
-	if is_blocked(c):
+	if _blocked.has(c):
 		return not _thin_cells.has(c)
 	return absi(get_level(c) - base_level) > max_step_levels
 

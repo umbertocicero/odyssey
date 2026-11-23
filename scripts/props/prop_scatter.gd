@@ -79,12 +79,17 @@ func _rebuild() -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = random_seed
 	var transforms: Array[Transform3D] = []
+	var roads := get_tree().get_nodes_in_group(&"dirt_road") if is_inside_tree() else []
 	var attempts := 0
 	while transforms.size() < count and attempts < count * 20:
 		attempts += 1
 		var p := Vector2(rng.randf_range(-0.5, 0.5) * area_size.x, rng.randf_range(-0.5, 0.5) * area_size.y)
 		if exclude_rects.any(func(r: Rect2) -> bool: return r.has_point(p)):
 			continue
+		if not roads.is_empty():
+			var wp := global_transform * Vector3(p.x, 0.0, p.y)
+			if roads.any(func(r: Node) -> bool: return r.edge_distance(Vector2(wp.x, wp.z)) < 0.3):
+				continue
 		var s := 1.0 + rng.randf_range(-size_variation, size_variation)
 		var rot := Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3.ONE * s)
 		transforms.append(Transform3D(rot, Vector3(p.x, 0.0, p.y)))

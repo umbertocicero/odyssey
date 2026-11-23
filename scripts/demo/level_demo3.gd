@@ -709,22 +709,26 @@ func _build_ui() -> void:
 	_ui = CanvasLayer.new()
 	_ui.layer = 60
 	add_child(_ui)
-	var title := _label(16, Control.PRESET_CENTER_TOP)
-	title.offset_top = 112
-	title.offset_bottom = 134
-	title.offset_left = -300
-	title.offset_right = 300
+	# Il HUD del gioco occupa il centro in alto (titolo, obiettivo) e il banner a y~190:
+	# i testi della demo stanno a sinistra, sotto il ritratto, e in basso sopra lo stato.
+	var title := _label(14, Control.PRESET_TOP_LEFT)
+	title.offset_top = 236
+	title.offset_bottom = 256
+	title.offset_left = 16
+	title.offset_right = 340
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	title.text = "DEMO 3  -  speedrun, no cheats"
 	title.modulate.a = 0.8
-	_clock_label = _label(54, Control.PRESET_CENTER_TOP)
-	_clock_label.offset_top = 132
-	_clock_label.offset_bottom = 200
-	_clock_label.offset_left = -200
-	_clock_label.offset_right = 200
+	_clock_label = _label(40, Control.PRESET_TOP_LEFT)
+	_clock_label.offset_top = 254
+	_clock_label.offset_bottom = 308
+	_clock_label.offset_left = 16
+	_clock_label.offset_right = 340
+	_clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_clock_label.add_theme_color_override(&"font_color", Color(1.0, 0.86, 0.5))
-	_info_label = _label(16, Control.PRESET_CENTER_TOP)
-	_info_label.offset_top = 202
-	_info_label.offset_bottom = 226
+	_info_label = _label(16, Control.PRESET_CENTER_BOTTOM)
+	_info_label.offset_top = -92
+	_info_label.offset_bottom = -68
 	_info_label.offset_left = -400
 	_info_label.offset_right = 400
 	_status_label = _label(20, Control.PRESET_CENTER_BOTTOM)

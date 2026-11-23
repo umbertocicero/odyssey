@@ -45,6 +45,7 @@ var particle_count := 0
 var tilted_count := 0
 
 var _t := 0.0
+var _wind_timer := 0.0
 var _noise := FastNoiseLite.new()
 
 
@@ -62,6 +63,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_t += delta
+	_wind_timer -= delta
+	if _wind_timer <= 0.0:
+		_wind_timer = 0.15
+		var clock := get_tree().get_first_node_in_group(&"level_clock") as LevelClock
+		if clock:
+			TorchFlame.update_wind(clock.wind_direction, clock.wind_strength)
 	for i in fire_lights.size():
 		var l := fire_lights[i]
 		if is_instance_valid(l):
@@ -125,10 +132,19 @@ func _setup_fire() -> void:
 		_add_smoke(base + Vector3(0, 0.4, 0), 1.0 if quality == Quality.Level.HIGH else 0.5)
 		_add_sparks(base + Vector3(0, 0.3, 0), 1.0 if quality == Quality.Level.HIGH else 0.5)
 		_add_flame(base + Vector3(0, 0.15, 0), 0.55)
-	if quality == Quality.Level.HIGH:
-		for torch in level.find_children("Torcia*", "Node3D", true, false):
-			var b := _world_aabb(torch as Node3D)
-			_add_flame(Vector3(b.get_center().x, b.end.y, b.get_center().z))
+	# Torce sul palo e braceri delle mura: stessa fiamma animata di quelle in mano (TorchFlame); la fiamma
+	# statica del modello è nascosta nella scena (hide_materials = M_flame).
+	for torch in level.find_children("*", "Node3D", true, false):
+		if not torch is GridProp:
+			continue
+		var is_torch := String(torch.name).begins_with("Torcia")
+		var is_brazier := String(torch.name).begins_with("BrazierTorre")
+		if not is_torch and not is_brazier:
+			continue
+		# I prop sono batchati (nessun MeshInstance3D figlio): la cima si ricava dall'altezza del modello
+		# senza la fiamma statica (M_flame nascosta).
+		var top := (torch as GridProp).global_position + Vector3(0.0, (torch as GridProp).visual_height() * (0.78 if is_torch else 0.62), 0.0)
+		TorchFlame.attach(level, top - level.global_position, 0.62 if is_torch else 0.8, 0.4 if is_torch else 0.55)
 
 
 func _soft_texture() -> GradientTexture2D:

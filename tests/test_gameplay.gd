@@ -61,7 +61,13 @@ func _initialize() -> void:
 	trojan._halted = true
 	ulisse.place_at(free_cell)
 	ulisse.face(trojan.cell - ulisse.cell)
-	ulisse._melee_attack()
+	# Il colpo arriva all'impatto della lama (0,22 s) e il troiano può schivare: si riprova qualche volta.
+	for attempt in 6:
+		ulisse._attack_cd = 0.0
+		ulisse._melee_attack()
+		await create_timer(0.9).timeout
+		if trojan.health < hp:
+			break
 	_check(trojan.health < hp, "Ulisse colpisce il troiano davanti (vita %d -> %d)" % [hp, trojan.health])
 	var kills_before := director.kills
 	trojan.take_damage(1000)

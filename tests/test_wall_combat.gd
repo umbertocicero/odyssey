@@ -112,8 +112,8 @@ func _run() -> void:
 	var ally_cell := ally.cell
 	ally.take_damage(1000)
 	await process_frame
-	_check(not is_instance_valid(ally) and grid.get_occupant(ally_cell) == null,
-		"il soldato caduto sparisce e libera la casella")
+	_check(is_instance_valid(ally) and ally.is_in_group(&"corpses") and grid.get_occupant(ally_cell) == null,
+		"il soldato caduto resta a terra come cadavere e libera la casella")
 
 	Engine.time_scale = 1.0
 	print("RISULTATO: ", "OK" if _failures == 0 else "%d controlli falliti" % _failures)

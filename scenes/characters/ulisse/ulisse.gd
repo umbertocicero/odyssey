@@ -62,7 +62,7 @@ func set_carrying(on: bool, helped := false) -> void:
 		speed_multiplier = carry_speed_helped if helped else carry_speed_alone
 	var model := get_node_or_null(^"Model") as CharacterModel
 	if model:
-		model.set_stance(&"support" if on else &"normal")
+		model.set_stance(&"carry_r" if on else &"normal")
 
 
 ## Ulisse non sparisce: nel prototipo riappare all'accampamento con la vita piena.
@@ -144,6 +144,16 @@ func _free_move(delta: float) -> void:
 				if _model:
 					_face_yaw = _model.rotation.y
 				_vault(axis)
+				return
+		var climb_cell = result.get("climb_cell")
+		if climb_cell != null and can_climb:
+			var caxis := _dominant_axis(dir)
+			if climb_cell == cell + caxis and Vector2(dir.x, dir.z).dot(Vector2(caxis)) > 0.55 \
+					and grid.can_climb_over(cell, caxis):
+				face(caxis)
+				if _model:
+					_face_yaw = _model.rotation.y
+				_climb(caxis)
 				return
 		if travelled > 0.0005:
 			var y := grid.get_height_at_world(Vector3(end.x, 0.0, end.y))
@@ -249,4 +259,4 @@ func _melee_attack() -> void:
 	if best:
 		var to := best.global_position - global_position
 		_face_yaw = atan2(-to.x, -to.z)
-		best.take_damage(attack_damage)
+		melee_strike(best, attack_damage)

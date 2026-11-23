@@ -107,3 +107,23 @@ Opzioni: `--seed=N` (default 1207), `--plan=5,6,2,4,C,3,1,W` (visite in ordine: 
 `--clean`. Tasti: `R` ricomincia, `Space` pausa, `Esc` esce. Prove veloci senza finestra:
 `godot --headless --path . --fixed-fps 60 res://scenes/demo/demo3.tscn -- --auto-quit`
 (stampa `[demo3] RESULT time=...`). Codice: `scripts/demo/level_demo3.gd`.
+
+## Demo 4 (tempo e meteo)
+
+`scenes/demo/demo4.tscn` (**F6**) mostra in ~95 s il diorama del livello 1 dal pomeriggio alla notte:
+vento sull'erba, un acquazzone (inizio e durata casuali ma con seme fisso), pozze che si asciugano
+quando torna il sole, tramonto, notte con torce accese e luna fredda. Usa i sistemi veri
+(`LevelClock`, `NightCycle`, `WeatherFx`, `LevelAtmosphere`); il Director parte senza ondate né feriti.
+La demo pilota solo l'ora e la pioggia; la camera ha movimenti lenti (Catmull-Rom). A schermo: orologio
+discreto e brevi didascalie in inglese. Solo per il video, sopra l'overlay della pioggia di gioco, ci sono
+strisce di pioggia 3D davanti alla camera (non fanno parte del livello).
+
+```bash
+scenes/demo/run_demo4.sh                    # finestra
+scenes/demo/run_demo4.sh --record           # video in out/demo4.avi (30 fps fissi, esce da solo)
+scenes/demo/run_demo4.sh --record=/tmp/v.avi --quality=high
+```
+
+Opzioni: `--seed=N` (cambia momento e durata della pioggia), `--clean`, `--auto-quit`,
+`--shots=DIR --shot-times=3,20,...`, `--timescale=N` (solo prove). Tasti: `Space` pausa, `R` ricomincia, `Esc` esce.
+Codice: `scripts/demo/level_demo4.gd` (orari: `HOUR_KEYS`, camera: `CAM_KEYS`, testi: `CAPTIONS`).

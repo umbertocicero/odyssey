@@ -9,8 +9,10 @@ const SHADER := preload("res://assets/shaders/dirt_road.gdshader")
 
 ## Punti (X, Z) del centro della strada in coordinate del mondo, da ovest a nord.
 @export var path_points: PackedVector2Array = PackedVector2Array([
-	Vector2(-17.5, 11.9), Vector2(-9.0, 11.2), Vector2(-1.0, 11.7), Vector2(4.8, 10.3),
-	Vector2(6.9, 5.5), Vector2(6.1, -1.5), Vector2(6.9, -8.5), Vector2(6.2, -14.0), Vector2(6.5, -19.0)])
+	Vector2(-17.5, 11.9), Vector2(-9.0, 11.2), Vector2(-1.0, 11.7),
+	# Svolta ovest-nord come arco largo (raggio ~6 m) e non più angolo quasi retto.
+	Vector2(1.4, 11.5), Vector2(3.3, 10.9), Vector2(5.0, 9.8), Vector2(6.2, 8.2), Vector2(6.8, 6.4),
+	Vector2(6.9, 5.0), Vector2(6.1, -1.5), Vector2(6.9, -8.5), Vector2(6.2, -14.0), Vector2(6.5, -19.0)])
 @export_range(1.0, 6.0) var width := 3.4
 ## Quanto il nastro sta sopra il terreno (m): evita il z-fighting.
 @export_range(0.0, 0.1) var lift := 0.035
@@ -23,6 +25,21 @@ var stone_count := 0
 var road_length := 0.0
 var _terrain: PhotoTerrain
 var _relief: TerrainRelief
+
+
+func _enter_tree() -> void:
+	# Nel gruppo già prima dei _ready: maschera dell'erba e sparpagliatori la leggono.
+	add_to_group(&"dirt_road")
+
+
+## Distanza (m) dal bordo della strada nel punto (x, z) del mondo: negativa dentro il nastro.
+func edge_distance(world_xz: Vector2) -> float:
+	var s := _samples()
+	var best := INF
+	for i in range(s.size() - 1):
+		var c := Geometry2D.get_closest_point_to_segment(world_xz, s[i], s[i + 1])
+		best = minf(best, world_xz.distance_to(c))
+	return best - width * 0.5
 
 
 func _ready() -> void:

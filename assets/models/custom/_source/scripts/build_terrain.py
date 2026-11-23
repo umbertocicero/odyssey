@@ -59,6 +59,35 @@ def rect_sdf(gx, gz, x0, x1, z0, z1):
     return np.hypot(np.maximum(qx, 0), np.maximum(qz, 0)) + np.minimum(np.maximum(qx, qz), 0)
 
 
+def road_centerline():
+    """Centro della strada come in DirtRoad (scripts/props/dirt_road.gd): Catmull-Rom sui path_points."""
+    src = open(os.path.join(PROJECT, "scripts", "props", "dirt_road.gd")).read()
+    block = src.split("var path_points", 1)[1].split("])", 1)[0]
+    block = "\n".join(l.split("#")[0] for l in block.splitlines())
+    pts = [(float(a), float(b)) for a, b in re.findall(r"Vector2\(\s*(-?[\d.]+),\s*(-?[\d.]+)\)", block)]
+    out = []
+    for i in range(len(pts) - 1):
+        p0, p1, p2, p3 = pts[max(i - 1, 0)], pts[i], pts[i + 1], pts[min(i + 2, len(pts) - 1)]
+        steps = max(int(math.dist(p1, p2) / 0.25), 2)
+        for k in range(steps):
+            t = k / steps
+            out.append(tuple(0.5 * (2 * p1[c] + (-p0[c] + p2[c]) * t + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * t * t
+                                     + (-p0[c] + 3 * p1[c] - 3 * p2[c] + p3[c]) * t ** 3) for c in (0, 1)))
+    out.append(pts[-1])
+    return np.array(out)
+
+
+def road_sdf(gx, gz, half_width):
+    """Distanza con segno dal bordo del nastro della strada: curva, senza angoli squadrati."""
+    c = road_centerline()
+    best = np.full(gx.shape, 1e9)
+    for a, b in zip(c[:-1], c[1:]):
+        ab = b - a
+        t = np.clip(((gx - a[0]) * ab[0] + (gz - a[1]) * ab[1]) / (ab @ ab), 0, 1)
+        best = np.minimum(best, np.hypot(gx - (a[0] + t * ab[0]), gz - (a[1] + t * ab[1])))
+    return best - half_width
+
+
 def noise(seed, n, beta=2.0, fmin=1, fmax=None):
     return fbm(seed, beta, fmin, fmax, shape=(n, n))
 
@@ -127,7 +156,8 @@ def masks(Hf, cliff_f):
     e1, e2, e3, e4 = (noise(s, MAPN, 2.2, 4) for s in (301, 302, 303, 304))
     fine = noise(305, MAPN, 1.6, 30)
     # sentieri (StradaAccampamento e StradaPorta di level1.tscn) con bordi irregolari
-    d = np.minimum(rect_sdf(gx, gz, -17, 8, 10, 13), rect_sdf(gx, gz, 5, 8, -23.5, 10))
+    # La curva segue DirtRoad (larghezza 3 m nella maschera); oltre la fine della curva resta il piazzale della porta.
+    d = np.minimum(road_sdf(gx, gz, 1.5), rect_sdf(gx, gz, 5, 8, -23.5, -18.5))
     d = d + (e1 - 0.5) * 1.0 + (fine - 0.5) * 0.25
     path = smooth(0.25, -0.25, d)
     shoulder = smooth(1.4, 0.1, d) * (1 - path) * smooth(0.35, 0.6, e2)

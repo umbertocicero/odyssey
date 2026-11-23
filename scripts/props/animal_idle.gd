@@ -38,6 +38,7 @@ var _dip_total := 1.0
 var _next_dip := 5.0
 var _pivot_z := 0.7
 var _params: Dictionary
+var _grid: DioramaGrid
 
 
 func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit_deg := 180.0) -> void:
@@ -52,6 +53,56 @@ func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit
 	_rest_left = _rng.randf_range(0.5, 5.0)
 	_next_dip = _rng.randf_range(1.0, 6.0)
 	set_process(true)
+	_register_body.call_deferred()
+
+
+func _exit_tree() -> void:
+	if _grid != null and is_instance_valid(_grid):
+		_grid.remove_body(_prop)
+
+
+## Corpo dell'animale sulla griglia: una catena di cerchi lungo il corpo (un cavallo ne occupa
+## più caselle), che segue i passi. Ulisse, alleati e nemici non lo attraversano e il pathfinding lo aggira.
+func _register_body() -> void:
+	if _prop == null or not is_instance_valid(_prop) or not _prop.is_inside_tree():
+		return
+	_grid = get_tree().get_first_node_in_group(&"diorama_grid") as DioramaGrid
+	if _grid != null:
+		_grid.set_body(_prop, _circles(_pos, _yaw))
+
+
+## Cerchi (x, z, raggio) in coordinate del mondo per la posizione/orientamento dati.
+func _circles(pos: Vector2, yaw: float) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	var box := _prop.visual_box()
+	if box.size.x <= 0.0 or box.size.z <= 0.0:
+		return out
+	if _pivot_z == 0.7:
+		_pivot_z = _prop.visual_size().z * 0.35
+	var c := box.get_center()
+	var r := clampf(box.size.x * 0.5, 0.22, 0.5)
+	var half := maxf(box.size.z * 0.5 - r, 0.0)
+	var n := maxi(ceili(half * 2.0 / (r * 1.2)) + 1, 1)
+	var yaw_b := Basis(Vector3.UP, yaw)
+	var pivot := Vector3(0.0, 0.0, _pivot_z)
+	for i in n:
+		var z := c.z if n == 1 else lerpf(c.z - half, c.z + half, float(i) / (n - 1))
+		var local := yaw_b * (Vector3(c.x, 0.0, z) - pivot) + pivot + Vector3(pos.x, 0.0, pos.y)
+		var w := _prop.global_transform * local
+		out.append(Vector3(w.x, w.z, r))
+	return out
+
+
+## Applica un nuovo passo/orientamento solo se il corpo ci sta (niente ostacoli, animali o unità).
+func _try_move(pos: Vector2, yaw: float) -> bool:
+	if _grid != null and is_instance_valid(_grid):
+		var circles := _circles(pos, yaw)
+		if not _grid.body_fits(_prop, circles):
+			return false
+		_grid.set_body(_prop, circles)
+	_pos = pos
+	_yaw = yaw
+	return true
 
 
 func _process(delta: float) -> void:
@@ -125,14 +176,22 @@ func _update_walk(delta: float) -> void:
 		var rest: Vector2 = _params["rest"]
 		_rest_left = _rng.randf_range(rest.x, rest.y)
 		return
-	# Prima ci si gira verso la meta, poi si cammina.
+	# Prima ci si gira verso la meta, poi si cammina. Ogni gesto passa dal controllo d'ingombro:
+	# se qualcosa è in mezzo (unità, ostacolo, altro animale) l'animale si ferma e riposa.
 	var want := atan2(-to.x, -to.y)
 	var lim := deg_to_rad(max_turn_deg)
 	want = clampf(wrapf(want, -PI, PI), -lim, lim)
 	var turn_rate := deg_to_rad(float(_params["turn"])) * delta
 	var diff := wrapf(want - _yaw, -PI, PI)
-	_yaw += clampf(diff, -turn_rate, turn_rate)
+	var new_yaw := _yaw + clampf(diff, -turn_rate, turn_rate)
+	var new_pos := _pos
+	var stepped := false
 	if absf(diff) < deg_to_rad(35.0):
-		var step := minf(float(_params["speed"]) * delta, dist)
-		_pos += to / dist * step
+		new_pos = _pos + to / dist * minf(float(_params["speed"]) * delta, dist)
+		stepped = true
+	if not _try_move(new_pos, new_yaw):
+		_walking = false
+		_rest_left = _rng.randf_range(2.0, 5.0)
+		return
+	if stepped:
 		_gait = fmod(_gait + float(_params["step_hz"]) * delta * 0.5, 1.0)

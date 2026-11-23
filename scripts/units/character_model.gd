@@ -53,21 +53,32 @@ const UPPER_BODY := ["spine", "neck", "head", "upperarm.L", "forearm.L", "hand.L
 ## la seconda si corre, in mezzo si fondono.
 const GAIT_SPEEDS := {
 	&"normal": Vector2(1.3, 3.8), &"support": Vector2(1.2, 3.0), &"limp": Vector2(0.9, 2.2),
+	&"limp_l": Vector2(0.9, 2.2), &"limp_r": Vector2(0.9, 2.2), &"limp_lr": Vector2(0.9, 2.2),
+	&"carry_r": Vector2(1.2, 3.0), &"carry_l": Vector2(1.2, 3.0),
 	&"stretcher_r": Vector2(1.2, 2.6), &"stretcher_l": Vector2(1.2, 2.6),
-	&"drag": Vector2(0.8, 2.0), &"drag_l": Vector2(0.8, 2.0), &"drag_r": Vector2(0.8, 2.0), &"dragged": Vector2(0.8, 2.0),
+	&"torch": Vector2(1.3, 3.8), &"row": Vector2(1.3, 3.8), &"drag": Vector2(0.8, 2.0), &"drag_l": Vector2(0.8, 2.0), &"drag_r": Vector2(0.8, 2.0), &"dragged": Vector2(0.8, 2.0),
 }
 const STANCE_CLIPS := {
 	&"normal": [&"idle", &"walk", &"run"], &"support": [&"support_idle", &"support_walk", &"support_run"],
 	&"limp": [&"limp_idle", &"limp_walk", &"limp_run"],
+	# Ferito sorretto a piedi: braccio attorno al collo di chi gli sta a sinistra (l) / destra (r) / a entrambi (lr);
+	# chi lo sorregge gli cinge la vita col braccio destro (carry_r: ferito a destra) o sinistro (carry_l).
+	&"limp_l": [&"limp_l_idle", &"limp_l_walk", &"limp_l_run"], &"limp_r": [&"limp_r_idle", &"limp_r_walk", &"limp_r_run"],
+	&"limp_lr": [&"limp_lr_idle", &"limp_lr_walk", &"limp_lr_run"],
+	&"carry_r": [&"carry_r_idle", &"carry_r_walk", &"carry_r_run"], &"carry_l": [&"carry_l_idle", &"carry_l_walk", &"carry_l_run"],
 	&"stretcher_r": [&"stretcher_r_idle", &"stretcher_r_walk", &"stretcher_r_run"],
 	&"stretcher_l": [&"stretcher_l_idle", &"stretcher_l_walk", &"stretcher_l_run"],
 	# Trascinamento sotto le ascelle: da solo (drag) o in due (drag_l / drag_r: mano sinistra / destra),
 	# all'indietro verso il ferito; il ferito trascinato (dragged). Distanze in HumanoidAnims.DRAG_*.
+	&"torch": [&"torch_idle", &"torch_walk", &"torch_run"],
+	# Rematore seduto sul banco: sempre lo stesso ciclo di voga, qualunque sia la velocità della barca.
+	&"row": [&"row_idle", &"row_walk", &"row_run"],
 	&"drag": [&"drag_idle", &"drag_walk", &"drag_walk"], &"drag_l": [&"drag_l_idle", &"drag_l_walk", &"drag_l_walk"],
 	&"drag_r": [&"drag_r_idle", &"drag_r_walk", &"drag_r_walk"], &"dragged": [&"dragged_idle", &"dragged_walk", &"dragged_walk"],
 }
-const ACTIONS := [&"attack", &"attack2", &"attack_thrust", &"block", &"hit", &"dodge", &"jump", &"shoot"]
-const DEAD_CLIPS := [&"death", &"lie", &"lie_dead", &"getup", &"liedown"]
+const ACTIONS := [&"attack", &"attack2", &"attack_thrust", &"block", &"hit", &"dodge", &"jump", &"shoot", &"climb_0", &"climb_1", &"climb_2"]
+const DEATH_CLIPS := [&"death", &"death_front", &"death_side_r", &"death_side_l"]
+const DEAD_CLIPS := [&"death", &"death_front", &"death_side_r", &"death_side_l", &"lie", &"lie_dead", &"getup", &"liedown"]
 
 var instance: Node3D
 ## Nome della variante scelta (vuoto se il modello è unico).
@@ -101,6 +112,7 @@ var _dead_clip := &""
 var _getting_up_until := 0.0
 var _attack_index := 0
 var _defend_cd := 0.0
+var _torch_on := false
 var _no_hit_until := 0.0
 var _stances: Array[StringName] = []
 
@@ -108,9 +120,6 @@ var _stances: Array[StringName] = []
 func _ready() -> void:
 	unit = get_parent() as GridUnit
 	_pick_variant()
-	if int(Quality.current()) < 2:
-		if lod_scene_path != "" and model_variants.is_empty():
-			model_scene = load(lod_scene_path) as PackedScene
 	if model_scene == null:
 		return
 	instance = model_scene.instantiate() as Node3D
@@ -127,6 +136,8 @@ func _ready() -> void:
 		skeleton = sk[0]
 	for mesh: MeshInstance3D in instance.find_children("*", "MeshInstance3D", true, false):
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		if humanize and skeleton:
+			mesh.mesh = HandFist.fisted(mesh.mesh, skeleton)   # mani chiuse a pugno intorno al manico
 	if humanize and skeleton and skeleton.find_bone("hips") >= 0 and skeleton.find_bone("upperarm.L") >= 0:
 		_build_tree()
 	elif player:
@@ -138,6 +149,8 @@ func _ready() -> void:
 		_last_health = unit.max_health
 		if unit.has_signal(&"vaulted"):
 			unit.connect(&"vaulted", func(_a, _b): _fire(&"jump", true))
+		if unit.has_signal(&"climbed"):
+			unit.connect(&"climbed", func(_a, _b, h: float): _fire(HumanoidAnims.climb_clip(HumanoidAnims.climb_index(h)), true))
 		unit.health_changed.connect(_on_health_changed)
 		unit.died.connect(_on_died)
 		if unit.has_signal(&"action_requested"):
@@ -157,14 +170,19 @@ func _gear() -> UnitGear:
 
 func _default_sets() -> PackedStringArray:
 	var s := PackedStringArray(["base"])
+	if unit is AllySoldier or (unit and unit.is_in_group(&"player")):
+		s.append("torch")
 	if unit is WoundedSoldier:
 		s.append("limp")
 	elif unit is AllySoldier:
 		s.append("support")
+		s.append("carry")
 		s.append("stretcher")
 		s.append("drag")
+		s.append("row")
 	elif unit and unit.is_in_group(&"player"):
 		s.append("support")
+		s.append("carry")
 	return s
 
 
@@ -260,6 +278,9 @@ func _build_tree() -> void:
 			bt.add_node(StringName("dead_%s" % d), _anim_node(d))
 			di += 1
 	bt.add_node(&"dead_sel", dsel)
+	# Velocita' della caduta regolabile (ogni caduto cade un po' diverso): ts_dead/scale.
+	bt.add_node(&"ts_dead", AnimationNodeTimeScale.new())
+	bt.connect_node(&"ts_dead", 0, &"dead_sel")
 	var j := 0
 	for d: StringName in DEAD_CLIPS:
 		if _lib.has_animation(d):
@@ -271,7 +292,7 @@ func _build_tree() -> void:
 	_add_input(life, "dead")
 	bt.add_node(&"life", life)
 	bt.connect_node(&"life", 0, last)
-	bt.connect_node(&"life", 1, &"dead_sel")
+	bt.connect_node(&"life", 1, &"ts_dead")
 	bt.connect_node(&"output", 0, &"life")
 	tree.tree_root = bt
 	tree.active = true
@@ -311,6 +332,7 @@ func _snap(node_name: StringName, state: StringName) -> void:
 func _process(delta: float) -> void:
 	if instance == null or delta <= 0.0:
 		return
+	_watch_torch()
 	_measure(delta)
 	if tree == null:
 		_glb_process()
@@ -350,6 +372,11 @@ func _apply_locomotion(delta: float) -> void:
 		var b := clampf((speed - r.x) / (r.y - r.x), 0.0, 1.0)
 		var st := lerpf(HumanoidAnims.stride(clips[1]), HumanoidAnims.stride(clips[2]), b)
 		_tp("gait_%s/blend_position" % s, b)
+		if s == &"row":
+			# Seduto sul banco: la velocità della barca non c'entra, il ritmo è fisso e non si cammina mai.
+			_tp("ts_row/scale", 1.0)
+			_tp("mv_row/blend_amount", 0.0)
+			continue
 		# Sotto la velocità minima si rallenta la cadenza ma non sotto un terzo (passi corti, non moviola).
 		_tp("ts_%s/scale" % s, maxf(speed, 0.45) / st)
 		_tp("mv_%s/blend_amount" % s, moving)
@@ -384,11 +411,43 @@ func _apply_body(delta: float) -> void:
 # =====================================================================================================
 
 ## Cambia stance (normal, support, limp, stretcher_r, stretcher_l) con una dissolvenza.
-func set_stance(s: StringName) -> void:
+func set_stance(s: StringName, instant := false) -> void:
 	stance = s
+	# Col braccio destro attorno al ferito la spada resta nel fodero.
+	var gear := _gear()
+	if gear and gear.weapon_node:
+		gear.weapon_node.visible = not (s == &"carry_r" or s == &"row" or _torch_on)
 	if tree == null or not _stances.has(s):
 		return
-	_tp("stance/transition_request", String(s))
+	if instant:
+		_snap(&"stance", s)
+	else:
+		_tp("stance/transition_request", String(s))
+
+
+## Torcia accesa in mano (di notte): la spada resta nel fodero e il braccio destro regge la torcia
+## dritta. Va chiamato con `true` quando la torcia compare e con `false` quando sparisce.
+func set_torch(on: bool) -> void:
+	var gear := _gear()
+	if gear and gear.weapon_node:
+		gear.weapon_node.visible = not on and stance != &"carry_r"
+	if tree == null or not _stances.has(&"torch"):
+		return
+	if on and stance == &"normal":
+		set_stance(&"torch")
+	elif not on and stance == &"torch":
+		set_stance(&"normal")
+
+
+## Controlla se NightCycle ha acceso la torcia in mano (nodo "TorciaInMano" visibile sullo scheletro).
+func _watch_torch() -> void:
+	if skeleton == null:
+		return
+	var node := skeleton.get_node_or_null(^"TorciaInMano") as Node3D
+	var on := node != null and node.visible
+	if on != _torch_on:
+		_torch_on = on
+		set_torch(on)
 
 
 ## Esegue l'attacco (alterna fendente, taglio e affondo).
@@ -407,7 +466,8 @@ func play_attack() -> void:
 
 
 ## Avvia la morte e resta sull'ultimo fotogramma finché non si chiama revive().
-func play_death() -> void:
+## `variant`: clip di caduta (DEATH_CLIPS; vuoto = all'indietro), `speed`: velocita' della caduta.
+func play_death(variant := &"", speed_scale := 1.0) -> void:
 	if tree == null:
 		dead = true
 		_busy_until = 0.0
@@ -421,9 +481,22 @@ func play_death() -> void:
 	if lying and _lib.has_animation(&"lie_dead"):
 		_dead_clip = &"lie_dead"
 	else:
-		_dead_clip = anim_death
+		_dead_clip = variant if DEATH_CLIPS.has(variant) and _lib.has_animation(variant) else anim_death
+	_tp("ts_dead/scale", speed_scale)
 	_tp("dead_sel/transition_request", String(_dead_clip))
 	_tp("life/transition_request", "dead")
+
+
+## Durata della caduta in corso (secondi, alla velocita' impostata).
+func death_duration() -> float:
+	return anim_length(_dead_clip) / maxf(float(tree.get("parameters/ts_dead/scale")), 0.1) if tree else 1.0
+
+
+## Verso (mondo, orizzontale) in cui punta la testa del caduto.
+func death_head_world() -> Vector3:
+	var d := instance.global_basis.orthonormalized() * HumanoidAnims.death_head_dir(_dead_clip)
+	d.y = 0.0
+	return d.normalized() if d.length() > 0.01 else Vector3.BACK
 
 
 ## Sdraiato a terra, vivo (ferito). `instant`: senza animazione (inizio del livello).
@@ -486,7 +559,7 @@ func current_animation() -> StringName:
 	if tree == null:
 		return player.current_animation if player else &""
 	if dead:
-		return anim_death if _dead_clip == anim_death or _dead_clip == &"lie_dead" else _dead_clip
+		return anim_death if DEATH_CLIPS.has(_dead_clip) or _dead_clip == &"lie_dead" else _dead_clip
 	if _getting_up_until > 0.0:
 		return &"getup"
 	var now := Time.get_ticks_msec() / 1000.0
@@ -515,7 +588,7 @@ func _fire(a: StringName, full := false) -> void:
 	_tp("act_%s/request" % layer, AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)
 	_action = a
 	_busy_until = Time.get_ticks_msec() / 1000.0 + _lib.get_animation(a).length
-	if a != &"jump":
+	if a != &"jump" and not String(a).begins_with("climb"):
 		_combat_until = Time.get_ticks_msec() / 1000.0 + 3.5
 
 
@@ -524,7 +597,7 @@ func _fire(a: StringName, full := false) -> void:
 ## chi sta già affondando un colpo, chi è a terra o chi si è appena difeso.
 func defend(amount: int, from: Vector3) -> int:
 	var now := Time.get_ticks_msec() / 1000.0
-	if tree == null or dead or stance == &"limp" or stance == &"dragged" or now < _defend_cd:
+	if tree == null or dead or String(stance).begins_with("limp") or stance == &"dragged" or now < _defend_cd:
 		return amount
 	if _action in [&"attack", &"attack2", &"attack_thrust"] and now < _busy_until - 0.3:
 		return amount
@@ -542,6 +615,87 @@ func defend(amount: int, from: Vector3) -> int:
 		_no_hit_until = now + 0.35
 		return 0
 	return amount
+
+
+## Istante (s dall'inizio del colpo) in cui la lama arriva a bersaglio, uguale per tutti gli attacchi
+## (chiavi "hit" delle clip a 0,21-0,23 s).
+const IMPACT_TIME := 0.22
+## Anticipo con cui la parata o la schivata devono partire rispetto al colpo: la clip arriva in guardia a 0,12 s.
+const DEFENSE_LEAD := 0.12
+
+
+## Secondi che mancano all'impatto del colpo in corso (IMPACT_TIME se è appena partito).
+func attack_impact_remaining() -> float:
+	var now := Time.get_ticks_msec() / 1000.0
+	if _action in [&"attack", &"attack2", &"attack_thrust"] and _lib != null and _lib.has_animation(_action):
+		var elapsed := _lib.get_animation(_action).length - (_busy_until - now)
+		return maxf(IMPACT_TIME - elapsed, 0.02)
+	return IMPACT_TIME
+
+
+## Decide in anticipo come reagirà a un colpo in arrivo: &"hit" (lo incassa), &"block" (para con
+## lama o scudo) o &"dodge" (schiva). Stessa logica e stesse probabilità di defend().
+func plan_defense() -> StringName:
+	var now := Time.get_ticks_msec() / 1000.0
+	if tree == null or dead or String(stance).begins_with("limp") or stance == &"dragged" or now < _defend_cd:
+		return &"hit"
+	if _action in [&"attack", &"attack2", &"attack_thrust"] and now < _busy_until - 0.3:
+		return &"hit"
+	var gear := _gear()
+	var guard := gear != null and (gear.has_shield() or gear.hand_kind() == HumanoidAnims.Hand.SPEAR)
+	var roll := randf()
+	if guard and roll < 0.5:
+		_defend_cd = now + 1.1
+		return &"block"
+	if roll < (0.75 if guard else 0.4) and speed < 0.6:
+		_defend_cd = now + 1.3
+		return &"dodge"
+	return &"hit"
+
+
+## Fa partire la parata o la schivata pianificata dopo `delay` s, così è in guardia quando arriva la lama.
+func start_defense(kind: StringName, delay: float) -> void:
+	_no_hit_until = Time.get_ticks_msec() / 1000.0 + delay + 0.4
+	var fire := func() -> void:
+		if dead or tree == null:
+			return
+		_fire(&"block" if kind == &"block" else &"dodge", kind == &"dodge")
+	if delay <= 0.01:
+		fire.call()
+	else:
+		get_tree().create_timer(delay).timeout.connect(fire)
+
+
+## Punto del mondo dove la lama (o lo scudo) incontra il colpo: l'arma impugnata, o lo scudo se c'è.
+func guard_point(prefer_shield: bool) -> Vector3:
+	var gear := _gear()
+	if gear != null:
+		if prefer_shield and gear.shield_node != null:
+			return gear.shield_node.global_position
+		if gear.weapon_node != null:
+			return gear.weapon_node.global_position
+		if gear.shield_node != null:
+			return gear.shield_node.global_position
+	return global_position + Vector3.UP * 1.1
+
+
+## Vero se il modello para con uno scudo (suono e scintille diversi dalla lama contro lama).
+func has_shield() -> bool:
+	var gear := _gear()
+	return gear != null and gear.has_shield()
+
+
+## Pone la testa del bersaglio in guardia verso `world_pos` (i due si fronteggiano al momento dell'impatto).
+func face_toward(world_pos: Vector3) -> void:
+	if unit == null:
+		return
+	var to := world_pos - unit.global_position
+	to.y = 0.0
+	if to.length() < 0.01:
+		return
+	var yaw := atan2(-to.x, -to.z)
+	var from := global_rotation.y
+	create_tween().tween_method(func(f: float) -> void: global_rotation.y = lerp_angle(from, yaw, f), 0.0, 1.0, 0.1)
 
 
 func _on_health_changed(current: int, _maximum: int) -> void:
@@ -608,18 +762,8 @@ func _pick_variant() -> void:
 	var index := (int(digits) if digits != "" else 0) % count
 	if model_variants.is_empty():
 		var path := variant_paths[index]
-		# Gli achei sono pochi e sempre vicini alla camera: modello pieno (il _lod decimato da vicino
-		# mostra calotta frastagliata e texture a blocchi).
-		var near_camera := unit != null and unit.team == GridUnit.Team.ACHEI
-		if (int(Quality.current()) < 2 or (unit != null and unit.team == GridUnit.Team.TROIANI)) and not near_camera:
-			var base := path.get_file().get_basename()
-			var lod := path.get_base_dir() + "_lod/" + base + "_lod.gltf"
-			if ResourceLoader.exists(lod):
-				path = lod
 		model_scene = load(path) as PackedScene
 		variant_name = variant_names[index] if index < variant_names.size() else ""
 		return
 	model_scene = model_variants[index]
-	if int(Quality.current()) < 2 and index < lod_variant_paths.size() and lod_variant_paths[index] != "":
-		model_scene = load(lod_variant_paths[index]) as PackedScene
 	variant_name = variant_names[index] if index < variant_names.size() else ""

@@ -11,6 +11,7 @@ const SHOTS := [
 	["prato_centro", Vector3(-2.0, 0, -2.0), 9.0, -35.0],
 	["riva", Vector3(-17.0, 0, 2.0), 9.0, -38.0],
 	["sentiero", Vector3(-4.0, 0, 11.0), 8.0, -38.0],
+	["strada_p4", Vector3(6.0, 0, 3.5), 9.0, -60.0],
 	["nord", Vector3(2.0, 0, -18.0), 12.0, -40.0],
 	["radente", Vector3(6.0, 0, 0.0), 6.0, -14.0],
 	["gioco", Vector3(4.0, 0, 2.0), 20.0, -42.0],

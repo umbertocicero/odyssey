@@ -19,11 +19,11 @@ var _think_timer := 0.0
 var _attack_cd := 0.0
 
 
-## Chiamato dal ferito che questo soldato accompagna alla riva: andatura di scorta.
+## Chiamato dal ferito che questo soldato accompagna alla riva: andatura di scorta: il ferito gli cammina a sinistra, col suo braccio attorno alle spalle.
 func set_carrying(on: bool, _helped := false) -> void:
 	var model := get_node_or_null(^"Model") as CharacterModel
 	if model:
-		model.set_stance(&"support" if on else &"normal")
+		model.set_stance(&"carry_l" if on else &"normal")
 
 
 func _ready() -> void:
@@ -35,6 +35,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if health <= 0:
+		return
 	_attack_cd -= delta
 	if busy:
 		return
@@ -67,9 +69,15 @@ func _fight() -> bool:
 			face(d)
 			if _attack_cd <= 0.0:
 				_attack_cd = attack_cooldown
-				var m := get_node_or_null(^"Model") as CharacterModel
-				if m:
-					m.play_attack()
-				unit.take_melee(attack_damage, self)
+				melee_strike(unit, attack_damage)
 			return true
 	return false
+
+
+func _on_died() -> void:
+	_become_corpse()
+
+
+## Dopo una parata o una schivata contrattacca quasi subito.
+func riposte() -> void:
+	_attack_cd = minf(_attack_cd, 0.3)

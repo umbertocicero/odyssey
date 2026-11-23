@@ -1,13 +1,17 @@
 class_name WoundedSoldier
 extends GridUnit
 ## Compagno ferito da portare in salvo. Giace a terra, bendato e sanguinante,
-## finché qualcuno non gli si avvicina; poi viene sorretto e quasi trascinato
-## (piegato in avanti, passo lento) da chi lo porta: Ulisse verso l'accampamento,
-## un soldato alleato dall'accampamento alla riva. In salvo all'accampamento
+## finché Ulisse non gli si avvicina; poi si rialza e cammina zoppicando al suo fianco, con il
+## braccio attorno al suo collo, sorretto da lui (Ulisse gli cinge la vita). Se un compagno
+## incontrato per strada si affianca, il ferito sta al centro e le sue braccia vanno attorno
+## alle spalle di entrambi. Nessuno compare dal nulla e la barella non si usa. Dall'accampamento
+## alla riva lo porta un soldato alleato (già presente), sempre al suo fianco. In salvo all'accampamento
 ## (SAVED), poi imbarcato (EVACUATED) su una barca che lo porta alla nave grande.
 ## Perso (LOST) se muore prima.
 
 signal state_changed(new_state: int)
+## Un compagno si è affiancato a Ulisse per aiutarlo a sorreggere il ferito.
+signal helper_joined(by: AllySoldier)
 
 enum State { LYING, FOLLOWING, SAVED, LOST, CARRIED, EVACUATED, STRETCHER }
 
@@ -15,15 +19,17 @@ enum State { LYING, FOLLOWING, SAVED, LOST, CARRIED, EVACUATED, STRETCHER }
 ## sotto una chioma o accanto a un oggetto (non conta la casella, ma lo spazio).
 @export var wake_distance := 1.9
 ## Velocità massima (m/s) quando viene trascinato.
-@export var drag_speed := 2.6
+@export var drag_speed := 4.2
 ## Distanza (m) a cui sta dietro a chi lo sorregge.
 @export var drag_offset := 0.72
 ## Inclinazione in avanti dell'intero modello quando è sorretto (il resto lo fa l'animazione zoppa).
 @export var lean_angle := 0.06
-## Un compagno entro questa distanza (m) da Ulisse lo aiuta a sorreggere il ferito.
+## Un compagno entro questa distanza (m) dal ferito va ad affiancarsi a Ulisse.
 @export var helper_range := 6.0
+## Il compagno si affianca (ferito al centro) quando è a questa distanza (m) dal ferito.
+@export var handover_distance := 1.5
 
-## Ferito grave: non cammina, lo portano quattro soldati su una barella.
+## Ferito grave (solo informativo: si porta come gli altri, niente barella).
 var severe := false
 var state: State = State.LYING
 var camp_rect := Rect2i()
@@ -32,6 +38,11 @@ var _model_node: CharacterModel
 var _dragging := false
 var _helper_check := 0.0
 var helper: AllySoldier
+var _helper_prev_leader: GridUnit
+var _helper_prev_follow := 2
+## Il compagno è già affiancato (cammina dall'altra parte del ferito).
+var _helper_joined := false
+var _cur_stance: StringName = &"limp"
 
 
 func _ready() -> void:
@@ -62,18 +73,23 @@ func _physics_process(delta: float) -> void:
 		return
 	if state == State.SAVED:
 		_set_dragging(false)
+		_update_stance()
 		return
 	if state == State.LYING:
 		_wake_check()
 		return
 	_drag(delta)
+	_update_stance()
 	if state == State.FOLLOWING:
 		_helper_check -= delta
 		if _helper_check <= 0.0:
 			_helper_check = 0.3
 			_refresh_helper()
 	if state == State.FOLLOWING and camp_rect.has_point(cell):
-		lie_down()
+		# In salvo: resta in piedi, accasciato, finché un soldato non lo prende in consegna
+		# (niente "butta giù e rialza": a terra va solo sulla barca).
+		release_support()
+		_drop_helper()
 		_set_state(State.SAVED)
 
 
@@ -84,15 +100,37 @@ func _wake_check() -> void:
 	if leader == null or leader.health <= 0:
 		return
 	var d := Vector2(leader.global_position.x - global_position.x, leader.global_position.z - global_position.z)
-	if d.length() <= wake_distance:
-		if severe:
-			_set_state(State.STRETCHER)   # lo prende la squadra della barella
-		else:
-			start_support(leader, State.FOLLOWING)
+	if d.length() <= wake_distance and not _leader_busy():
+		start_support(leader, State.FOLLOWING)
+
+
+## Ulisse sorregge già un altro ferito: questo aspetta (si porta un ferito alla volta).
+func _leader_busy() -> bool:
+	for n in get_tree().get_nodes_in_group(&"achei"):
+		var o := n as WoundedSoldier
+		if o != null and o != self and o.leader == leader and (o.state == State.FOLLOWING or o.state == State.CARRIED):
+			return true
+	return false
+
+
+## Stance del ferito in base a chi lo sorregge: Ulisse gli sta a sinistra, un compagno incontrato a destra.
+func _update_stance() -> void:
+	if _model_node == null:
+		return
+	var want := &"limp"
+	if is_supported() and leader != null and is_instance_valid(leader):
+		var left := leader.is_in_group(&"player")
+		var right := not left or _helper_joined
+		want = &"limp_lr" if (left and right) else (&"limp_l" if left else &"limp_r")
+	if want != _cur_stance:
+		_cur_stance = want
+		_model_node.set_stance(want)
 
 
 ## Il ferito si rialza e viene sorretto da `by`.
 func start_support(by: GridUnit, new_state: State) -> void:
+	if leader != null and leader != by and is_instance_valid(leader) and leader.has_method(&"set_carrying"):
+		leader.call(&"set_carrying", false)   # chi lo sorreggeva prima si libera
 	leader = by
 	if _model_node and _model_node.dead:
 		_model_node.revive()
@@ -101,7 +139,14 @@ func start_support(by: GridUnit, new_state: State) -> void:
 		by.call(&"set_carrying", true)
 
 
-## Smette di essere sorretto e si sdraia (in salvo, imbarco).
+## Chi lo sorregge lo lascia, ma il ferito resta in piedi (accasciato).
+func release_support() -> void:
+	if leader and is_instance_valid(leader) and leader.has_method(&"set_carrying"):
+		leader.call(&"set_carrying", false)
+	_set_dragging(false)
+
+
+## Smette di essere sorretto e si sdraia (imbarco).
 func lie_down() -> void:
 	if leader and is_instance_valid(leader) and leader.has_method(&"set_carrying"):
 		leader.call(&"set_carrying", false)
@@ -149,8 +194,10 @@ func _drag(delta: float) -> void:
 	var lm := leader.get_node_or_null(^"Model") as Node3D
 	if lm:
 		yaw = lm.rotation.y
-	var behind := Vector3(sin(yaw), 0.0, cos(yaw)) * drag_offset
-	var target := leader.global_position + behind
+	# Cammina al fianco di chi lo sorregge (Ulisse: alla sua destra; un soldato: alla sua sinistra).
+	var right := Vector3(cos(yaw), 0.0, -sin(yaw))
+	var side := 1.0 if leader.is_in_group(&"player") else -1.0
+	var target := leader.global_position + right * (HumanoidAnims.CARRY_SIDE * side)
 	var to := Vector2(target.x - global_position.x, target.z - global_position.z)
 	# Se la linea retta lo blocca (muri, palizzate, ostacoli) cerca un percorso sulla griglia.
 	var here := Vector2(global_position.x, global_position.z)
@@ -176,33 +223,94 @@ func _drag(delta: float) -> void:
 		_sync_cell()
 	_set_dragging(moving)
 	if _model:
-		var face_to := Vector2(leader.global_position.x - global_position.x, leader.global_position.z - global_position.z)
-		if face_to.length() > 0.05:
-			_model.rotation.y = lerp_angle(_model.rotation.y, atan2(-face_to.x, -face_to.y), minf(1.0, 8.0 * delta))
+		# Guarda dove va chi lo sorregge (stessa direzione, fianco a fianco).
+		_model.rotation.y = lerp_angle(_model.rotation.y, yaw, minf(1.0, 8.0 * delta))
 		_model.rotation.x = lerpf(_model.rotation.x, lean_angle, minf(1.0, 6.0 * delta))
+	if _helper_joined:
+		_move_helper(delta, yaw, right)
 
 
-## Cerca un compagno vivo e libero vicino a Ulisse: con il suo aiuto si va più veloci.
-## Se sono lontani o morti, Ulisse prosegue da solo (più lento).
+## Il compagno affiancato cammina dall'altra parte del ferito (che resta al centro), fianco a fianco.
+func _move_helper(delta: float, yaw: float, right: Vector3) -> void:
+	var h := helper
+	if h == null or not is_instance_valid(h) or h.health <= 0:
+		return
+	var target := leader.global_position + right * (HumanoidAnims.CARRY_SIDE * 2.0)
+	var to := Vector2(target.x - h.global_position.x, target.z - h.global_position.z)
+	var moving := to.length() > 0.12
+	if moving:
+		var step := to.normalized() * minf(to.length(), drag_speed * delta)
+		var wish := Vector2(h.global_position.x, h.global_position.z) + step
+		var res := grid.resolve_circle(wish, 0.28, h.cell)
+		var p: Vector2 = res["pos"]
+		var y := grid.get_height_at_world(Vector3(p.x, 0.0, p.y))
+		h.global_position = Vector3(p.x, lerpf(h.global_position.y, y, minf(1.0, 12.0 * delta)), p.y)
+		var now := grid.world_to_cell(h.global_position)
+		if now != h.cell:
+			grid.release(h.cell, h)
+			h.cell = now
+			if grid.get_occupant(now) == null:
+				grid.occupy(now, h)
+	h.is_moving = moving
+	var hm := h.get_node_or_null(^"Model") as Node3D
+	if hm:
+		hm.rotation.y = lerp_angle(hm.rotation.y, yaw, minf(1.0, 8.0 * delta))
+
+
+## Cerca il compagno vivo e libero più vicino (entro helper_range) e lo fa venire a dare il cambio a Ulisse.
+## Con un compagno in arrivo Ulisse va più veloce; appena il compagno è accanto al ferito lo prende in
+## consegna (scambio di sostegno): Ulisse si libera, il ferito non cade e non si rialza.
 func _refresh_helper() -> void:
 	if leader == null or not is_instance_valid(leader) or not leader.has_method(&"set_carrying"):
 		return
-	if helper != null and (not is_instance_valid(helper) or helper.health <= 0 or helper.busy \
-			or helper.global_position.distance_to(leader.global_position) > helper_range * 1.3):
-		helper = null
+	if helper != null and (not is_instance_valid(helper) or helper.health <= 0 \
+			or (_helper_joined and global_position.distance_to(helper.global_position) > 3.0) \
+			or (not _helper_joined and (helper.busy or global_position.distance_to(helper.global_position) > helper_range * 1.5))):
+		_drop_helper()
 	if helper == null:
 		var best := helper_range
 		for n in get_tree().get_nodes_in_group(&"achei"):
 			var a := n as AllySoldier
 			if a == null or a.busy or a.health <= 0:
 				continue
-			var d := a.global_position.distance_to(leader.global_position)
+			var d := a.global_position.distance_to(global_position)
 			if d < best:
 				best = d
 				helper = a
+		if helper != null:
+			_helper_prev_leader = helper.leader
+			_helper_prev_follow = helper.follow_distance
+			helper.leader = self            # va incontro al ferito
+			helper.follow_distance = 1
 	leader.call(&"set_carrying", true, helper != null)
-	if helper != null:
-		helper.follow_distance = 1
+	if helper != null and not _helper_joined and _dist_xz(helper) <= handover_distance:
+		_join_helper()
+
+
+func _dist_xz(u: Node3D) -> float:
+	return Vector2(u.global_position.x - global_position.x, u.global_position.z - global_position.z).length()
+
+
+func _drop_helper() -> void:
+	if helper != null and is_instance_valid(helper):
+		if _helper_joined:
+			helper.busy = false
+			helper.is_moving = false
+			helper.set_carrying(false)
+		if helper.leader == self:
+			helper.leader = _helper_prev_leader if _helper_prev_leader != null and is_instance_valid(_helper_prev_leader) \
+				else get_tree().get_first_node_in_group(&"player") as GridUnit
+		helper.follow_distance = _helper_prev_follow
+	helper = null
+	_helper_joined = false
+
+
+## Il compagno arrivato accanto si affianca a Ulisse: il ferito resta al centro, braccia attorno a entrambi.
+func _join_helper() -> void:
+	_helper_joined = true
+	helper.busy = true
+	helper.set_carrying(true)
+	helper_joined.emit(helper)
 
 
 func _set_dragging(on: bool) -> void:
@@ -246,6 +354,7 @@ func mark_evacuated() -> void:
 
 
 func _on_died() -> void:
+	_drop_helper()
 	if leader and is_instance_valid(leader) and leader.has_method(&"set_carrying"):
 		leader.call(&"set_carrying", false)
 	if grid:

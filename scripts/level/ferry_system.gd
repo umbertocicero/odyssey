@@ -37,6 +37,7 @@ class Boat:
 	var busy := false
 	## Soldati a bordo (rematori) mentre la barca è in viaggio.
 	var crew: Array[AllySoldier] = []
+	var rowing: BoatRowing
 
 var grid: DioramaGrid
 ## Punto di imbarco sulla riva (x, z in metri) e specchio d'acqua dove stanno le barche.
@@ -63,6 +64,7 @@ var _camp_start := Vector2i.ZERO
 
 func setup(g: DioramaGrid, units_root_node: Node, level_root: Node, rules: LevelRules) -> void:
 	grid = g
+	add_to_group(&"ferry_system")
 	units_root = units_root_node
 	shore_point = rules.shore_point
 	_camp_start = rules.camp_rect.position + rules.camp_rect.size / 2
@@ -153,9 +155,35 @@ func busy_jobs() -> int:
 func request_evacuation(w: WoundedSoldier) -> void:
 	if w.severe:
 		return   # i feriti gravi li porta la squadra della barella
+	if _has_job(w):
+		return   # già in consegna a un soldato (cambio di sostegno lungo il percorso)
 	var j := Job.new()
 	j.wounded = w
 	jobs.append(j)
+
+
+func _has_job(w: WoundedSoldier) -> bool:
+	for j in jobs:
+		if j.wounded == w:
+			return true
+	return false
+
+
+## Un compagno prende il posto di Ulisse nel sorreggere un ferito che cammina: lo porta all'accampamento e poi alla riva.
+func request_handover(w: WoundedSoldier, a: AllySoldier) -> bool:
+	if a == null or not _alive(a) or a.busy or _has_job(w):
+		return false
+	var j := Job.new()
+	j.wounded = w
+	j.bearer = a
+	j.to_camp = not w.camp_rect.has_point(w.cell)
+	j.phase = Phase.CARRY
+	a.busy = true
+	a.can_swap_with_allies = true
+	a.step_duration = 0.42
+	w.start_support(a, WoundedSoldier.State.CARRIED)
+	jobs.append(j)
+	return true
 
 
 ## Soldati liberi (non impegnati con altri feriti) che possono portare un ferito.
@@ -385,7 +413,6 @@ func _run(j: Job, delta: float) -> void:
 				if j.to_camp:
 					# Il ferito grave è in salvo all'accampamento: da qui lo si porta alla riva.
 					j.to_camp = false
-					j.wounded.lie_down()
 					j.wounded.mark_saved()
 					j.wounded.start_support(j.bearer, WoundedSoldier.State.CARRIED)
 					return
@@ -517,27 +544,19 @@ func _load(boat: Boat, j: Job) -> void:
 		boat.busy = false)
 
 
-## Due soldati salgono sulla barca e la manovrano (uno a prua e uno a poppa) mentre il ferito giace al centro.
+## Due soldati salgono sulla barca e remano seduti sui banchi (rivolti alla prua, stesso ritmo) mentre il ferito giace al centro.
 func _board_crew(boat: Boat) -> void:
 	_clear_crew(boat)
-	for i in BOAT_CREW:
-		var u := UnitFactory.make(AllySoldier, UnitFactory.MODEL_ACHEO, GridUnit.Team.ACHEI, 60, "BoatCrew%d" % i) as AllySoldier
-		u.busy = true
-		u.show_health_bar = false
-		units_root.add_child(u)
-		for g in [&"achei", &"units"]:
-			u.remove_from_group(g)
-		u.set_physics_process(false)
-		u.reparent(boat.node, false)
-		u.position = Vector3(0.0, 0.1, -1.0 if i == 0 else 1.0)
-		u.rotation = Vector3(0.0, 0.0 if i == 0 else PI, 0.0)
-		boat.crew.append(u)
+	var seats: Array[float] = [-0.95, 0.85]
+	boat.rowing = BoatRowing.board(boat.node, units_root, seats)
+	for u in boat.rowing.rowers:
+		boat.crew.append(u as AllySoldier)
 
 
 func _clear_crew(boat: Boat) -> void:
-	for u in boat.crew:
-		if is_instance_valid(u):
-			u.queue_free()
+	if boat.rowing and is_instance_valid(boat.rowing):
+		boat.rowing.queue_free()
+	boat.rowing = null
 	boat.crew.clear()
 
 

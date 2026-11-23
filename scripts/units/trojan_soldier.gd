@@ -21,9 +21,6 @@ func _ready() -> void:
 	_think = randf_range(0.0, think_interval)
 
 
-const MAX_CORPSES := 40
-
-
 func halt() -> void:
 	_halted = true
 
@@ -46,9 +43,7 @@ func _physics_process(delta: float) -> void:
 		face(diff)
 		if _attack_cd <= 0.0:
 			_attack_cd = attack_interval
-			if _model_node:
-				_model_node.play_attack()
-			target.take_melee(attack_damage, self)
+			melee_strike(target, attack_damage)
 		return
 	var primary := Vector2i(signi(diff.x), 0) if absi(diff.x) >= absi(diff.y) else Vector2i(0, signi(diff.y))
 	var secondary := Vector2i(0, signi(diff.y)) if primary.x != 0 else Vector2i(signi(diff.x), 0)
@@ -82,20 +77,9 @@ func _nearest_target() -> GridUnit:
 
 func _on_died() -> void:
 	_halted = true
-	if grid:
-		grid.release(cell, self)
-	if _tween:
-		_tween.kill()
-	is_moving = false
-	for c in get_children():
-		if c is CollisionShape3D:
-			c.disabled = true
-	if _model_node:
-		_model_node.play_death()
-	remove_from_group(&"units")
-	remove_from_group(&"troiani")
-	# Il caduto resta a terra (senza collisioni): se ce ne sono troppi, sparisce il più vecchio.
-	add_to_group(&"corpses")
-	var corpses := get_tree().get_nodes_in_group(&"corpses")
-	if corpses.size() > MAX_CORPSES:
-		(corpses[0] as Node).queue_free()
+	_become_corpse()   # resta a terra; il tetto ai cadaveri è in ClashFx.register_corpse()
+
+
+## Dopo una parata o una schivata contrattacca quasi subito.
+func riposte() -> void:
+	_attack_cd = minf(_attack_cd, 0.3)

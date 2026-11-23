@@ -32,6 +32,12 @@ var _fog_color0 := Color(0.96, 0.66, 0.48)
 var _fog_density0 := 0.6
 var _exposure0 := 0.9
 var _timer := 0.0
+var _grass_cards: GrassCards
+var _grass_fields: Array[GrassField] = []
+
+## Di notte l'erba perde il verde saturo: moltiplica R e B (più del verde) per avvicinarla al grigio-blu
+## del terreno e della strada sotto la luna.
+const NIGHT_GRASS_TINT := Color(1.0, 0.88, 1.5)
 
 
 func _ready() -> void:
@@ -140,6 +146,16 @@ func _process(delta: float) -> void:
 	env.fog_light_color = _fog_color0.lerp(Color(0.1, 0.14, 0.26), night).lerp(Color(0.5, 0.52, 0.56), rain * 0.5)
 	env.fog_density = _fog_density0 * (1.0 + 0.9 * rain)
 	env.tonemap_exposure = lerpf(_exposure0, 1.05, night)
+	if _grass_cards == null:
+		_grass_cards = level.get_node_or_null(^"ErbaFotorealistica") as GrassCards
+	if _grass_fields.is_empty():
+		for n in level.get_children():
+			if n is GrassField:
+				_grass_fields.append(n)
+	for g in _grass_fields:
+		g.set_night(night)
+	if _grass_cards and _grass_cards.material:
+		_grass_cards.material.set_shader_parameter(&"tint", Color(1, 1, 1).lerp(NIGHT_GRASS_TINT, night))
 	if sky_material:
 		sky_material.set_shader_parameter(&"night", night)
 		sky_material.set_shader_parameter(&"rain_amount", rain)
@@ -160,9 +176,9 @@ func _process(delta: float) -> void:
 			var hand := _hand_torches.get(unit) as Node3D
 			l.global_position = hand.global_position + Vector3(0, 0.45, 0) if hand != null and hand.visible else unit.global_position + Vector3(0.35, 1.25, 0.25)
 		if l.visible:
-			l.light_energy = lerpf(l.light_energy, (0.9 + 0.25 * sin(Time.get_ticks_msec() * 0.011 + l.get_instance_id())) * night * 1.6, minf(1.0, 6.0 * delta))
+			l.light_energy = lerpf(l.light_energy, 0.95 * TorchFlame.flicker(Time.get_ticks_msec(), float(l.get_instance_id() % 97)) * night * 1.6, minf(1.0, 14.0 * delta))
 	for l in wall_lights:
-		l.light_energy = night * 1.1 * (0.9 + 0.1 * sin(Time.get_ticks_msec() * 0.007 + l.get_instance_id()))
+		l.light_energy = night * 1.1 * TorchFlame.flicker(Time.get_ticks_msec(), float(l.get_instance_id() % 89))
 
 
 var _carriers: Array[Node3D] = []
@@ -187,17 +203,18 @@ func _hand_torch_for(unit: Node3D) -> Node3D:
 	var scene := load(TORCH_PATH) as PackedScene
 	if scene == null:
 		return null
-	var rest := skeleton.get_bone_global_rest(skeleton.find_bone("hand.L"))
 	var attachment := BoneAttachment3D.new()
 	attachment.name = "TorciaInMano"
 	attachment.bone_name = "hand.L"
 	skeleton.add_child(attachment)
 	var torch := scene.instantiate() as Node3D
-	# Torcia verticale con l'impugnatura nel pugno: l'origine del modello è il punto di presa (scala reale 0,62 m).
-	var aim := Basis(Vector3.RIGHT, Vector3(0.0, 1.0, 0.08).normalized(), Vector3.RIGHT.cross(Vector3(0.0, 1.0, 0.08).normalized())).orthonormalized()
-	torch.transform = Transform3D(rest.basis.inverse() * aim * Basis.from_scale(Vector3.ONE), rest.affine_inverse() * (rest.origin + Vector3(0.0, 0.0, 0.02)))
+	# Impugnatura nel palmo, fiamma in alto (stessa presa dell'arma: HumanoidAnims.hand_item_transform);
+	# l'origine del modello è il punto di presa. Il braccio la regge dritta grazie a CharacterModel.set_torch,
+	# che si accorge da solo del nodo "TorciaInMano" visibile.
+	torch.transform = HumanoidAnims.hand_item_transform(skeleton, &"hand.L", 0)
 	attachment.add_child(torch)
-	torch.add_child(_flame_sparks())
+	_replace_static_flame(torch)
+	TorchFlame.attach(torch, Vector3(0.0, 0.25, 0.0), 0.4, 0.28)
 	attachment.visible = false
 	_hand_torches[unit] = attachment
 	return attachment
@@ -235,33 +252,9 @@ func _update_torches(night: float) -> void:
 			l.light_energy = 0.0
 
 
-## Scintille e fumo leggero sopra la fiamma della torcia in mano (punta a circa 0,6 m dall'impugnatura).
-func _flame_sparks() -> CPUParticles3D:
-	var p := CPUParticles3D.new()
-	p.name = "ScintilleTorcia"
-	p.position = Vector3(0.0, 0.62, 0.0)
-	p.amount = 6
-	p.lifetime = 0.9
-	p.local_coords = false
-	p.direction = Vector3.UP
-	p.spread = 25.0
-	p.initial_velocity_min = 0.3
-	p.initial_velocity_max = 0.8
-	p.gravity = Vector3(0.0, 0.4, 0.0)
-	var quad := QuadMesh.new()
-	quad.size = Vector2(0.03, 0.03)
-	p.mesh = quad
-	var m := StandardMaterial3D.new()
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
-	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	m.vertex_color_use_as_albedo = true
-	p.material_override = m
-	var ramp := Gradient.new()
-	ramp.offsets = PackedFloat32Array([0.0, 1.0])
-	ramp.colors = PackedColorArray([Color(1.0, 0.75, 0.3, 1.0), Color(0.9, 0.25, 0.05, 0.0)])
-	p.color_ramp = ramp
-	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	p.emitting = true
-	return p
+## Toglie la fiamma statica del modello (materiale M_flame): la sostituisce TorchFlame, animata.
+func _replace_static_flame(root: Node) -> void:
+	for mi in root.find_children("*", "MeshInstance3D", true, false):
+		var inst := mi as MeshInstance3D
+		if inst.mesh != null:
+			inst.mesh = FoliageTint.without_materials(inst.mesh, PackedStringArray(["M_flame"]))

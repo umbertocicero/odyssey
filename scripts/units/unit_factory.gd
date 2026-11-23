@@ -46,12 +46,7 @@ static func make(script: Script, model_path: String, team: GridUnit.Team, health
 		model.variant_name = ACHAEAN_NAMES[_achaean_count % ACHAEAN_NAMES.size()]
 		_achaean_count += 1
 	model.model_scene = load(chosen) as PackedScene
-	# Gli achei (pochi, sempre vicini alla camera fissa) usano sempre il modello pieno: il _lod decimato
-	# mostra calotta dei capelli frastagliata, collo staccato e texture a blocchi da vicino.
-	if (int(Quality.current()) < 2 or team == GridUnit.Team.TROIANI) and model_path != MODEL_ACHEO and not unit is WoundedSoldier:
-		var lod_path := chosen.replace("personaggi_nuovi/", "personaggi_nuovi/").replace(chosen.get_file().get_basename() + ".gltf", chosen.get_file().get_basename() + "_lod.gltf").replace("/" + chosen.get_file().get_basename() + "/", "/" + chosen.get_file().get_basename() + "_lod/")
-		if ResourceLoader.exists(lod_path):
-			model.model_scene = load(lod_path) as PackedScene
+	# Sempre il modello pieno: la versione _lod decimata si vede male anche da lontano (caduti a terra).
 	unit.add_child(model)
 	# Armi in mano: lancia ai troiani, xiphos agli achei in piedi (i feriti giacciono, senza arma).
 	var gear := UnitGear.new()

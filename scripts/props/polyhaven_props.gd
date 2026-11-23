@@ -27,7 +27,7 @@ var stats := {"solid_nodes": 0, "solid_tris": 0, "scatter_instances": 0, "scatte
 ## sotto la luce calda del diorama diventano nere. Il fogliame (materiali
 ## alpha-cutout di alberi e arbusti) viene schiarito con questo fattore,
 ## senza toccare i file. Non si applica ai fiori.
-@export var foliage_gain := Color(5.5, 12.0, 6.0)
+@export var foliage_gain := Color(8.5, 15.0, 6.5)
 
 var _quality := 2
 var _relief: TerrainRelief
@@ -84,7 +84,8 @@ func _add_solid(item: Dictionary) -> void:
 	prop.fit_axis = ModelFit.Axis.HEIGHT if item.get("fit", "height") == "height" else ModelFit.Axis.LONGEST
 	prop.fit_size = height
 	# Attrezzi e basamenti piatti non bloccano la griglia; il resto sì (salvo "blocking": false).
-	prop.blocking = item.get("blocking", role != PolyhavenCatalog.Role.TOOL and role != PolyhavenCatalog.Role.GROUND)
+	prop.blocking = item.get("blocking", role != PolyhavenCatalog.Role.TOOL and role != PolyhavenCatalog.Role.GROUND \
+			and role != PolyhavenCatalog.Role.PLANT and role != PolyhavenCatalog.Role.FLOWER and role != PolyhavenCatalog.Role.GRASS)
 	if item.has("rotate"):
 		prop.model_rotation_degrees = Vector3(item["rotate"][0], item["rotate"][1], item["rotate"][2])
 	prop.cast_shadows = true
@@ -111,6 +112,8 @@ func _add_solid(item: Dictionary) -> void:
 			prop.vault_mode = 1 if box.size.y <= 1.1 else 2
 		elif role == PolyhavenCatalog.Role.WALL or role == PolyhavenCatalog.Role.CLIFF:
 			prop.vault_mode = 2
+			prop.climb_mode = 2   # mura e pareti di roccia non si scalano
+	prop.set_meta(&"poly_id", id)
 	add_child(prop)
 	_tune_visual(prop, role)
 	prop.global_position = Vector3(pos[0], _ground(pos[0], pos[1]) - float(item.get("sink", 0.0)), pos[1])
@@ -120,6 +123,17 @@ func _add_solid(item: Dictionary) -> void:
 
 
 # --- Fogliame -----------------------------------------------------------------
+
+## Gli alberi island (ulivi) hanno foglie molto più chiare degli abeti: con il guadagno degli abeti
+## diventavano verde neon. Guadagno più basso e caldo (verde oliva, vicino all'erba).
+const ISLAND_GAIN := Color(2.2, 2.9, 1.5)
+
+
+func _gain_for(id: String, role: int) -> Color:
+	if not _wants_gain(role):
+		return Color(1, 1, 1)
+	return ISLAND_GAIN if id.begins_with("island_tree") else foliage_gain
+
 
 func _wants_gain(role: int) -> bool:
 	return role == PolyhavenCatalog.Role.TREE
@@ -139,15 +153,14 @@ func _tuned_material(mat: Material) -> Material:
 
 func _tune_visual(prop: GridProp, role: int) -> void:
 	# FoliageTint: fogliame schiarito (alberi e piante) e metallico spurio azzerato (tutti i modelli).
-	var gain := foliage_gain if _wants_gain(role) else Color(1, 1, 1)
+	var gain := _gain_for(prop.get_meta(&"poly_id", ""), role)
 	for mi in prop.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
 		m.mesh = FoliageTint.apply(m.mesh, gain)
 
 
 func _tuned_mesh(id: String, mesh: Mesh) -> Mesh:
-	var gain := foliage_gain if _wants_gain(PolyhavenCatalog.role(id)) else Color(1, 1, 1)
-	return FoliageTint.apply(mesh, gain)
+	return FoliageTint.apply(mesh, _gain_for(id, PolyhavenCatalog.role(id)))
 
 
 # --- Sparsi (MultiMesh) -----------------------------------------------------

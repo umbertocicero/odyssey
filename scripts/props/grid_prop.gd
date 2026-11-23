@@ -51,6 +51,10 @@ extends Node3D
 ## vault_max_size metri di altezza reale): casse, scudi, barili, sassi, recinti. No = muro vero e proprio.
 @export_enum("Auto", "Yes", "No") var vault_mode := 0
 @export_range(0.5, 3.0) var vault_max_size := 1.1
+## Si può scalare? Auto = sì se l'oggetto occupa una sola casella, non è un albero o un palo e supera
+## vault_max_size senza superare climb_max_size (casse impilate, rocce, muretti, carri bassi). No = non si scala.
+@export_enum("Auto", "Yes", "No") var climb_mode := 0
+@export_range(1.0, 3.0) var climb_max_size := 2.0
 ## Raggio del tronco (alberi) o del palo: se > 0 l'oggetto blocca solo un cerchio
 ## di questo raggio e non tutta l'impronta. 0 = automatico (alberi e pali sottili).
 @export var trunk_radius := 0.0
@@ -83,6 +87,17 @@ extends Node3D
 	set(value):
 		foliage_gain = value
 		_rebuild()
+## Rovine in calcare PBR triplanare al posto dell'atlante piatto del modello (vedi FoliageTint.limestone).
+@export var limestone := false:
+	set(value):
+		limestone = value
+		_rebuild()
+@export var limestone_scale := 0.6
+## Nomi dei materiali da non mostrare (es. "M_leaves": fronde attaccate al telo delle tende).
+@export var hide_materials := PackedStringArray():
+	set(value):
+		hide_materials = value
+		_rebuild()
 
 var _visual: Node3D
 var _height := -1.0
@@ -91,7 +106,8 @@ var _box_ready := false
 
 
 func _enter_tree() -> void:
-	if blocking:
+	# Gli animali non hanno caselle fisse: il loro corpo si sposta e lo registra AnimalIdle sulla griglia.
+	if blocking and animal == "" and not is_bush():
 		add_to_group(&"grid_obstacle")
 
 
@@ -117,6 +133,9 @@ var _player: Node3D
 func _process(delta: float) -> void:
 	if _visual == null:
 		return
+	if is_bush():
+		_rustle(delta)
+		return
 	if _player == null or not is_instance_valid(_player):
 		_player = get_tree().get_first_node_in_group(&"player") as Node3D
 		if _player == null:
@@ -130,6 +149,33 @@ func _process(delta: float) -> void:
 		var mi := child as MeshInstance3D
 		if mi:
 			mi.transparency = _fade * canopy_fade_amount
+
+
+## Cespuglio / erba alta: si attraversa camminandoci in mezzo (non è un ostacolo, non si scavalca né
+## si scala, il terreno resta alla stessa quota) e i rametti si muovono al passaggio.
+func is_bush() -> bool:
+	return String(name).to_lower().begins_with("cespuglio") or is_in_group(&"bush")
+
+
+const RUSTLE_RADIUS := 1.1
+var _rustle_amount := 0.0
+var _rustle_time := 0.0
+
+
+func _rustle(delta: float) -> void:
+	var near := false
+	for u in get_tree().get_nodes_in_group(&"units"):
+		var n := u as Node3D
+		if n and Vector2(n.global_position.x - global_position.x, n.global_position.z - global_position.z).length() < RUSTLE_RADIUS:
+			near = true
+			break
+	_rustle_amount = move_toward(_rustle_amount, 1.0 if near else 0.0, delta * (6.0 if near else 1.5))
+	if _rustle_amount <= 0.0:
+		_visual.rotation = Vector3.ZERO
+		return
+	_rustle_time += delta * 14.0
+	var a := _rustle_amount * 0.05
+	_visual.rotation = Vector3(sin(_rustle_time) * a, 0.0, sin(_rustle_time * 1.3 + 1.0) * a)
 
 
 ## Per PropBatcher: toglie il nodo visivo e restituisce le sue mesh come lista di
@@ -153,20 +199,49 @@ func visual_node() -> Node3D:
 	return _visual
 
 
+## Riquadro del modello (spazio locale del nodo) dopo l'adattamento.
+func visual_box() -> AABB:
+	_compute_box()
+	return _box
+
+
 ## Una chiave uguale per oggetti con lo stesso aspetto (stesso modello, pezzo, misura): solo quelli si uniscono.
 func visual_key() -> String:
-	if _active_model() == null or is_tree() or animal != "":
+	if _active_model() == null or is_tree() or is_bush() or animal != "":
 		return ""
-	return "%s|%s|%s|%d|%s|%s|%s|%s" % [_active_model().resource_path, piece, model_rotation_degrees, fit_axis, fit_size, cast_shadows, tint, desaturate]
+	return "%s|%s|%s|%d|%s|%s|%s|%s|%s|%s" % [_active_model().resource_path, piece, model_rotation_degrees, fit_axis, fit_size, cast_shadows, tint, desaturate, hide_materials, limestone]
 
 
 ## True se i personaggi possono scavalcare questo oggetto con un balzo.
 func is_vaultable() -> bool:
+	if is_jar():
+		return false
 	if vault_mode == 1:
 		return true
 	if vault_mode == 2:
 		return false
 	return visual_height() <= vault_max_size
+
+
+## True se i personaggi possono arrampicarsi su questo oggetto e scenderne dall'altra parte (blocchi
+## più alti di quelli che si scavalcano). Non vale per alberi, pali, mura e oggetti di più caselle.
+func is_climbable() -> bool:
+	if is_jar() or climb_mode == 2 or is_vaultable() or footprint != Vector2i.ONE or is_tree() or not thin_shape().is_empty():
+		return false
+	if climb_mode == 1:
+		return true
+	return visual_height() <= climb_max_size
+
+
+## Giara / anfora / pithos: non ha senso saltarci sopra né scalarla, si aggira.
+func is_jar() -> bool:
+	var n := String(name).to_lower()
+	if n.begins_with("anfora") or n.begins_with("pithos") or n.begins_with("giara") or n.begins_with("amphora"):
+		return true
+	if model == null:
+		return false
+	var path := model.resource_path.to_lower()
+	return path.contains("amphora") or path.contains("pithos") or path.contains("giara") or path.contains("/giare")
 
 
 ## Il modello da mostrare: quello leggero a qualità bassa e media, se c'è.
@@ -278,7 +353,13 @@ func _rebuild() -> void:
 	add_child(_visual)
 	for entry in meshes:
 		var mi := MeshInstance3D.new()
-		mi.mesh = FoliageTint.apply(entry[0], foliage_gain, tint, desaturate)
+		if limestone:
+			mi.mesh = FoliageTint.limestone(entry[0], tint, limestone_scale)
+		else:
+			mi.mesh = FoliageTint.without_materials(FoliageTint.apply(entry[0], foliage_gain, tint, desaturate), hide_materials)
+		if mi.mesh == null:
+			mi.queue_free()
+			continue
 		mi.transform = fit * (entry[1] as Transform3D)
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if cast_shadows else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_visual.add_child(mi)

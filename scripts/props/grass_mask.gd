@@ -19,6 +19,8 @@ var solid_cells := {}   # Vector2i -> true
 ## Rientro (m) del rettangolo di una casella solida sui lati senza vicini solidi.
 var solid_inset := 0.0
 var grid: DioramaGrid
+## Strade di terra (DirtRoad): bordo curvo, niente erba sul nastro e sfumatura ai lati.
+var roads: Array = []
 
 
 ## skip_hidden_areas: ignora i nodi ad area (lastricati, piazzali) spenti con visible = false.
@@ -31,7 +33,13 @@ static func from_tree(tree: SceneTree, fade_distance := 0.6, skip_hidden_areas :
 		var r := _rect_of(node)
 		if r.size != Vector2.ZERO:
 			m.ground.append(r)
+	for node in tree.get_nodes_in_group(&"dirt_road"):
+		if node is Node3D and (node as Node3D).visible:
+			m.roads.append(node)
 	for node in tree.get_nodes_in_group(&"grass_exclude"):
+		# I riquadri della strada procedurale cedono il posto alla curva della DirtRoad.
+		if not m.roads.is_empty() and node.is_in_group(&"road_rect"):
+			continue
 		if skip_hidden_areas and not node is MeshInstance3D and node is Node3D and not (node as Node3D).visible:
 			continue
 		var r := _rect_of(node)
@@ -60,6 +68,12 @@ func weight(world_xz: Vector2) -> float:
 		var d := _distance(world_xz, r)
 		if d < fade:
 			w = minf(w, d / fade)
+			if w <= 0.0:
+				return 0.0
+	for road in roads:
+		var d: float = road.edge_distance(world_xz)
+		if d < fade:
+			w = minf(w, maxf(d, 0.0) / fade)
 			if w <= 0.0:
 				return 0.0
 	if grid and not solid_cells.is_empty():

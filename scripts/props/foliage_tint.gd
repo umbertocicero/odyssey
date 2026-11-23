@@ -43,6 +43,52 @@ static func apply(mesh: Mesh, gain: Color = Color(1, 1, 1), tint: Color = Color(
 	return copy
 
 
+## Copia della mesh senza le superfici i cui materiali hanno uno dei nomi dati (null se non resta nulla).
+static func without_materials(mesh: Mesh, names: PackedStringArray) -> Mesh:
+	if mesh == null or names.is_empty():
+		return mesh
+	var key := "w|%d|%s" % [mesh.get_instance_id(), names]
+	if _meshes.has(key):
+		return _meshes[key]
+	var copy := ArrayMesh.new()
+	for i in mesh.get_surface_count():
+		var material := mesh.surface_get_material(i)
+		if material != null and names.has(material.resource_name):
+			continue
+		copy.add_surface_from_arrays(mesh.surface_get_primitive_type(i), mesh.surface_get_arrays(i))
+		copy.surface_set_material(copy.get_surface_count() - 1, material)
+	var result: Mesh = copy if copy.get_surface_count() > 0 else null
+	_meshes[key] = result
+	return result
+
+
+## Copia della mesh con il calcare PBR (stesse texture di torri e mura, quindi nessuna VRAM in più)
+## al posto dei materiali originali: le rovine del pack Quaternius hanno un atlante piatto, tutto
+## uguale. Il mapping è triplanare, così funziona su qualsiasi pezzo senza UV adatte.
+static func limestone(mesh: Mesh, tint: Color, scale: float) -> Mesh:
+	if mesh == null:
+		return mesh
+	var key := "l|%d|%s|%s" % [mesh.get_instance_id(), tint, scale]
+	if _meshes.has(key):
+		return _meshes[key]
+	var material := StandardMaterial3D.new()
+	material.resource_name = "limestone_pbr"
+	material.albedo_texture = load("res://assets/models/custom/campo/_tex/limestone_c.jpg")
+	material.albedo_color = tint
+	material.normal_enabled = true
+	material.normal_texture = load("res://assets/models/custom/campo/_tex/limestone_n.jpg")
+	material.roughness_texture = load("res://assets/models/custom/campo/_tex/limestone_r.jpg")
+	material.roughness = 1.0
+	material.uv1_triplanar = true
+	material.uv1_scale = Vector3.ONE * scale
+	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+	var copy := mesh.duplicate() as Mesh
+	for i in copy.get_surface_count():
+		copy.surface_set_material(i, material)
+	_meshes[key] = copy
+	return copy
+
+
 static func _wrong_metal(material: BaseMaterial3D) -> bool:
 	# Solo le texture Poly Haven convertite (nelle altre il canale blu è metallo vero).
 	return material.metallic > 0.05 and material.metallic_texture != null \

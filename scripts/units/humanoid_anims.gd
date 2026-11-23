@@ -19,13 +19,9 @@ extends RefCounted
 
 enum Hand { NONE, SWORD, SPEAR, BOW }
 
-## Mano a riposo (misurata sulle mesh): le mani sono aperte, con le dita in avanti (+Z), il palmo
-## verso il corpo e il pollice in su. L'impugnatura passa di traverso nel palmo, lungo il pollice, a
-## GRIP_OFFSET dal polso (x verso l'esterno, y, z avanti). Non ci sono ossa delle dita: la presa si
-## legge dal palmo appoggiato al manico.
-const HAND_THUMB := Vector3(0, 1, 0)
-const HAND_FINGERS := Vector3(0, 0, 1)
-const GRIP_OFFSET := Vector3(0.02, 0.0, 0.07)
+## Mano: le dita sono chiuse a pugno da HandFist (deformazione della mesh all'avvio). Il manico di ogni
+## oggetto passa nel pugno lungo la larghezza della mano, nel punto HandFist.grip_point, con la punta
+## (lama, cuspide, fiamma, flettente alto dell'arco) dal lato del pollice: presa a martello.
 ## Distanza della faccia interna dello scudo dall'asse dell'avambraccio.
 const SHIELD_OUT := 0.075
 ## Lunghezze delle armi dal centro della presa (spada: pomolo / punta; lancia: puntale / cuspide).
@@ -40,6 +36,9 @@ const STRIDE := {
 	&"walk": 1.12, &"run": 2.3, &"limp_walk": 0.8, &"limp_run": 1.3,
 	&"support_walk": 1.0, &"support_run": 2.0, &"stretcher_r_walk": 1.0, &"stretcher_l_walk": 1.0,
 	&"stretcher_r_run": 1.7, &"stretcher_l_run": 1.7,
+	&"torch_walk": 1.12, &"torch_run": 2.3,
+	&"carry_r_walk": 1.0, &"carry_r_run": 2.0, &"carry_l_walk": 1.0, &"carry_l_run": 2.0,
+	&"limp_l_walk": 0.8, &"limp_l_run": 1.3, &"limp_r_walk": 0.8, &"limp_r_run": 1.3, &"limp_lr_walk": 0.8, &"limp_lr_run": 1.3,
 	&"drag_walk": 0.7, &"drag_l_walk": 0.7, &"drag_r_walk": 0.7, &"dragged_walk": 0.7,
 }
 
@@ -75,24 +74,22 @@ static func library(skeleton: Skeleton3D, right: Hand, shield: bool, bow: bool, 
 	return lib
 
 
-## Base dell'arma a riposo nello spazio del modello (per UnitGear): asse lungo lungo il pollice.
-## La mano visibile è pesata sull'avambraccio: l'osso della mano resta dritto e l'arma si orienta
-## ruotando l'avambraccio. Spada: lama nel verso del mignolo (prosegue l'avambraccio); lancia, arco e
-## stanghe: lungo le dita (perpendicolari all'avambraccio, come in un pugno con il polso piegato).
-static func weapon_rest_basis(_skeleton: Skeleton3D, _bone: StringName, kind: int) -> Basis:
-	return _weapon_basis_rest(kind)
+## Base dell'arma a riposo nello spazio del modello (per UnitGear). La mano visibile è pesata
+## sull'avambraccio: l'osso della mano resta dritto e l'arma si orienta ruotando l'avambraccio.
+static func weapon_rest_basis(skeleton: Skeleton3D, bone: StringName, kind: int) -> Basis:
+	var x := skeleton.get_bone_global_rest(skeleton.find_bone(bone)).origin.x
+	return _weapon_basis_rest(kind, signf(x) if absf(x) > 0.001 else 1.0)
 
 
-## kind: 0 spada, 1 lancia, 2 arco (come UnitGear.WeaponKind).
-static func _weapon_basis_rest(kind: int) -> Basis:
-	var down := -HAND_THUMB
-	var fing := HAND_FINGERS
-	match kind:
-		1:
-			return Basis(-HAND_THUMB, fing, (-HAND_THUMB).cross(fing))
-		2:
-			return Basis(fing.cross(down), fing, down)
-	return Basis(fing, down, fing.cross(down))
+## kind: 0 spada/torcia, 1 lancia, 2 arco (come UnitGear.WeaponKind); sx: lato della mano.
+## Asse +Y dell'oggetto verso il pollice; per l'arco la corda (-Z del modello) verso il polso.
+static func _weapon_basis_rest(kind: int, sx: float) -> Basis:
+	var ax := HandFist.axes(sx)
+	var fing: Vector3 = ax[0]
+	var thumb: Vector3 = ax[2]
+	if kind == 2:
+		return Basis(thumb.cross(fing), thumb, fing)
+	return Basis(fing, thumb, fing.cross(thumb))
 
 
 ## Centro della presa a riposo nello spazio del modello (nel palmo, vedi GRIP_OFFSET).
@@ -101,9 +98,16 @@ static func grip_rest_position(skeleton: Skeleton3D, bone: StringName) -> Vector
 	return g.origin + _grip_offset(g.origin.x)
 
 
+## Posizione e orientamento locali (rispetto all'osso della mano) di un oggetto lungo con l'origine nel
+## punto di presa e l'asse +Y verso la punta (spada, torcia): da assegnare al nodo figlio di un
+## BoneAttachment3D sulla mano. `kind`: 0 spada/torcia, 1 lancia, 2 arco.
+static func hand_item_transform(skeleton: Skeleton3D, bone: StringName, kind := 0) -> Transform3D:
+	var rest := skeleton.get_bone_global_rest(skeleton.find_bone(bone))
+	return rest.affine_inverse() * Transform3D(weapon_rest_basis(skeleton, bone, kind), grip_rest_position(skeleton, bone))
+
+
 static func _grip_offset(wrist_x: float) -> Vector3:
-	var sx := signf(wrist_x) if absf(wrist_x) > 0.001 else 1.0
-	return Vector3(GRIP_OFFSET.x * sx, GRIP_OFFSET.y, GRIP_OFFSET.z)
+	return HandFist.grip_point(signf(wrist_x) if absf(wrist_x) > 0.001 else 1.0)
 
 
 ## Trasformazione dello scudo a riposo (spazio del modello) sull'avambraccio `forearm`: faccia sul dorso
@@ -184,14 +188,16 @@ class Rig:
 			arm_hinge[s] = [_hinge(up[s], lo[s], Vector3(0, 0, -1)), _hinge(lo[s], hand[s], Vector3(0, 0, -1))]
 			leg_hinge[s] = [_hinge(thigh[s], shin[s], Vector3(0, 0, 1)), _hinge(shin[s], foot[s], Vector3(0, 0, 1))]
 			var hb: Basis = grest[hand[s]].basis
-			thumb_loc[s] = hb.inverse() * HumanoidAnims.HAND_THUMB
-			axis_loc[s] = hb.inverse() * HumanoidAnims.HAND_FINGERS
+			var sxh := signf(grest[hand[s]].origin.x)
+			var hax := HandFist.axes(sxh)
+			thumb_loc[s] = hb.inverse() * (hax[2] as Vector3)
+			axis_loc[s] = hb.inverse() * (hax[0] as Vector3)
 			grip_loc[s] = hb.inverse() * HumanoidAnims._grip_offset(grest[hand[s]].origin.x)
 			var fb: Basis = grest[lo[s]].basis
-			var sxh := signf(grest[hand[s]].origin.x)
-			blade_fl[s] = fb.inverse() * -HumanoidAnims.HAND_THUMB
-			fing_fl[s] = fb.inverse() * HumanoidAnims.HAND_FINGERS
-			palm_fl[s] = fb.inverse() * Vector3(-sxh, 0, 0)
+			# Tutti gli oggetti passano nel pugno lungo il pollice (anche lancia, arco e stanghe).
+			blade_fl[s] = fb.inverse() * (hax[2] as Vector3)
+			fing_fl[s] = blade_fl[s]
+			palm_fl[s] = fb.inverse() * (hax[1] as Vector3)
 			grip_fl[s] = fb.inverse() * (grest[hand[s]].origin + HumanoidAnims._grip_offset(grest[hand[s]].origin.x) - grest[lo[s]].origin)
 		var fb: Basis = grest[lo[1]].basis
 		var f := (grest[hand[1]].origin - grest[lo[1]].origin).normalized()
@@ -399,24 +405,51 @@ static func _arm(p: Pose, f: Dictionary, chest: Transform3D, s: int) -> void:
 static func _weapon_arm(p: Pose, s: int, grip: Vector3, dir: Vector3, fingers: bool, palm: Vector3) -> void:
 	var r := _rig
 	var wl: Vector3 = r.fing_fl[s] if fingers else r.blade_fl[s]
-	var bf := _align(wl, r.palm_fl[s], dir.normalized(), palm)
+	var dn := dir.normalized()
+	var bf0 := _align(wl, r.palm_fl[s], dn, palm)
 	var gl: Vector3 = r.grip_fl[s]
 	var sh := p.g[r.up[s]].origin
-	var e_want := grip - bf * gl
-	var ud := (e_want - sh).normalized()
-	var fdir := bf * (r.rest[r.hand[s]].origin.normalized())
-	var h := ud.cross(fdir)
-	if h.length() < 0.05:
-		h = Vector3(0, 0, -1).cross(ud)
-	h = h.normalized()
-	p.set_global(r.up[s], _align(r.rest[r.lo[s]].origin, r.arm_hinge[s][0], ud, h))
+	var l1 := r.rest[r.lo[s]].origin.length()
+	var fl := r.rest[r.hand[s]].origin.normalized()
+	# La lama fissa l'avambraccio a meno di una rotazione attorno alla lama stessa: si sceglie quella che
+	# porta il gomito alla distanza giusta dalla spalla (presa raggiungibile), con il gomito in basso e
+	# all'esterno e senza torcere l'avambraccio rispetto al braccio (niente pieghe della pelle al gomito).
+	var best := bf0
+	var best_cost := INF
+	var sx := -1.0 if s == 0 else 1.0
+	for i in 36:
+		var bf := Basis(dn, TAU * i / 36.0) * bf0
+		var e := grip - bf * gl
+		var to_e := e - sh
+		var miss := absf(to_e.length() - l1)
+		var ud := to_e.normalized()
+		var fdir := bf * fl
+		var h := ud.cross(fdir)
+		if h.length() < 0.05:
+			h = Vector3(0, 0, -1).cross(ud)
+		var up_b := _align(r.rest[r.lo[s]].origin, r.arm_hinge[s][0], ud, h.normalized())
+		var natural := up_b * r.rest[r.lo[s]].basis * (r.palm_fl[s] as Vector3)
+		var twist := 1.0 - (bf * (r.palm_fl[s] as Vector3)).dot(natural)
+		var elbow_up := maxf(0.0, ud.y + 0.2)
+		var elbow_in := maxf(0.0, -ud.x * sx)
+		var cost := miss * miss * 400.0 + twist * 0.6 + elbow_up * 0.8 + elbow_in * 0.5
+		if cost < best_cost:
+			best_cost = cost
+			best = bf
+	var bfx := best
+	var e_want := grip - bfx * gl
+	var ud2 := (e_want - sh).normalized()
+	var h2 := ud2.cross(bfx * fl)
+	if h2.length() < 0.05:
+		h2 = Vector3(0, 0, -1).cross(ud2)
+	p.set_global(r.up[s], _align(r.rest[r.lo[s]].origin, r.arm_hinge[s][0], ud2, h2.normalized()))
 	var elbow := p.g[r.up[s]] * r.rest[r.lo[s]].origin
 	p.g[r.lo[s]] = Transform3D(p.g[r.lo[s]].basis, elbow)
-	var cur := (bf * gl).normalized()
+	var cur := (bfx * gl).normalized()
 	var want := (grip - elbow).normalized()
 	if cur.dot(want) < 0.99999:
-		bf = Basis(Quaternion(cur, want)) * bf
-	p.set_global(r.lo[s], bf)
+		bfx = Basis(Quaternion(cur, want)) * bfx
+	p.set_global(r.lo[s], bfx)
 	p.g[r.hand[s]] = p.g[r.lo[s]] * Transform3D(Basis(p.rot[r.hand[s]]), r.rest[r.hand[s]].origin)
 
 
@@ -440,7 +473,7 @@ static func _shield_arm(p: Pose, f: Dictionary, chest: Transform3D) -> void:
 static func _spear_left(p: Pose, f: Dictionary, chest: Transform3D) -> void:
 	var r := _rig
 	var hg := p.g[r.hand[0]]
-	var d := (hg.basis * (r.grest[r.hand[0]].basis.inverse() * HumanoidAnims.HAND_FINGERS)).normalized()
+	var d := (hg.basis * (r.thumb_loc[0] as Vector3)).normalized()
 	var grip := hg.origin + hg.basis * (r.grip_loc[0] as Vector3)
 	var on := grip + d * (f["td"] as float)
 	var th: float = f["th"]
@@ -582,7 +615,7 @@ static func _right_carry(cfg: Cfg, swing: float, run: float) -> Dictionary:
 	match cfg.right:
 		Hand.SWORD:
 			var w := Vector3(-0.215, lerpf(0.79, 0.9, run), lerpf(0.1, 0.12, run)) + Vector3(0, absf(swing) * 0.25 + swing * 0.2, swing)
-			var d := Vector3(-0.14, lerpf(-0.95, 0.75, run), lerpf(0.7, 0.75, run)).normalized()
+			var d := Vector3(-0.18, lerpf(-0.72, 0.75, run), lerpf(0.75, 0.75, run)).normalized()
 			return {"w0": w, "e0": Vector3(-0.5, -0.1, -1), "d0": d, "a0": Vector3.ZERO}
 		Hand.SPEAR:
 			var w := Vector3(-0.24, 0.93, lerpf(0.17, 0.08, run)) + Vector3(0, swing * 0.15, swing * 0.4)
@@ -612,7 +645,7 @@ static func _guard(cfg: Cfg) -> Dictionary:
 		Hand.SWORD:
 			f.merge({"w0": Vector3(-0.23, 0.95, 0.17), "e0": Vector3(-0.7, -0.2, -0.8), "d0": Vector3(-0.05, 0.3, 0.95).normalized(), "a0": Vector3.ZERO}, true)
 		Hand.SPEAR:
-			f.merge({"w0": Vector3(-0.28, 0.93, 0.03), "e0": Vector3(-0.6, -0.5, -0.6), "d0": Vector3(0.22, 0.1, 0.97).normalized(), "a0": Vector3.ZERO, "th": 1.0, "td": 0.45}, true)
+			f.merge({"w0": Vector3(-0.21, 0.92, 0.08), "e0": Vector3(-0.6, -0.5, -0.6), "d0": Vector3(0.3, 0.12, 0.95).normalized(), "a0": Vector3.ZERO, "th": 1.0, "td": 0.25}, true)
 		_:
 			f.merge({"w0": Vector3(-0.2, 0.95, 0.2), "e0": Vector3(-0.5, -0.3, -0.8)}, true)
 	if cfg.shield:
@@ -647,16 +680,40 @@ static func _clips_for(set_name: String, cfg: Cfg) -> Dictionary:
 			c[&"hit"] = _hit(cfg)
 			c[&"dodge"] = _dodge(cfg)
 			c[&"jump"] = _jump(cfg)
+			for i in CLIP_CLIMB_HEIGHTS.size():
+				c[climb_clip(i)] = _climb(cfg, CLIP_CLIMB_HEIGHTS[i])
 			c[&"death"] = _death(cfg)
+			for v: String in ["front", "side_r", "side_l"]:
+				c[StringName("death_" + v)] = _death_variant(cfg, v)
 		"support":
 			c[&"support_idle"] = _idle(cfg, false, true)
 			c[&"support_walk"] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(cfg, t, _WALK_SUPPORT, &"support"), cfg)
 			c[&"support_run"] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(cfg, t, _RUN_SUPPORT, &"support"), cfg)
+		"carry":
+			# Chi sorregge un ferito camminando al suo fianco: braccio dietro la sua schiena (r: ferito a destra, l: a sinistra).
+			for s in 2:
+				var tag2 := "r" if s == 0 else "l"
+				var st3 := StringName("carry_" + tag2)
+				c[StringName("carry_%s_idle" % tag2)] = _idle(cfg, false, false, false, s)
+				c[StringName("carry_%s_walk" % tag2)] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(cfg, t, _WALK_SUPPORT, st3), cfg)
+				c[StringName("carry_%s_run" % tag2)] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(cfg, t, _RUN_SUPPORT, st3), cfg)
 		"limp":
 			var bare := Cfg.new(Hand.NONE, false, false)
 			c[&"dragged_idle"] = _dragged(bare, false)
 			c[&"dragged_walk"] = _dragged(bare, true)
 			c[&"limp_idle"] = _limp_idle(bare)
+			# Ferito sorretto da chi gli sta a sinistra (l), a destra (r) o da due compagni (lr): il braccio
+			# del lato dal compagno va attorno alle sue spalle.
+			for tag in ["l", "r", "lr"]:
+				var st2 := StringName("limp_" + tag)
+				var sides: Array = []
+				if tag.contains("r"):
+					sides.append(0)
+				if tag.contains("l"):
+					sides.append(1)
+				c[StringName("limp_%s_idle" % tag)] = _limp_idle(bare, sides)
+				c[StringName("limp_%s_walk" % tag)] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(bare, t, _LIMP, st2), bare)
+				c[StringName("limp_%s_run" % tag)] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(bare, t, _LIMP_RUN, st2), bare)
 			c[&"limp_walk"] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(bare, t, _LIMP, &"limp"), bare)
 			c[&"limp_run"] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(bare, t, _LIMP_RUN, &"limp"), bare)
 			c[&"lie"] = _lie(bare, false)
@@ -671,6 +728,17 @@ static func _clips_for(set_name: String, cfg: Cfg) -> Dictionary:
 				c[StringName("stretcher_%s_idle" % tag)] = _stretcher_idle(bare2, s)
 				c[StringName("stretcher_%s_walk" % tag)] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(bare2, t, _WALK_LOAD, StringName("stretcher_%d" % s)), bare2)
 				c[StringName("stretcher_%s_run" % tag)] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(bare2, t, _RUN_LOAD, StringName("stretcher_%d" % s)), bare2)
+		"row":
+			# Rematore seduto sul banco: un solo ciclo di voga, uguale per tutti (idle/walk/run puntano allo stesso).
+			var bare4 := Cfg.new(Hand.NONE, false, false)
+			var rowing := _row(bare4)
+			c[&"row_idle"] = rowing
+			c[&"row_walk"] = rowing.duplicate()
+			c[&"row_run"] = rowing.duplicate()
+		"torch":
+			c[&"torch_idle"] = _idle(cfg, false, false, true)
+			c[&"torch_walk"] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(cfg, t, _WALK, &"torch"), cfg)
+			c[&"torch_run"] = _bake(1.0, true, 24.0, func(t: float) -> Dictionary: return _gait(cfg, t, _RUN, &"torch"), cfg)
 		"drag":
 			# Soccorso senza barella: il ferito trascinato sotto le ascelle da uno o due soldati.
 			var bare3 := Cfg.new(Hand.NONE, false, false)
@@ -793,7 +861,11 @@ static func _gait(cfg: Cfg, t: float, gp: Dictionary, style: StringName) -> Dict
 			var look := 0.5 + 0.5 * sin(TAU * ph)
 			f["hd"] = (f["hd"] as Vector3) + Vector3(-4, 28 * look, 0)
 			f["sp"] = (f["sp"] as Vector3) + Vector3(0, 6 * look, 0)
-		&"limp":
+		&"carry_r":
+			_carry_arm(f, 0)
+		&"carry_l":
+			_carry_arm(f, 1)
+		&"limp", &"limp_l", &"limp_r", &"limp_lr":
 			# Ferito: busto chino, mano sinistra sul fianco ferito, destra avanti sulla spalla di chi lo regge.
 			f["hd"] = Vector3(-10, 0, 0)
 			f["w1"] = Vector3(0.04, 0.9, 0.15) + Vector3(0, 0.01 * c, 0)
@@ -801,12 +873,42 @@ static func _gait(cfg: Cfg, t: float, gp: Dictionary, style: StringName) -> Dict
 			f["w0"] = Vector3(-0.11, 1.16, 0.36) + Vector3(0, 0.015 * c2, 0)
 			f["e0"] = Vector3(-0.6, -0.6, -0.3)
 			f["k0"] = Vector3(-0.15, 0, 1)
+			if style == &"limp_l" or style == &"limp_lr":
+				_neck_arm(f, 1)
+			if style == &"limp_r" or style == &"limp_lr":
+				_neck_arm(f, 0)
 		&"stretcher_0", &"stretcher_1":
 			var hs := 0 if style == &"stretcher_0" else 1
 			_stretcher_hand(f, hs)
+		&"torch":
+			_torch_arm(f, c)
 		&"drag", &"drag_l", &"drag_r":
 			_drag_hands(f, style, c)
 	return f
+
+
+## Distanza (m) tra chi sorregge e il ferito camminando fianco a fianco (asse contro asse).
+const CARRY_SIDE := 0.55
+
+
+## Chi sorregge: il braccio del lato del ferito gli cinge la vita, dietro la schiena (mano sul fianco lontano).
+static func _carry_arm(f: Dictionary, s: int) -> void:
+	var sx := -1.0 if s == 0 else 1.0
+	f["m%d" % s] = Vector3(sx * (CARRY_SIDE + 0.17), 1.02, -0.06)
+	f["mw%d" % s] = 1.0
+	f["e%d" % s] = Vector3(sx * 0.9, -0.2, -0.3)
+	f["d%d" % s] = Vector3.ZERO
+	f["sp"] = (f["sp"] as Vector3) + Vector3(0, 0, -sx * 3.0)
+
+
+## Ferito: il braccio del lato di chi lo sorregge va attorno al suo collo, mano sulla spalla lontana.
+static func _neck_arm(f: Dictionary, s: int) -> void:
+	var sx := -1.0 if s == 0 else 1.0
+	f["m%d" % s] = Vector3(sx * (CARRY_SIDE + 0.14), 1.44, -0.1)
+	f["mw%d" % s] = 1.0
+	f["e%d" % s] = Vector3(sx * 0.7, 0.3, -0.7)
+	f["d%d" % s] = Vector3.ZERO
+	f["hr"] = (f["hr"] as Vector3) + Vector3(0, 0, -sx * 3.0)
 
 
 ## Mano che regge la stanga della barella: polso fisso nel modello (la stanga non balla col passo).
@@ -831,6 +933,15 @@ const DRAG_REACH := 0.42
 const DRAG_HAND_Y := 0.58
 const DRAG_GAP := 0.7
 const DRAG_SIDE := 0.34
+
+
+## Torcia in mano destra: braccio piegato davanti al fianco, torcia dritta con la fiamma in alto.
+static func _torch_arm(f: Dictionary, phase: float) -> void:
+	f["w0"] = Vector3(-0.32, 0.93, 0.2 + 0.015 * phase)
+	f["e0"] = Vector3(-0.8, -0.6, -0.3)
+	f["d0"] = Vector3(-0.2, 1.0, 0.1).normalized()
+	f["a0"] = Vector3(-1, -0.1, 0)
+	f["x0"] = 0.0
 
 
 static func _drag_hands(f: Dictionary, style: StringName, phase_c: float) -> void:
@@ -895,7 +1006,7 @@ static func _dragged(cfg: Cfg, moving: bool) -> Animation:
 
 ## Riposo vivo: respiro, peso che passa da una gamba all'altra (piedi fermi), sguardo che si sposta.
 ## Durata 6 s; tutte le oscillazioni sono armoniche intere del ciclo, così il loop non salta.
-static func _idle(cfg: Cfg, guard: bool, support := false) -> Animation:
+static func _idle(cfg: Cfg, guard: bool, support := false, torch := false, hug := -1) -> Animation:
 	var length := 6.0
 	return _bake(length, true, 15.0, func(t: float) -> Dictionary:
 		var u := t / length
@@ -929,10 +1040,14 @@ static func _idle(cfg: Cfg, guard: bool, support := false) -> Animation:
 			f["w1"] = (f["w1"] as Vector3) + Vector3(0.01 * shift, arm, 0)
 		if support:
 			f["hd"] = (f["hd"] as Vector3) + Vector3(-3, 22.0 * (0.5 + 0.5 * sin(TAU * u * 2.0)), 0)
+		if torch:
+			_torch_arm(f, breath)
+		if hug >= 0:
+			_carry_arm(f, hug)
 		return f, cfg)
 
 
-static func _limp_idle(cfg: Cfg) -> Animation:
+static func _limp_idle(cfg: Cfg, sides: Array = []) -> Animation:
 	var length := 4.0
 	return _bake(length, true, 15.0, func(t: float) -> Dictionary:
 		var u := t / length
@@ -949,6 +1064,8 @@ static func _limp_idle(cfg: Cfg) -> Animation:
 		f["e1"] = Vector3(0.8, -0.1, -0.5)
 		f["w0"] = Vector3(-0.12, 1.12, 0.34) + Vector3(0, 0.01 * breath, 0)
 		f["e0"] = Vector3(-0.6, -0.6, -0.3)
+		for sd in sides:
+			_neck_arm(f, sd)
 		return f, cfg)
 
 
@@ -964,6 +1081,59 @@ static func _stretcher_idle(cfg: Cfg, s: int) -> Animation:
 		f.merge(_right_carry(cfg, 0.0, 0.0), true)
 		f.merge(_left_carry(cfg, 0.0, 0.0), true)
 		_stretcher_hand(f, s)
+		return f, cfg)
+
+
+# --- voga ---------------------------------------------------------------------------------------------
+## Durata di una remata (s), altezza del bacino da seduto (rispetto a in piedi) e geometria dei remi nello
+## spazio dello scheletro del rematore (fronte +Z): scalmo a ROW_LOCK_X di lato, ROW_LOCK_Y in alto, la mano
+## impugna il remo a ROW_GRIP dall'interno dello scalmo e lo fa ruotare di ±ROW_SWING gradi.
+const ROW_PERIOD := 2.4
+const ROW_SIT_DROP := -0.22
+const ROW_LOCK_X := 0.78
+const ROW_LOCK_Y := 0.80
+const ROW_GRIP := 0.46
+const ROW_SWING := 24.0
+
+
+## Posizione del polso del lato `s` (spazio dello scheletro) alla fase `u` (0..1) della remata, e angolo del remo
+## (gradi, positivo = impugnatura in avanti). Spinta (0..0.5): l'impugnatura va in avanti e la pala indietro in acqua;
+## recupero: torna indietro con la pala fuori dall'acqua (l'impugnatura si abbassa).
+static func row_hand(s: int, u: float) -> Dictionary:
+	var sx := -1.0 if s == 0 else 1.0
+	var ang := -ROW_SWING * cos(TAU * u)            # u=0: fine recupero (impugnatura indietro), u=.5 fine spinta
+	var th := deg_to_rad(ang)
+	var lift := -0.07 * maxf(0.0, -sin(TAU * u))    # recupero: l'impugnatura scende, la pala esce dall'acqua
+	var pos := Vector3(sx * (ROW_LOCK_X - ROW_GRIP * cos(th)), ROW_LOCK_Y - 0.1 + lift, ROW_GRIP * sin(th) + 0.02)
+	return {"pos": pos, "angle": ang}
+
+
+static func _row(cfg: Cfg) -> Animation:
+	return _bake(ROW_PERIOD, true, 20.0, func(t: float) -> Dictionary:
+		var u := t / ROW_PERIOD
+		var f := _neutral()
+		var lean := -cos(TAU * u)                    # -1 busto indietro (impugnatura indietro), +1 avanti
+		var breath := sin(TAU * u * 5.0)
+		f["hp"] = Vector3(0, ROW_SIT_DROP, -0.05 + 0.02 * lean)
+		f["hr"] = Vector3(-4.0 + 3.0 * lean, 0, 0)
+		f["sp"] = Vector3(6.0 + 11.0 * lean + 0.6 * breath, 0, 0)
+		f["hd"] = Vector3(-5.0 - 2.0 * lean, 0, 0)
+		f["f0"] = Vector3(-0.15, 0.075, 0.36)
+		f["f1"] = Vector3(0.15, 0.075, 0.36)
+		f["p0"] = Vector3(6, 14, 0)
+		f["p1"] = Vector3(6, 14, 0)
+		f["k0"] = Vector3(-0.2, 0, 1)
+		f["k1"] = Vector3(0.2, 0, 1)
+		for s in 2:
+			var h := row_hand(s, u)
+			var pos: Vector3 = h["pos"]
+			f["m%d" % s] = pos
+			f["mw%d" % s] = 1.0
+			f["w%d" % s] = pos
+			f["e%d" % s] = Vector3((-1.0 if s == 0 else 1.0) * 0.5, -0.4, -1)
+			f["d%d" % s] = Vector3(0, 0, 1)
+			f["a%d" % s] = Vector3(-(-1.0 if s == 0 else 1.0), 0, 0)
+			f["x%d" % s] = 1.0
 		return f, cfg)
 
 
@@ -1073,9 +1243,9 @@ static func _thrust(cfg: Cfg) -> Animation:
 static func _spear_thrust(cfg: Cfg, v: float) -> Animation:
 	var g := _with(_with(_neutral(), _guard_feet()), _guard(cfg))
 	var hgt := lerpf(0.06, -0.08, v)
-	var cock := _with(g, {"w0": Vector3(-0.31, 0.92 + hgt * 0.5, -0.06), "d0": Vector3(0.24, 0.1 + hgt, 0.96).normalized(), "td": 0.5,
+	var cock := _with(g, {"w0": Vector3(-0.33, 0.92 + hgt * 0.5, -0.02), "d0": Vector3(0.28, 0.1 + hgt, 0.96).normalized(), "td": 0.3,
 		"hr": Vector3(0, -16, 0), "sp": Vector3(0, -12, 0), "hd": Vector3(-3, 14, 0), "hp": Vector3(0, -0.07, -0.05)})
-	var hit := _with(g, {"w0": Vector3(-0.27, 0.98 + hgt, 0.3), "d0": Vector3(0.22, 0.05 + hgt, 1.0).normalized(), "td": 0.36,
+	var hit := _with(g, {"w0": Vector3(-0.27, 0.98 + hgt, 0.3), "d0": Vector3(0.26, 0.05 + hgt, 1.0).normalized(), "td": 0.26,
 		"hr": Vector3(8, 12, 0), "sp": Vector3(10, 10, 0), "hd": Vector3(-10, -10, 0), "hp": Vector3(0, -0.13, 0.15),
 		"f1": Vector3(0.13, 0.072, 0.42), "p0": Vector3(-16, 30, 0)})
 	var keys := [
@@ -1098,7 +1268,7 @@ static func _block(cfg: Cfg) -> Animation:
 	if cfg.shield:
 		up.merge({"se": Vector3(0.13, 1.06, 0.24), "sf": Vector3(-0.9, 0.25, 0.35), "sn": Vector3(0.05, 0.15, 1.0)}, true)
 	elif cfg.right == Hand.SPEAR:
-		up.merge({"w0": Vector3(-0.28, 1.04, 0.2), "d0": Vector3(0.35, 0.3, 0.88).normalized(), "td": 0.45}, true)
+		up.merge({"w0": Vector3(-0.28, 1.04, 0.2), "d0": Vector3(0.35, 0.3, 0.88).normalized(), "td": 0.28}, true)
 	else:
 		up.merge({"w1": Vector3(0.12, 1.14, 0.24), "e1": Vector3(0.9, -0.3, -0.2), "d1": Vector3(-0.3, 0.9, 0.3)}, true)
 	if cfg.right == Hand.SWORD:
@@ -1185,6 +1355,129 @@ static func _jump(cfg: Cfg) -> Animation:
 	return _bake_keys(keys, cfg)
 
 
+# --- arrampicata ---------------------------------------------------------------------------------------
+
+## Altezze (m) dei blocchi per cui esiste una clip di arrampicata ("climb_0", "climb_1", ...).
+const CLIP_CLIMB_HEIGHTS := [1.25, 1.6, 1.95]
+## Durata dell'arrampicata (s): clip e movimento del GridUnit sono sincronizzati su questa.
+const CLIMB_TIME := 1.8
+## Distanza (m) dalla faccia del blocco a cui ci si aggrappa, e posizione della presa sul piano.
+const CLIMB_GRAB_Z := 0.65
+
+
+static func climb_clip(index: int) -> StringName:
+	return StringName("climb_%d" % index)
+
+
+## Indice della clip di arrampicata più vicina all'altezza `h` del blocco.
+static func climb_index(h: float) -> int:
+	var best := 0
+	for i in CLIP_CLIMB_HEIGHTS.size():
+		if absf(CLIP_CLIMB_HEIGHTS[i] - h) < absf(CLIP_CLIMB_HEIGHTS[best] - h):
+			best = i
+	return best
+
+
+## Percorso del bacino/piedi (radice dell'unità) durante l'arrampicata, per f in 0..1 del tempo:
+## x = frazione dei 2 m fra la casella di partenza e quella di arrivo, y = scarto verticale dal
+## terreno di partenza. `h` altezza del blocco, `y_end` dislivello del terreno d'arrivo.
+static func climb_profile(f: float, h: float, y_end := 0.0) -> Vector2:
+	var keys := [
+		[0.0, 0.0, 0.0], [0.12, 0.17, 0.0], [0.5, 0.19, h - 0.9], [0.64, 0.4, h],
+		[0.74, 0.5, h], [0.78, 0.55, h], [1.0, 1.0, y_end],
+	]
+	f = clampf(f, 0.0, 1.0)
+	for i in range(keys.size() - 1):
+		var a: Array = keys[i]
+		var b: Array = keys[i + 1]
+		if f <= float(b[0]):
+			var u := (f - float(a[0])) / (float(b[0]) - float(a[0]))
+			var ux := smoothstep(0.0, 1.0, u)
+			var uy := u * u if i == keys.size() - 2 else ux   # ultimo tratto: caduta
+			return Vector2(lerpf(float(a[1]), float(b[1]), ux if i < keys.size() - 2 else u), lerpf(float(a[2]), float(b[2]), uy))
+	return Vector2(1.0, y_end)
+
+
+## Arrampicata su un blocco alto `h`: sguardo alla cornice, presa con le mani, trazione, bacino oltre
+## il bordo, in piedi sul blocco, discesa dall'altra parte. Il corpo sale con climb_profile().
+static func _climb(cfg: Cfg, h: float) -> Animation:
+	return _bake(CLIMB_TIME, false, 30.0, func(t: float) -> Dictionary: return _climb_fields(cfg, h, t / CLIMB_TIME), cfg)
+
+
+static func _climb_fields(cfg: Cfg, h: float, f: float) -> Dictionary:
+	var n := _neutral()
+	n.merge(_right_carry(cfg, 0.0, 0.0), true)
+	n.merge(_left_carry(cfg, 0.0, 0.0), true)
+	var pr := climb_profile(f, h)
+	var rx := pr.x * 2.0
+	var ry := pr.y
+	var grab := smoothstep(0.0, 0.12, f) * (1.0 - smoothstep(0.64, 0.8, f))
+	var rel_h := h - ry
+	var ledge_z := CLIMB_GRAB_Z - rx
+	var o := {}
+	var pull := smoothstep(0.12, 0.5, f) * (1.0 - smoothstep(0.5, 0.74, f))
+	var over := smoothstep(0.5, 0.66, f) * (1.0 - smoothstep(0.7, 0.8, f))
+	var drop := smoothstep(0.78, 0.92, f)
+	# Busto: testa alla cornice, poi si piega sul bordo, poi in piedi.
+	var lean := 8.0 + 26.0 * pull + 28.0 * over
+	o["sp"] = Vector3(lean, 0, 0)
+	o["hd"] = Vector3(-14.0 * grab - 4.0 * over, 0, 0)
+	o["hp"] = Vector3(0, -0.03 - 0.2 * over - 0.18 * smoothstep(0.7, 0.8, f) * (1.0 - drop), 0.04 * pull)
+	o["hr"] = Vector3(10.0 * pull + 10.0 * over, 0, 0)
+	# Piedi: in appoggio sulla parete a destra/sinistra alternati (uno si alza e spinge).
+	var scr := sin(f * TAU * 2.2) * pull
+	var wall_z := 0.07
+	var fz := lerpf(0.01, wall_z, smoothstep(0.1, 0.3, f) * (1.0 - over))
+	o["f0"] = Vector3(-0.105, 0.072 + maxf(scr, 0.0) * 0.16, fz + 0.04 * maxf(scr, 0.0))
+	o["f1"] = Vector3(0.105, 0.072 + maxf(-scr, 0.0) * 0.16, fz + 0.04 * maxf(-scr, 0.0))
+	o["k0"] = Vector3(-0.15, 0.0, 1.0)
+	o["k1"] = Vector3(0.15, 0.0, 1.0)
+	o["p0"] = Vector3(10.0 * pull, 8, 0)
+	o["p1"] = Vector3(10.0 * pull, 8, 0)
+	var air := smoothstep(0.78, 0.84, f) * (1.0 - smoothstep(0.96, 1.0, f))
+	var land_crouch := smoothstep(0.93, 1.0, f)
+	o["hp"] = (o["hp"] as Vector3) + Vector3(0, -0.2 * land_crouch + 0.02 * air, 0.05 * land_crouch)
+	o["sp"] = (o["sp"] as Vector3) + Vector3(18.0 * land_crouch - 14.0 * drop * (1.0 - land_crouch), 0, 0)
+	if air > 0.0:
+		o["f0"] = Vector3(-0.1, 0.072 + 0.18 * air, 0.1 * air)
+		o["f1"] = Vector3(0.1, 0.072 + 0.12 * air, 0.14 * air)
+		o["q0"] = 0.35 * air
+		o["q1"] = 0.35 * air
+	# Braccia: sulla cornice, poi in avanti/bilanciamento in caduta.
+	var rest0: Vector3 = n["w0"]
+	var rest1: Vector3 = n.get("w1", Vector3(0.2, 0.71, 0.04))
+	var grip0 := Vector3(-0.2 if cfg.right == Hand.NONE else -0.32, rel_h, ledge_z)
+	var grip1 := Vector3(0.2, rel_h, ledge_z)
+	var bal0 := Vector3(-0.42, 0.95, 0.12)
+	var bal1 := Vector3(0.42, 0.95, 0.12)
+	var m0 := rest0.lerp(grip0, grab).lerp(bal0, drop)
+	var m1 := rest1.lerp(grip1, grab).lerp(bal1, drop)
+	if cfg.right == Hand.NONE:
+		o["m0"] = m0
+		o["mw0"] = 1.0 if (grab > 0.001 or drop > 0.001) else 0.0
+		o["d0"] = Vector3.ZERO if o["mw0"] > 0.0 else n["d0"]
+	else:
+		# Con un'arma in pugno la mano destra si aggrappa lo stesso, ma l'arma resta lontana dal corpo:
+		# spada e lancia verticali, lungo la parete.
+		var hold := Vector3(0.35, 1.0, 0.15)
+		var carry_d: Vector3 = n["d0"]
+		o["w0"] = (rest0.lerp(grip0, grab) if not drop > 0.0 else rest0.lerp(grip0, grab).lerp(bal0, drop))
+		o["d0"] = carry_d.lerp(hold.normalized(), grab).normalized()
+	o["e0"] = Vector3(-0.7, -0.4, -0.6)
+	if cfg.shield:
+		var up_amt := grab
+		o["se"] = (n["se"] as Vector3).lerp(Vector3(0.24, 1.2, 0.2), up_amt)
+		o["sf"] = (n["sf"] as Vector3).lerp(Vector3(0.1, 0.55, 0.83).normalized(), up_amt)
+		o["sn"] = (n["sn"] as Vector3).lerp(Vector3(1.0, 0.0, 0.3), up_amt)
+	else:
+		o["m1"] = m1
+		o["mw1"] = 1.0 if (grab > 0.001 or drop > 0.001) else 0.0
+		o["e1"] = Vector3(0.7, -0.4, -0.6)
+		if n.has("d1"):
+			o["d1"] = Vector3.ZERO if o["mw1"] > 0.0 else n["d1"]
+	return _with(n, o)
+
+
 static func _arms_forward(cfg: Cfg, lift: float) -> Dictionary:
 	var f := {}
 	if cfg.right == Hand.NONE:
@@ -1196,7 +1489,8 @@ static func _arms_forward(cfg: Cfg, lift: float) -> Dictionary:
 	return f
 
 
-## Morte: colpo che spinge indietro, le ginocchia cedono, caduta sulla schiena, rimbalzo e quiete.
+## Morte all'indietro (colpito da davanti): il colpo spinge, le ginocchia cedono, caduta sulla schiena,
+## rimbalzo e quiete. Le altre varianti: _death_variant().
 static func _death(cfg: Cfg) -> Animation:
 	var n := _with(_neutral(), {})
 	n.merge(_right_carry(cfg, 0.0, 0.0), true)
@@ -1231,6 +1525,81 @@ static func _death(cfg: Cfg) -> Animation:
 		_k(1.25, _with(down, {"hd": Vector3(-4, 34, 0)}), {}, true),
 	]
 	return _bake_keys(keys, cfg)
+
+
+
+## Varianti di caduta (in spazio anim il soldato guarda +Z, la sua destra anatomica e' -X):
+##  "front"  colpito da dietro: spinta in avanti, ginocchia a terra, crollo a faccia in giu';
+##  "side_r" / "side_l"  colpito di lato: ginocchia che cedono e crollo sul fianco destro / sinistro.
+## Dove finisce la testa (spazio anim) lo dice death_head_dir().
+static func _death_variant(cfg: Cfg, kind: String) -> Animation:
+	var n := _with(_neutral(), {})
+	n.merge(_right_carry(cfg, 0.0, 0.0), true)
+	n.merge(_left_carry(cfg, 0.0, 0.0), true)
+	var keys: Array
+	if kind == "front":
+		var jolt := _with(n, {"hp": Vector3(0, -0.04, 0.05), "hr": Vector3(5, -6, 0), "sp": Vector3(-8, -6, 3), "hd": Vector3(-20, 6, 0),
+			"w0": Vector3(-0.42, 0.85, -0.1), "w1": Vector3(0.42, 0.85, -0.1), "e0": Vector3(-1, 0, -0.3), "e1": Vector3(1, 0, -0.3)})
+		if cfg.shield:
+			jolt.merge({"se": Vector3(0.3, 0.9, -0.05), "sf": Vector3(0.3, -0.4, 0.8), "sn": Vector3(0.8, 0.1, 0.5)}, true)
+		var stagger := _with(n, {"hp": Vector3(0, -0.2, 0.14), "hr": Vector3(14, 6, 0), "sp": Vector3(18, 4, 0), "hd": Vector3(-6, 0, 0),
+			"f0": Vector3(-0.12, 0.072, 0.2), "f1": Vector3(0.12, 0.072, -0.05), "k0": Vector3(-0.2, 0, 1), "k1": Vector3(0.2, 0, 1)})
+		stagger.merge(_arms_forward(cfg, -0.12), true)
+		var kneel := _with(stagger, {"hp": Vector3(0, -0.42, 0.14), "hr": Vector3(18, 4, 0), "sp": Vector3(26, 0, 0), "hd": Vector3(-12, -6, 0),
+			"f0": Vector3(-0.14, 0.1, -0.4), "f1": Vector3(0.14, 0.1, -0.4), "q0": 0.9, "q1": 0.9})
+		var fall := _with(kneel, {"hp": Vector3(0, -0.5, 0.34), "hr": Vector3(58, 0, 0), "sp": Vector3(10, 0, 0), "hd": Vector3(-14, 18, 0),
+			"f0": Vector3(-0.14, 0.09, -0.5), "f1": Vector3(0.14, 0.09, -0.5), "q0": 1.0, "q1": 1.0,
+			"w0": Vector3(-0.42, 0.95, 0.22), "w1": Vector3(0.42, 0.95, 0.22), "e0": Vector3(-1, 0, 0.2), "e1": Vector3(1, 0, 0.2)})
+		var down := _with(fall, {"hp": Vector3(0, -0.57, 0.52), "hr": Vector3(86, 0, 0), "sp": Vector3(2, 0, 0), "hd": Vector3(-8, 34, 0),
+			"f0": Vector3(-0.15, 0.09, -0.4), "f1": Vector3(0.16, 0.09, -0.46),
+			"w0": Vector3(-0.5, 1.0, 0.12), "w1": Vector3(0.5, 1.0, 0.12), "e0": Vector3(-1, 0, 0), "e1": Vector3(1, 0, 0)})
+		if cfg.shield:
+			down.merge({"se": Vector3(0.4, 1.0, 0.1), "sf": Vector3(0.6, 0.1, 0.4), "sn": Vector3(0.1, 0.9, 0.2)}, true)
+		if cfg.right != Hand.NONE:
+			# L'arma sfugge di mano e giace lungo il corpo, non conficcata nel terreno.
+			fall["d0"] = Vector3(-0.4, 0.5, 0.2).normalized()
+			down["d0"] = Vector3(-0.6, 0.8, 0.0).normalized()
+			down["w0"] = Vector3(-0.5, 1.0, 0.05)
+		var bounce := _with(down, {"hp": Vector3(0, -0.55, 0.5), "hr": Vector3(82, 0, 0)})
+		keys = [_k(0.0, n, {}, true), _k(0.1, jolt, {}), _k(0.3, stagger, {}), _k(0.52, kneel, {}), _k(0.74, fall, {}),
+			_k(0.9, down, {}), _k(1.0, bounce, {}), _k(1.2, down, {}, true), _k(1.5, _with(down, {"hd": Vector3(-8, 36, 0)}), {}, true)]
+	else:
+		# Sul fianco: sg=+1 testa verso la destra anatomica (-X), il braccio destro finisce sotto.
+		var sg := 1.0 if kind == "side_r" else -1.0
+		var jolt := _with(n, {"hp": Vector3(0.05 * sg, -0.05, 0), "hr": Vector3(0, 0, -8 * sg), "sp": Vector3(-6, 0, -10 * sg), "hd": Vector3(-8, 0, -10 * sg),
+			"w0": (n["w0"] as Vector3) + Vector3(-0.06, 0.1, 0), "w1": (n["w1"] as Vector3) + Vector3(0.06, 0.1, 0)})
+		var buckle := _with(n, {"hp": Vector3(-0.1 * sg, -0.28, 0.03), "hr": Vector3(0, 8 * sg, 14 * sg), "sp": Vector3(14, 0, 12 * sg), "hd": Vector3(8, 0, 14 * sg),
+			"k0": Vector3(-0.3, 0, 1), "k1": Vector3(0.3, 0, 1)})
+		var fall := _with(buckle, {"hp": Vector3(-0.3 * sg, -0.42, 0.0), "hr": Vector3(0, 0, 55 * sg), "sp": Vector3(6, 0, 12 * sg), "hd": Vector3(0, 0, 8 * sg),
+			"f0": Vector3(-0.13, 0.09, 0.1), "f1": Vector3(0.13, 0.09, 0.14), "q0": 0.6, "q1": 0.6})
+		var down := _with(fall, {"hp": Vector3(-0.5 * sg, -0.44, -0.02), "hr": Vector3(0, 6 * sg, 86 * sg), "sp": Vector3(2, 0, 2 * sg), "hd": Vector3(0, 10 * sg, 4 * sg),
+			"f0": Vector3(0.3 * sg, 0.1, 0.12), "f1": Vector3(0.3 * sg, 0.1, 0.34), "q0": 1.0, "q1": 1.0,
+			"k0": Vector3(0, 0, 1), "k1": Vector3(0, 0, 1)})
+		# Il braccio sotto resta lungo il corpo, quello sopra cade avanti sul terreno.
+		var under := 0 if sg > 0.0 else 1
+		var top := 1 - under
+		down["w%d" % under] = Vector3(-0.3 * sg + (0.0), 0.8, 0.1)
+		down["e%d" % under] = Vector3(0, -1, 0.2)
+		down["w%d" % top] = Vector3(0.12 * sg, 0.7, 0.3)
+		down["e%d" % top] = Vector3(0, -1, 0.3)
+		if cfg.shield:
+			# Lo scudo (braccio sinistro) giace piatto sul terreno davanti al corpo: la sua normale e' la verticale.
+			down.merge({"se": Vector3(0.2 * sg, 0.75, 0.3), "sf": Vector3(0.1 * sg, 0.1, 1.0), "sn": Vector3(sg, 0.05, 0.0)}, true)
+		if cfg.right != Hand.NONE:
+			down["d0"] = Vector3(0.0, -0.2, 1.0).normalized()
+		var bounce := _with(down, {"hp": Vector3(-0.49 * sg, -0.43, -0.02), "hr": Vector3(0, 6 * sg, 83 * sg)})
+		keys = [_k(0.0, n, {}, true), _k(0.1, jolt, {}), _k(0.3, buckle, {}), _k(0.5, fall, {}), _k(0.7, down, {}),
+			_k(0.8, bounce, {}), _k(1.0, down, {}, true), _k(1.3, _with(down, {"hd": Vector3(0, 12 * sg, 4 * sg)}), {}, true)]
+	return _bake_keys(keys, cfg)
+
+
+## Verso (spazio anim) in cui punta la testa del caduto, per posare il corpo sul rilievo.
+static func death_head_dir(clip: StringName) -> Vector3:
+	match clip:
+		&"death_front": return Vector3.BACK
+		&"death_side_r": return Vector3.LEFT
+		&"death_side_l": return Vector3.RIGHT
+	return Vector3.FORWARD
 
 
 ## Posa sdraiata del ferito (centrata sull'origine): una gamba piegata, mano sulla ferita, respiro.
@@ -1439,8 +1808,7 @@ static func audit(anim: Animation, right: Hand, shield: bool, step := 1.0 / 30.0
 		var pts := []
 		if right != Hand.NONE:
 			var hg := p.g[r.hand[0]]
-			var wdir := HAND_FINGERS if right == Hand.SPEAR else -HAND_THUMB
-			var d := (hg.basis * (r.grest[r.hand[0]].basis.inverse() * wdir)).normalized()
+			var d := (hg.basis * (r.thumb_loc[0] as Vector3)).normalized()
 			var grip := hg.origin + hg.basis * (r.grip_loc[0] as Vector3)
 			var back := SPEAR_BACK if right == Hand.SPEAR else SWORD_BACK
 			var tip := SPEAR_TIP if right == Hand.SPEAR else SWORD_TIP

@@ -137,11 +137,9 @@ def carro():
         pts = [(math.cos(math.pi * k / 8) * (rr + 0.04), y, zc2 + math.sin(math.pi * k / 8) * (rr + 0.04) * 1.05) for k in range(9)]
         for a, c in zip(pts, pts[1:]):
             b.rod(a, c, 0.018, 4, "rope")
-    # apertura anteriore scura e sacchi dietro
+    # apertura anteriore scura (niente sacchi: le sfere grezze dentro il carro erano mal disegnate)
     semi = [(math.cos(math.pi * k / 8) * (rr - 0.04), math.sin(math.pi * k / 8) * (rr - 0.04) * 1.05) for k in range(9)]
     b.poly_extrude(semi, 0.02, M((0, 0.90, zc2)), "pitch")
-    for (x, y, s) in ((0.2, -0.7, 0.22), (-0.15, -0.75, 0.2), (0.0, -0.45, 0.18)):
-        b.sphere(s, M((x, y, 0.9)), "canvas_dark", seg=8, rings=5, scale=(1, 1, 0.8))
     # timone e giogo
     b.rod((0, 0.95, 0.55), (0, 2.0, 0.48), 0.04, 6, "wood")
     b.rod((-0.4, 1.95, 0.5), (0.4, 1.95, 0.5), 0.035, 6, "wood_dark")

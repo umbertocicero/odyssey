@@ -50,14 +50,14 @@ static func density() -> float:
 	return 1.0
 
 
-## Budget di ciuffi dell'erba a cards (GrassCards): web 3k, mobile 10k, PC 30k.
+## Budget di ciuffi dell'erba a lame (GrassCards): web 4k, mobile 16k, PC 54k (ciuffi piccoli e fitti).
 static func grass_budget() -> int:
 	var forced := OS.get_environment("ODYSSEY_GRASS_BUDGET")
 	if forced.is_valid_int():
 		return forced.to_int()
 	match current():
 		Level.LOW:
-			return 3000
+			return 4000
 		Level.MEDIUM:
-			return 10000
-	return 30000
+			return 16000
+	return 54000
