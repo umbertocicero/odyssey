@@ -197,7 +197,7 @@ func _drag(delta: float) -> void:
 	# Cammina al fianco di chi lo sorregge (Ulisse: alla sua destra; un soldato: alla sua sinistra).
 	var right := Vector3(cos(yaw), 0.0, -sin(yaw))
 	var side := 1.0 if leader.is_in_group(&"player") else -1.0
-	var target := leader.global_position + right * (HumanoidAnims.CARRY_SIDE * side)
+	var target := leader.global_position + right * (HumanoidAnims.CARRY_SIDE * side) + Vector3(sin(yaw), 0.0, cos(yaw)) * HumanoidAnims.CARRY_LAG
 	var to := Vector2(target.x - global_position.x, target.z - global_position.z)
 	# Se la linea retta lo blocca (muri, palizzate, ostacoli) cerca un percorso sulla griglia.
 	var here := Vector2(global_position.x, global_position.z)

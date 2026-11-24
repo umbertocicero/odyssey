@@ -1,44 +1,63 @@
 class_name AnimalIdle
 extends Node
-## Vita leggera per gli animali di scena (cavalli, pecore, maiali). I modelli sono mesh statiche
-## senza scheletro, quindi l'animazione è procedurale e agisce solo sul nodo "Visual" del GridProp:
-## respiro, peso che passa da un lato all'altro, testa che si abbassa a brucare e si rialza,
-## ogni tanto qualche passo in un cerchio piccolo attorno alla posizione di partenza.
-## Collisioni, caselle bloccate e griglia non cambiano (restano sul GridProp). Costo: una
-## Transform3D per animale per frame, nessuna risorsa nuova (niente VRAM, niente draw call extra).
+## Vita per gli animali di scena (cavalli, pecore, maiali). I modelli sono mesh statiche senza
+## scheletro: le articolazioni sono nello shader `animal_rig.gdshader` (zampe che oscillano e si
+## piegano, collo e testa che si flettono, schiena, coda), pilotato da parametri per istanza.
+## Qui vivono la macchina a stati (riposo, brucare, zampata, passi), le transizioni morbide
+## (accelerazione, rotazione smorzata, andatura che segue la velocità) e l'appoggio al terreno:
+## la quota è presa dalla mesh vera (PhotoTerrain) sotto i piedi, così nessun animale affonda.
+## Collisioni, caselle bloccate e griglia restano sul GridProp.
 
-## Parametri per specie: respiro (periodo s, ampiezza), testa bassa (gradi, ogni quanti secondi),
-## andatura (m/s, frequenza passi Hz, rimbalzo m), pausa fra due spostamenti.
+const SHADER := preload("res://assets/shaders/animal_rig.gdshader")
+
+## Per specie: respiro (periodo s, ampiezza), testa bassa (ogni quanti s), andatura (m/s, lunghezza
+## passo m), pausa fra spostamenti, rotazione (rad/s), collo (zf base, hy base, lunghezza zf),
+## stile shader (zampe rad, testa rad, coda m, schiena m).
 const KINDS := {
-	"horse": {"breath_period": 4.2, "breath": 0.010, "dip_deg": 5.0, "dip_every": Vector2(9.0, 18.0),
-		"speed": 0.45, "step_hz": 1.5, "bob": 0.012, "rest": Vector2(6.0, 14.0), "turn": 70.0},
-	"sheep": {"breath_period": 2.6, "breath": 0.014, "dip_deg": 14.0, "dip_every": Vector2(4.0, 9.0),
-		"speed": 0.28, "step_hz": 2.2, "bob": 0.008, "rest": Vector2(5.0, 12.0), "turn": 100.0},
-	"pig": {"breath_period": 2.2, "breath": 0.016, "dip_deg": 10.0, "dip_every": Vector2(3.0, 8.0),
-		"speed": 0.30, "step_hz": 2.4, "bob": 0.008, "rest": Vector2(5.0, 11.0), "turn": 110.0},
+	"horse": {"breath_period": 4.2, "breath": 0.012, "dip_every": Vector2(9.0, 18.0),
+		"speed": 0.7, "stride": 0.75, "rest": Vector2(6.0, 14.0), "turn": 1.2, "stomp": true,
+		"neck": Vector4(-0.22, 0.80, 0.26, 0.0), "style": Vector4(0.40, 0.65, 0.07, 0.025)},
+	"sheep": {"breath_period": 2.6, "breath": 0.016, "dip_every": Vector2(4.0, 9.0),
+		"speed": 0.35, "stride": 0.36, "rest": Vector2(5.0, 12.0), "turn": 1.8, "stomp": false,
+		"neck": Vector4(-0.25, 0.78, 0.22, 0.0), "style": Vector4(0.45, 0.75, 0.025, 0.015)},
+	"pig": {"breath_period": 2.2, "breath": 0.018, "dip_every": Vector2(3.0, 8.0),
+		"speed": 0.35, "stride": 0.34, "rest": Vector2(5.0, 11.0), "turn": 1.9, "stomp": false,
+		"neck": Vector4(-0.25, 0.80, 0.22, 0.0), "style": Vector4(0.45, 0.45, 0.04, 0.02)},
 }
 
+static var _mats := {}
+static var _terrain: PhotoTerrain
+static var _relief: TerrainRelief
+
 var kind := "horse"
-## Raggio massimo (m) dello spostamento dal punto di partenza. 0 = fermo (solo respiro e testa).
 var wander := 1.0
-## Rotazione massima rispetto all'orientamento di partenza (gradi), per chi non deve girarsi molto.
 var max_turn_deg := 180.0
 
 var _prop: GridProp
 var _rng := RandomNumberGenerator.new()
 var _t := 0.0
-var _pos := Vector2.ZERO       # offset XZ nello spazio locale del prop
+var _pos := Vector2.ZERO
 var _yaw := 0.0
+var _yaw_vel := 0.0
 var _target := Vector2.ZERO
 var _walking := false
 var _rest_left := 0.0
+var _speed := 0.0
 var _gait := 0.0
+var _walk := 0.0
 var _dip_left := 0.0
 var _dip_total := 1.0
 var _next_dip := 5.0
-var _pivot_z := 0.7
+var _stomp_left := 0.0
+var _next_stomp := 12.0
+var _ground_y := 0.0
+var _ground_ready := false
+var _pitch := 0.0
+var _roll := 0.0
 var _params: Dictionary
-var _grid: DioramaGrid
+var _rigged: Node3D
+var _meshes: Array[MeshInstance3D] = []
+var _seed := 0.0
 
 
 func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit_deg := 180.0) -> void:
@@ -49,60 +68,12 @@ func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit
 	_params = KINDS[kind]
 	var p := prop.global_position
 	_rng.seed = hash(Vector3i(roundi(p.x * 10.0), roundi(p.y * 10.0), roundi(p.z * 10.0)))
+	_seed = _rng.randf() * 50.0
 	_t = _rng.randf() * 100.0
 	_rest_left = _rng.randf_range(0.5, 5.0)
 	_next_dip = _rng.randf_range(1.0, 6.0)
+	_next_stomp = _rng.randf_range(6.0, 25.0)
 	set_process(true)
-	_register_body.call_deferred()
-
-
-func _exit_tree() -> void:
-	if _grid != null and is_instance_valid(_grid):
-		_grid.remove_body(_prop)
-
-
-## Corpo dell'animale sulla griglia: una catena di cerchi lungo il corpo (un cavallo ne occupa
-## più caselle), che segue i passi. Ulisse, alleati e nemici non lo attraversano e il pathfinding lo aggira.
-func _register_body() -> void:
-	if _prop == null or not is_instance_valid(_prop) or not _prop.is_inside_tree():
-		return
-	_grid = get_tree().get_first_node_in_group(&"diorama_grid") as DioramaGrid
-	if _grid != null:
-		_grid.set_body(_prop, _circles(_pos, _yaw))
-
-
-## Cerchi (x, z, raggio) in coordinate del mondo per la posizione/orientamento dati.
-func _circles(pos: Vector2, yaw: float) -> PackedVector3Array:
-	var out := PackedVector3Array()
-	var box := _prop.visual_box()
-	if box.size.x <= 0.0 or box.size.z <= 0.0:
-		return out
-	if _pivot_z == 0.7:
-		_pivot_z = _prop.visual_size().z * 0.35
-	var c := box.get_center()
-	var r := clampf(box.size.x * 0.5, 0.22, 0.5)
-	var half := maxf(box.size.z * 0.5 - r, 0.0)
-	var n := maxi(ceili(half * 2.0 / (r * 1.2)) + 1, 1)
-	var yaw_b := Basis(Vector3.UP, yaw)
-	var pivot := Vector3(0.0, 0.0, _pivot_z)
-	for i in n:
-		var z := c.z if n == 1 else lerpf(c.z - half, c.z + half, float(i) / (n - 1))
-		var local := yaw_b * (Vector3(c.x, 0.0, z) - pivot) + pivot + Vector3(pos.x, 0.0, pos.y)
-		var w := _prop.global_transform * local
-		out.append(Vector3(w.x, w.z, r))
-	return out
-
-
-## Applica un nuovo passo/orientamento solo se il corpo ci sta (niente ostacoli, animali o unità).
-func _try_move(pos: Vector2, yaw: float) -> bool:
-	if _grid != null and is_instance_valid(_grid):
-		var circles := _circles(pos, yaw)
-		if not _grid.body_fits(_prop, circles):
-			return false
-		_grid.set_body(_prop, circles)
-	_pos = pos
-	_yaw = yaw
-	return true
 
 
 func _process(delta: float) -> void:
@@ -111,87 +82,177 @@ func _process(delta: float) -> void:
 	var visual := _prop.visual_node()
 	if visual == null:
 		return
+	if visual != _rigged:
+		_rig(visual)
 	delta = minf(delta, 0.1)
 	_t += delta
-	if _pivot_z == 0.7:
-		_pivot_z = _prop.visual_size().z * 0.35
-
 	_update_walk(delta)
-	_update_dip(delta)
+	_update_events(delta)
 
-	# Respiro: il torace si gonfia appena, i piedi restano a terra.
-	var b := sin(_t * TAU / float(_params["breath_period"])) * float(_params["breath"])
-	var scale_v := Vector3(1.0 + b * 0.4, 1.0 + b, 1.0 + b * 0.5)
-
-	# Testa: inclinazione attorno al posteriore (il fronte è -Z).
-	var dip := 0.0
+	# Testa: riposo con deriva lenta, brucare con masticazione, cenno a tempo con i passi.
+	var head := sin(_t * 0.7 + _seed) * 0.06 + sin(_t * 1.9 + _seed * 2.0) * 0.04
 	if _dip_left > 0.0:
 		var k := 1.0 - _dip_left / _dip_total
-		dip = smoothstep(0.0, 0.3, k) * (1.0 - smoothstep(0.7, 1.0, k))
-	var pitch := -deg_to_rad(float(_params["dip_deg"])) * dip
+		var env := _smoother(0.0, 0.3, k) * (1.0 - _smoother(0.72, 1.0, k))
+		head = lerpf(head, -1.0, env) + sin(_t * 5.5) * 0.03 * env
+	head += sin(_gait) * 0.12 * _walk
+	var look := sin(_t * 0.31 + _seed * 3.0) * 0.5 * (1.0 - _walk)
+	var stomp := 0.0
+	if _stomp_left > 0.0:
+		var ks := 1.0 - _stomp_left / 1.1
+		stomp = pow(maxf(sin(ks * PI * 2.0), 0.0), 2.0)
+	var breath := sin(_t * TAU / float(_params["breath_period"]) + _seed) * float(_params["breath"])
 
-	# Peso che passa da un lato all'altro e, camminando, dondolio dell'andatura.
-	var roll := sin(_t * 0.37) * deg_to_rad(0.7)
-	var bob := 0.0
-	if _walking:
-		var ph := _gait * TAU
-		bob = absf(sin(ph)) * float(_params["bob"])
-		roll += sin(ph) * deg_to_rad(1.2)
-		pitch += sin(ph * 2.0) * deg_to_rad(0.8)
-
+	var vsize := _prop.visual_size()
 	var yaw_b := Basis(Vector3.UP, _yaw)
-	var body := Basis(Vector3.RIGHT, pitch) * Basis(Vector3.BACK, roll) * Basis.from_scale(scale_v)
-	var pivot := Vector3(0.0, 0.0, _pivot_z)
-	var basis := yaw_b * body
-	var origin := Vector3(_pos.x, bob, _pos.y) + yaw_b * (pivot - body * pivot)
-	visual.transform = Transform3D(basis, origin)
+	var world := _prop.global_transform
+	var local := Vector3(_pos.x, 0.0, _pos.y)
+	# Appoggio al terreno: quota sotto cinque punti (centro, avanti, dietro, lati); si sta sul più alto.
+	var half_l := vsize.z * 0.32
+	var half_w := vsize.x * 0.3
+	var centre := world * local
+	var fwd := (world.basis * yaw_b * Vector3(0, 0, -1)).normalized() * half_l
+	var side := (world.basis * yaw_b * Vector3(1, 0, 0)).normalized() * half_w
+	var hf := _ground(centre.x + fwd.x, centre.z + fwd.z)
+	var hb := _ground(centre.x - fwd.x, centre.z - fwd.z)
+	var hl := _ground(centre.x - side.x, centre.z - side.z)
+	var hr := _ground(centre.x + side.x, centre.z + side.z)
+	var hc := _ground(centre.x, centre.z)
+	var top := maxf(maxf(hf, hb), maxf(maxf(hl, hr), hc))
+	var want_y := top - _prop.global_position.y
+	_ground_y = want_y if not _ground_ready else lerpf(_ground_y, want_y, 1.0 - exp(-delta * 8.0))
+	_ground_ready = true
+	# Inclinazione di metà della pendenza (non fa affondare né sollevare troppo le zampe).
+	var slope_p := atan2(hf - hb, half_l * 2.0) * 0.5
+	var slope_r := atan2(hr - hl, half_w * 2.0) * 0.5
+	var k_s := 1.0 - exp(-delta * 5.0)
+	_pitch = lerpf(_pitch, slope_p, k_s)
+	_roll = lerpf(_roll, slope_r, k_s)
+
+	var bob := absf(sin(_gait)) * 0.010 * vsize.y * _walk
+	var roll := _roll + sin(_t * 0.37) * deg_to_rad(0.6) + sin(_gait) * deg_to_rad(1.0) * _walk
+	var pitch := _pitch + sin(_gait * 2.0) * deg_to_rad(0.6) * _walk
+	var body := Basis(Vector3.RIGHT, pitch) * Basis(Vector3.BACK, roll)
+	visual.transform = Transform3D(yaw_b * body, Vector3(_pos.x, _ground_y + bob, _pos.y))
+
+	var pose := Vector4(_walk, _gait, head, look)
+	var extra := Vector4(stomp, _seed, breath, 0.0)
+	for mi in _meshes:
+		mi.set_instance_shader_parameter("pose", pose)
+		mi.set_instance_shader_parameter("extra", extra)
 
 
-func _update_dip(delta: float) -> void:
+## Sostituisce i materiali standard con quello a rig, copiando le texture, e imposta le dimensioni.
+func _rig(visual: Node3D) -> void:
+	_rigged = visual
+	_meshes.clear()
+	for child in visual.get_children():
+		var mi := child as MeshInstance3D
+		if mi == null or mi.mesh == null:
+			continue
+		for s in mi.mesh.get_surface_count():
+			var src := mi.mesh.surface_get_material(s) as BaseMaterial3D
+			if src != null:
+				mi.set_surface_override_material(s, _rig_material(src))
+		var box := mi.mesh.get_aabb()
+		mi.set_instance_shader_parameter("dims", Vector4(box.position.y, box.size.y, box.get_center().z, box.size.z))
+		var neck: Vector4 = _params["neck"]
+		mi.set_instance_shader_parameter("dims2", Vector4(box.size.x, neck.x, neck.y, neck.z))
+		var st: Vector4 = _params["style"]
+		mi.set_instance_shader_parameter("style", Vector4(st.x, st.y, st.z, st.w))
+		mi.extra_cull_margin = 0.6
+		_meshes.append(mi)
+
+
+static func _rig_material(src: BaseMaterial3D) -> ShaderMaterial:
+	var id := src.get_instance_id()
+	if _mats.has(id):
+		return _mats[id]
+	var m := ShaderMaterial.new()
+	m.shader = SHADER
+	if src.albedo_texture:
+		m.set_shader_parameter("albedo_tex", src.albedo_texture)
+	m.set_shader_parameter("albedo_color", src.albedo_color)
+	if src.normal_texture:
+		m.set_shader_parameter("normal_tex", src.normal_texture)
+		m.set_shader_parameter("normal_depth", src.normal_scale)
+	if src.roughness_texture:
+		m.set_shader_parameter("rough_tex", src.roughness_texture)
+	m.set_shader_parameter("rough_scale", src.roughness)
+	_mats[id] = m
+	return m
+
+
+func _update_events(delta: float) -> void:
 	if _dip_left > 0.0:
 		_dip_left -= delta
-		return
-	_next_dip -= delta
-	if _next_dip <= 0.0 and not _walking:
-		_dip_total = _rng.randf_range(3.5, 6.0)
-		_dip_left = _dip_total
-		var every: Vector2 = _params["dip_every"]
-		_next_dip = _rng.randf_range(every.x, every.y)
+	elif not _walking:
+		_next_dip -= delta
+		if _next_dip <= 0.0:
+			_dip_total = _rng.randf_range(4.0, 7.0)
+			_dip_left = _dip_total
+			var every: Vector2 = _params["dip_every"]
+			_next_dip = _rng.randf_range(every.x, every.y)
+	if _stomp_left > 0.0:
+		_stomp_left -= delta
+	elif bool(_params["stomp"]) and not _walking and _dip_left <= 0.0:
+		_next_stomp -= delta
+		if _next_stomp <= 0.0:
+			_stomp_left = 1.1
+			_next_stomp = _rng.randf_range(15.0, 35.0)
 
 
 func _update_walk(delta: float) -> void:
-	if wander <= 0.01:
-		return
+	var vmax := float(_params["speed"])
+	var target_speed := 0.0
+	if wander > 0.01:
+		if not _walking:
+			_rest_left -= delta
+			if _rest_left <= 0.0 and _dip_left <= 0.0 and _stomp_left <= 0.0:
+				var a := _rng.randf() * TAU
+				_target = Vector2(cos(a), sin(a)) * wander * sqrt(_rng.randf())
+				_walking = true
+		else:
+			var to := _target - _pos
+			var dist := to.length()
+			if dist < 0.05 and _speed < 0.05:
+				_walking = false
+				var rest: Vector2 = _params["rest"]
+				_rest_left = _rng.randf_range(rest.x, rest.y)
+			else:
+				var want := wrapf(atan2(-to.x, -to.y), -PI, PI)
+				var lim := deg_to_rad(max_turn_deg)
+				want = clampf(want, -lim, lim)
+				var diff := wrapf(want - _yaw, -PI, PI)
+				# Rotazione smorzata (accelera e frena), non uno scatto.
+				var desired_vel := clampf(diff * 2.5, -float(_params["turn"]), float(_params["turn"]))
+				_yaw_vel = lerpf(_yaw_vel, desired_vel, 1.0 - exp(-delta * 5.0))
+				_yaw += _yaw_vel * delta
+				var aligned := 1.0 - smoothstep(0.35, 1.0, absf(diff))
+				target_speed = vmax * aligned * clampf(dist * 1.6, 0.0, 1.0) if dist > 0.05 else 0.0
 	if not _walking:
-		_rest_left -= delta
-		if _rest_left <= 0.0 and _dip_left <= 0.0:
-			var a := _rng.randf() * TAU
-			_target = Vector2(cos(a), sin(a)) * wander * sqrt(_rng.randf())
-			_walking = true
-		return
-	var to := _target - _pos
-	var dist := to.length()
-	if dist < 0.06:
-		_walking = false
-		var rest: Vector2 = _params["rest"]
-		_rest_left = _rng.randf_range(rest.x, rest.y)
-		return
-	# Prima ci si gira verso la meta, poi si cammina. Ogni gesto passa dal controllo d'ingombro:
-	# se qualcosa è in mezzo (unità, ostacolo, altro animale) l'animale si ferma e riposa.
-	var want := atan2(-to.x, -to.y)
-	var lim := deg_to_rad(max_turn_deg)
-	want = clampf(wrapf(want, -PI, PI), -lim, lim)
-	var turn_rate := deg_to_rad(float(_params["turn"])) * delta
-	var diff := wrapf(want - _yaw, -PI, PI)
-	var new_yaw := _yaw + clampf(diff, -turn_rate, turn_rate)
-	var new_pos := _pos
-	var stepped := false
-	if absf(diff) < deg_to_rad(35.0):
-		new_pos = _pos + to / dist * minf(float(_params["speed"]) * delta, dist)
-		stepped = true
-	if not _try_move(new_pos, new_yaw):
-		_walking = false
-		_rest_left = _rng.randf_range(2.0, 5.0)
-		return
-	if stepped:
-		_gait = fmod(_gait + float(_params["step_hz"]) * delta * 0.5, 1.0)
+		_yaw_vel = lerpf(_yaw_vel, 0.0, 1.0 - exp(-delta * 6.0))
+		_yaw += _yaw_vel * delta
+	# Velocità con inerzia; l'andatura segue la velocità reale (niente piedi che scivolano).
+	_speed = lerpf(_speed, target_speed, 1.0 - exp(-delta * 2.2))
+	if _walking and _speed > 0.0:
+		var heading := Vector2(-sin(_yaw), -cos(_yaw))
+		_pos += heading * _speed * delta
+		_pos = _pos.limit_length(wander)
+	_gait = fmod(_gait + _speed / float(_params["stride"]) * TAU * delta, TAU * 4.0)
+	_walk = lerpf(_walk, clampf(_speed / vmax, 0.0, 1.0), 1.0 - exp(-delta * 6.0))
+
+
+func _ground(x: float, z: float) -> float:
+	if _terrain == null or not is_instance_valid(_terrain):
+		_terrain = get_tree().get_first_node_in_group(&"photo_terrain") as PhotoTerrain
+	if _terrain and _terrain.is_active():
+		return _terrain.height_at(x, z)
+	if _relief == null or not is_instance_valid(_relief):
+		_relief = get_tree().get_first_node_in_group(&"terrain_relief") as TerrainRelief
+	return _relief.height_at_world(x, z) if _relief else 0.0
+
+
+static func _smoother(a: float, b: float, x: float) -> float:
+	var t := clampf((x - a) / (b - a), 0.0, 1.0)
+	return t * t * t * (t * (t * 6.0 - 15.0) + 10.0)

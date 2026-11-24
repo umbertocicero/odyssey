@@ -867,7 +867,9 @@ static func _gait(cfg: Cfg, t: float, gp: Dictionary, style: StringName) -> Dict
 			_carry_arm(f, 1)
 		&"limp", &"limp_l", &"limp_r", &"limp_lr":
 			# Ferito: busto chino, mano sinistra sul fianco ferito, destra avanti sulla spalla di chi lo regge.
-			f["hd"] = Vector3(-10, 0, 0)
+			f["hd"] = Vector3(-26, 0, 0)
+			f["sp"] = (f["sp"] as Vector3) + Vector3(14, 0, 0)   # accasciato in avanti, peso sugli altri
+			f["hp"] = (f["hp"] as Vector3) + Vector3(0, -0.045, 0)
 			f["w1"] = Vector3(0.04, 0.9, 0.15) + Vector3(0, 0.01 * c, 0)
 			f["e1"] = Vector3(0.8, -0.1, -0.5)
 			f["w0"] = Vector3(-0.11, 1.16, 0.36) + Vector3(0, 0.015 * c2, 0)
@@ -888,7 +890,9 @@ static func _gait(cfg: Cfg, t: float, gp: Dictionary, style: StringName) -> Dict
 
 
 ## Distanza (m) tra chi sorregge e il ferito camminando fianco a fianco (asse contro asse).
-const CARRY_SIDE := 0.55
+const CARRY_SIDE := 0.62
+## Il ferito sta un po' indietro rispetto a chi lo sorregge: visto da dietro non viene coperto dai due.
+const CARRY_LAG := 0.2
 
 
 ## Chi sorregge: il braccio del lato del ferito gli cinge la vita, dietro la schiena (mano sul fianco lontano).

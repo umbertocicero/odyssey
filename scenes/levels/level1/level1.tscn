@@ -128,7 +128,7 @@ glow_bloom = 0.05
 glow_hdr_threshold = 1.4
 fog_enabled = true
 fog_mode = 1
-fog_light_color = Color(0.96, 0.66, 0.48, 1)
+fog_light_color = Color(0.80, 0.68, 0.60, 1)
 fog_sun_scatter = 0.55
 fog_density = 0.6
 fog_sky_affect = 0.0
@@ -224,7 +224,7 @@ environment = SubResource("env")
 
 [node name="Sole" type="DirectionalLight3D" parent="." unique_id=1675360879]
 transform = Transform3D(-0.618872, 0.351203, -0.702605, 0, 0.894478, 0.447112, 0.785492, 0.276705, -0.553568, 0, 12, 0)
-light_color = Color(1, 0.7, 0.44, 1)
+light_color = Color(1, 0.76, 0.54, 1)
 light_energy = 0.95
 shadow_enabled = true
 shadow_bias = 0.12
@@ -1501,9 +1501,10 @@ hide_materials = PackedStringArray()
 [node name="Cipresso3" type="Node3D" parent="Scenario/Pianura" unique_id=109557896]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 19.5)
 script = ExtResource("s_prop")
-model = ExtResource("n_fir_c")
+low_quality_model = ExtResource("n_fir_c")
+lazy_model_path = "res://assets/models/custom/polyhaven/alberi/fir_tree_01/fir_tree_01_c.gltf"
 fit_axis = 2
-fit_size = 5.0
+fit_size = 5.5
 trunk_radius = 0.25
 foliage_gain = Color(8.5, 15, 6.5, 1)
 hide_materials = PackedStringArray()

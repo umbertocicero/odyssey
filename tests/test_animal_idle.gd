@@ -38,7 +38,7 @@ func _run() -> void:
 			continue  # qualità bassa: modello non mostrato
 		if a.global_position != start[a]:
 			print("FAIL: il nodo si e' spostato ", a.name); fails += 1
-		var lim := a.animal_wander + 0.6 + 2.0 * a.visual_size().z * 0.0
+		var lim := a.animal_wander + 0.6
 		if maxd[a] > lim:
 			print("FAIL: ", a.name, " troppo lontano ", maxd[a]); fails += 1
 		if v.transform.is_equal_approx(Transform3D.IDENTITY):
