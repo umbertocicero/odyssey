@@ -904,9 +904,9 @@ static func _carry_arm(f: Dictionary, s: int) -> void:
 ## Ferito: il braccio del lato di chi lo sorregge va attorno al suo collo, mano sulla spalla lontana.
 static func _neck_arm(f: Dictionary, s: int) -> void:
 	var sx := -1.0 if s == 0 else 1.0
-	f["m%d" % s] = Vector3(sx * (CARRY_SIDE + 0.14), 1.44, -0.1)
+	f["m%d" % s] = Vector3(sx * (CARRY_SIDE + 0.08), 1.1, -0.12)
 	f["mw%d" % s] = 1.0
-	f["e%d" % s] = Vector3(sx * 0.7, 0.3, -0.7)
+	f["e%d" % s] = Vector3(sx * 0.7, -0.3, -0.7)
 	f["d%d" % s] = Vector3.ZERO
 	f["hr"] = (f["hr"] as Vector3) + Vector3(0, 0, -sx * 3.0)
 
@@ -1542,11 +1542,20 @@ static func _death_variant(cfg: Cfg, kind: String) -> Animation:
 			"w0": Vector3(-0.42, 0.85, -0.1), "w1": Vector3(0.42, 0.85, -0.1), "e0": Vector3(-1, 0, -0.3), "e1": Vector3(1, 0, -0.3)})
 		if cfg.shield:
 			jolt.merge({"se": Vector3(0.3, 0.9, -0.05), "sf": Vector3(0.3, -0.4, 0.8), "sn": Vector3(0.8, 0.1, 0.5)}, true)
+		if cfg.right == Hand.SPEAR:
+			jolt["d0"] = Vector3(-1.0, 0.1, 0.2).normalized()
+			jolt["th"] = 0.0
+			jolt["sp"] = Vector3(-3, -4, 2)
 		var stagger := _with(n, {"hp": Vector3(0, -0.2, 0.14), "hr": Vector3(14, 6, 0), "sp": Vector3(18, 4, 0), "hd": Vector3(-6, 0, 0),
 			"f0": Vector3(-0.12, 0.072, 0.2), "f1": Vector3(0.12, 0.072, -0.05), "k0": Vector3(-0.2, 0, 1), "k1": Vector3(0.2, 0, 1)})
 		stagger.merge(_arms_forward(cfg, -0.12), true)
+		if cfg.right == Hand.SPEAR:
+			stagger["d0"] = Vector3(-0.6, -0.7, 0.2).normalized()
+			stagger["th"] = 0.0
 		var kneel := _with(stagger, {"hp": Vector3(0, -0.42, 0.14), "hr": Vector3(18, 4, 0), "sp": Vector3(26, 0, 0), "hd": Vector3(-12, -6, 0),
 			"f0": Vector3(-0.14, 0.1, -0.4), "f1": Vector3(0.14, 0.1, -0.4), "q0": 0.9, "q1": 0.9})
+		if cfg.right == Hand.SPEAR:
+			kneel["d0"] = Vector3(-1.0, 0.2, 0.0).normalized()
 		var fall := _with(kneel, {"hp": Vector3(0, -0.5, 0.34), "hr": Vector3(58, 0, 0), "sp": Vector3(10, 0, 0), "hd": Vector3(-14, 18, 0),
 			"f0": Vector3(-0.14, 0.09, -0.5), "f1": Vector3(0.14, 0.09, -0.5), "q0": 1.0, "q1": 1.0,
 			"w0": Vector3(-0.42, 0.95, 0.22), "w1": Vector3(0.42, 0.95, 0.22), "e0": Vector3(-1, 0, 0.2), "e1": Vector3(1, 0, 0.2)})
@@ -1557,9 +1566,9 @@ static func _death_variant(cfg: Cfg, kind: String) -> Animation:
 			down.merge({"se": Vector3(0.4, 1.0, 0.1), "sf": Vector3(0.6, 0.1, 0.4), "sn": Vector3(0.1, 0.9, 0.2)}, true)
 		if cfg.right != Hand.NONE:
 			# L'arma sfugge di mano e giace lungo il corpo, non conficcata nel terreno.
-			fall["d0"] = Vector3(-0.4, 0.5, 0.2).normalized()
-			down["d0"] = Vector3(-0.6, 0.8, 0.0).normalized()
-			down["w0"] = Vector3(-0.5, 1.0, 0.05)
+			fall["d0"] = Vector3(-0.9, 0.5, 0.0).normalized() if cfg.right == Hand.SPEAR else Vector3(-0.4, 0.5, 0.2).normalized()
+			down["d0"] = Vector3(-0.9, 0.5, 0.0).normalized() if cfg.right == Hand.SPEAR else Vector3(-0.6, 0.8, 0.0).normalized()
+			down["w0"] = Vector3(-0.55, 1.0, 0.08)
 		var bounce := _with(down, {"hp": Vector3(0, -0.55, 0.5), "hr": Vector3(82, 0, 0)})
 		keys = [_k(0.0, n, {}, true), _k(0.1, jolt, {}), _k(0.3, stagger, {}), _k(0.52, kneel, {}), _k(0.74, fall, {}),
 			_k(0.9, down, {}), _k(1.0, bounce, {}), _k(1.2, down, {}, true), _k(1.5, _with(down, {"hd": Vector3(-8, 36, 0)}), {}, true)]
@@ -1568,10 +1577,19 @@ static func _death_variant(cfg: Cfg, kind: String) -> Animation:
 		var sg := 1.0 if kind == "side_r" else -1.0
 		var jolt := _with(n, {"hp": Vector3(0.05 * sg, -0.05, 0), "hr": Vector3(0, 0, -8 * sg), "sp": Vector3(-6, 0, -10 * sg), "hd": Vector3(-8, 0, -10 * sg),
 			"w0": (n["w0"] as Vector3) + Vector3(-0.06, 0.1, 0), "w1": (n["w1"] as Vector3) + Vector3(0.06, 0.1, 0)})
+		if cfg.shield:
+			jolt.merge({"se": Vector3(0.3, 0.85, 0.05), "sf": Vector3(0.3, -0.2, 0.9), "sn": Vector3(0.8, 0.05, 0.5)}, true)
 		var buckle := _with(n, {"hp": Vector3(-0.1 * sg, -0.28, 0.03), "hr": Vector3(0, 8 * sg, 14 * sg), "sp": Vector3(14, 0, 12 * sg), "hd": Vector3(8, 0, 14 * sg),
 			"k0": Vector3(-0.3, 0, 1), "k1": Vector3(0.3, 0, 1)})
+		if cfg.right != Hand.NONE:
+			buckle["d0"] = Vector3(-0.3, -0.45, 0.8).normalized()
+		if cfg.shield:
+			buckle.merge({"se": Vector3(0.35, 0.8, 0.1), "sf": Vector3(0.3, -0.2, 0.9), "sn": Vector3(0.8, 0.05, 0.5)}, true)
 		var fall := _with(buckle, {"hp": Vector3(-0.3 * sg, -0.42, 0.0), "hr": Vector3(0, 0, 55 * sg), "sp": Vector3(6, 0, 12 * sg), "hd": Vector3(0, 0, 8 * sg),
 			"f0": Vector3(-0.13, 0.09, 0.1), "f1": Vector3(0.13, 0.09, 0.14), "q0": 0.6, "q1": 0.6})
+		if cfg.shield:
+			buckle.merge({"se": Vector3(0.35, 0.8, 0.1), "sf": Vector3(0.3, -0.2, 0.9), "sn": Vector3(0.8, 0.05, 0.5)}, true)
+			fall.merge({"se": Vector3(0.4, 0.7, 0.45), "sf": Vector3(0.2, -0.1, 1.0), "sn": Vector3(0.7, 0.05, 0.6)} if sg < 0.0 else {"se": Vector3(0.15, 0.75, 0.4), "sf": Vector3(-0.2, -0.1, 1.0), "sn": Vector3(0.5 * sg, 0.1, 0.5)}, true)
 		var down := _with(fall, {"hp": Vector3(-0.5 * sg, -0.44, -0.02), "hr": Vector3(0, 6 * sg, 86 * sg), "sp": Vector3(2, 0, 2 * sg), "hd": Vector3(0, 10 * sg, 4 * sg),
 			"f0": Vector3(0.3 * sg, 0.1, 0.12), "f1": Vector3(0.3 * sg, 0.1, 0.34), "q0": 1.0, "q1": 1.0,
 			"k0": Vector3(0, 0, 1), "k1": Vector3(0, 0, 1)})
@@ -1584,7 +1602,7 @@ static func _death_variant(cfg: Cfg, kind: String) -> Animation:
 		down["e%d" % top] = Vector3(0, -1, 0.3)
 		if cfg.shield:
 			# Lo scudo (braccio sinistro) giace piatto sul terreno davanti al corpo: la sua normale e' la verticale.
-			down.merge({"se": Vector3(0.2 * sg, 0.75, 0.3), "sf": Vector3(0.1 * sg, 0.1, 1.0), "sn": Vector3(sg, 0.05, 0.0)}, true)
+			down.merge({"se": Vector3(0.12, 0.62, 0.5) if sg > 0.0 else Vector3(0.45, 0.1, 1.4), "sf": Vector3(0.0, 0.05, 1.0), "sn": Vector3(sg, 0.05, 0.0)}, true)
 		if cfg.right != Hand.NONE:
 			down["d0"] = Vector3(0.0, -0.2, 1.0).normalized()
 		var bounce := _with(down, {"hp": Vector3(-0.49 * sg, -0.43, -0.02), "hr": Vector3(0, 6 * sg, 83 * sg)})

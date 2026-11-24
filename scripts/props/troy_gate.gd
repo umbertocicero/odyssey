@@ -153,8 +153,10 @@ func _gate_stone(m: Mesher, t: float) -> void:
 	var outer := gap_width * 0.5 + 0.12
 	var h := opening_height
 	# Anima scura dietro i blocchi: niente spiragli di luce tra un blocco e l'altro.
-	m.box(Vector3(0, body_top * 0.5, 0), Vector3(outer * 2.0, body_top, (t - 0.06) * 2.0), _rand_off())
-	for side in [-1.0, 1.0]:
+	for cs: float in [-1.0, 1.0]:
+		m.box(Vector3(cs * (hw + outer) * 0.5, h * 0.5, 0), Vector3(outer - hw, h, (t - 0.06) * 2.0), _rand_off())
+	m.box(Vector3(0, (h + body_top) * 0.5, 0), Vector3(outer * 2.0, body_top - h, (t - 0.06) * 2.0), _rand_off())
+	for side: float in [-1.0, 1.0]:
 		var y := 0.0
 		var i := 0
 		while y < h - 0.01:
@@ -193,7 +195,7 @@ func _porch_stone(m: Mesher) -> void:
 	var h := opening_height
 	var d := porch_depth
 	var jw := 0.28
-	for side in [-1.0, 1.0]:
+	for side: float in [-1.0, 1.0]:
 		var y := 0.0
 		while y < h - 0.01:
 			var ch := _rng.randf_range(0.36, 0.52)
@@ -217,7 +219,7 @@ func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
 	var big := kind == Kind.GATE
 	var strap_ys: Array = [0.45, 1.5, 2.45] if big else [0.4, 1.45]
 	var studs: Array[Transform3D] = []
-	for side in [-1.0, 1.0]:
+	for side: float in [-1.0, 1.0]:
 		var edge_in := 0.01          # lato verso la battuta centrale
 		for i in plank_n:
 			var xa := side * (edge_in + i * plank_w)
@@ -243,7 +245,7 @@ func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
 	# Listello di battuta al centro.
 	iron.box(Vector3(0, lh * 0.5, front + 0.02), Vector3(0.07, lh, 0.04), _rand_off())
 	# Anelli di presa.
-	for side in [-1.0, 1.0]:
+	for side: float in [-1.0, 1.0]:
 		var ring := MeshInstance3D.new()
 		var torus := TorusMesh.new()
 		torus.inner_radius = 0.045

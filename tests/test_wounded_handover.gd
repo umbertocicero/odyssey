@@ -48,18 +48,18 @@ func _initialize() -> void:
 	# (in linea retta libera dal ferito, perché i soldati si muovono a passi golosi sugli assi)
 	var placed := false
 	for dist in [4, 3, 2]:
-	 for dir: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-		var clear := true
-		for k in range(1, dist + 1):
-			var c: Vector2i = w.cell + dir * k
-			if not grid.is_walkable(c) or c == ulisse.cell:
-				clear = false
+		for dir: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var clear := true
+			for k in range(1, dist + 1):
+				var c: Vector2i = w.cell + dir * k
+				if not grid.is_walkable(c) or c == ulisse.cell:
+					clear = false
+					break
+			if clear and mate.place_at(w.cell + dir * dist):
+				placed = true
 				break
-		if clear and mate.place_at(w.cell + dir * dist):
-			placed = true
+		if placed:
 			break
-	 if placed:
-		break
 	_check(placed, "compagno posizionato in linea libera")
 	var joined := false
 	var fell := false
@@ -84,7 +84,18 @@ func _initialize() -> void:
 	_check(get_nodes_in_group(&"stretcher").is_empty() and root.find_children("Stretcher*", "", true, false).is_empty(), "nessuna barella")
 	# Ulisse lo porta all'accampamento (a piedi, in teletrasporto della posizione): il compagno si libera.
 	var camp := director.rules.camp_rect
-	ulisse.place_at(camp.position + camp.size / 2)
+	var arrived := false
+	for r in range(0, 8):
+		for dx in range(-r, r + 1):
+			for dy in range(-r, r + 1):
+				if not arrived and ulisse.place_at(camp.position + camp.size / 2 + Vector2i(dx, dy)):
+					arrived = true
+	_check(arrived, "Ulisse raggiunge l'accampamento")
+	# Il ferito lo ha accompagnato lungo la strada (qui in teletrasporto, senza ostacoli di mezzo).
+	for off in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1)]:
+		if w.place_at(ulisse.cell + off):
+			break
+	w.global_position = grid.cell_to_world(w.cell)
 	t = 0.0
 	while t < 40.0 and w.state == WoundedSoldier.State.FOLLOWING:
 		await create_timer(0.1).timeout

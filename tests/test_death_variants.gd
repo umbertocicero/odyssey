@@ -52,7 +52,7 @@ func _initialize() -> void:
 		else:
 			u = UnitFactory.make(AllySoldier, UnitFactory.MODEL_ACHEO, GridUnit.Team.ACHEI, 10, "A%d" % i)
 		main.add_child(u)
-		u.place_at(Vector2i(cx - 6 + i * 2, cz))
+		u.place_at(Vector2i(cx - 2 + (i % 3) * 2, cz - 2 + (i / 3) * 3))
 		u.face(Vector2i(0, -1))
 		if troy:
 			(u as TrojanSoldier)._halted = true
@@ -72,7 +72,7 @@ func _initialize() -> void:
 	# Il settimo muore a meta' passo.
 	var walker := UnitFactory.make(AllySoldier, UnitFactory.MODEL_ACHEO, GridUnit.Team.ACHEI, 10, "Walker")
 	main.add_child(walker)
-	walker.place_at(Vector2i(cx - 6, cz + 3))
+	walker.place_at(Vector2i(cx - 2, cz + 5))
 	walker.set_physics_process(false)
 	await create_timer(0.3).timeout
 	walker.is_moving = true
@@ -115,12 +115,12 @@ func _initialize() -> void:
 
 func _shots(units: Array, dir: String) -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://tests/screenshots/" + dir))
-	var mid := (units[0] as Node3D).global_position.lerp((units[units.size() - 1] as Node3D).global_position, 0.5)
+	var mid := (units[0] as Node3D).global_position.lerp((units[units.size() - 1] as Node3D).global_position, 0.5) + Vector3(0, 0, 0.5)
 	var vp: SubViewport = root.get_node("Main/GameView/GameViewport") if root.has_node("Main/GameView/GameViewport") else get_first_node_in_group(&"diorama_grid").get_tree().root.find_child("GameViewport", true, false)
 	var cam := vp.get_camera_3d()
 	cam.set(&"_follow", null)
 	cam.set(&"target", mid + Vector3(0, 0.1, 0))
-	cam.set(&"distance", 7.0)
+	cam.set(&"distance", 5.5)
 	cam.set(&"pitch_degrees", -50.0)
 	cam.set(&"yaw_degrees", 0.0)
 	for pr in root.find_children("*", "GridProp", true, false):

@@ -7,6 +7,9 @@ extends Node
 ## medium ~100, high ~250; con la pioggia polline e polvere si spengono.
 
 @export var enabled := true
+## Bagliori di temporale con la pioggia: solo luce (cielo, ambiente, un velo a schermo), nessuna saetta
+## disegnata nella scena e nessun effetto sul gameplay. Intervalli irregolari, più evidenti di notte.
+@export var lightning_enabled := true
 @export var puddle_spots: PackedVector2Array = PackedVector2Array([
 	Vector2(-15.0, 12.0), Vector2(-9.5, 11.0), Vector2(-2.0, 12.0), Vector2(5.0, 9.0), Vector2(6.5, 3.0), Vector2(6.0, -4.0),
 	Vector2(7.0, -10.0), Vector2(6.0, -16.0), Vector2(-11.0, 4.0), Vector2(1.5, 3.0), Vector2(11.0, 8.0), Vector2(-4.0, -2.0),
@@ -29,16 +32,39 @@ var _terrain_material: StandardMaterial3D
 var _terrain_albedo0 := Color.WHITE
 var _terrain_rough0 := 1.0
 
+# Bagliori: ogni evento è una scarica di 1-3 impulsi ravvicinati (x = inizio, y = forza, z = durata, in s).
+var flash := 0.0                       # 0..1, intensità del bagliore in questo frame (per i test)
+var flash_overlay: ColorRect
+var _env: Environment
+var _sky: ShaderMaterial
+var _flash_rng := RandomNumberGenerator.new()
+var _flash_timer := 5.0
+var _event_t := 0.0
+var _event_pulses: Array[Vector3] = []
+var _event_end := 0.0
+var _flash_sky_dirty := false
+
+## Sotto questa pioggia non partono nuovi lampi (il temporale arriva con la pioggia piena).
+const STORM_MIN_RAIN := 0.4
+
 
 func _ready() -> void:
 	if not enabled:
 		return
+	# Dopo CicloNotte, che riscrive ambiente e nebbia a ogni frame: il bagliore si somma sopra.
+	process_priority = 10
 	await get_tree().process_frame
 	await get_tree().process_frame
 	clock = get_tree().get_first_node_in_group(&"level_clock") as LevelClock
 	if clock == null:
 		return
 	var level := get_parent()
+	_flash_rng.randomize()
+	var we := level.get_node_or_null(^"WorldEnvironment") as WorldEnvironment
+	if we and we.environment:
+		_env = we.environment
+		if _env.sky and _env.sky.sky_material is ShaderMaterial:
+			_sky = _env.sky.sky_material as ShaderMaterial
 	grass = level.get_node_or_null(^"ErbaFotorealistica") as GrassCards
 	terrain = get_tree().get_first_node_in_group(&"photo_terrain") as PhotoTerrain
 	_build_overlay()
@@ -74,6 +100,16 @@ func _build_overlay() -> void:
 	overlay.material = overlay_material
 	overlay.visible = false
 	layer.add_child(overlay)
+	# Velo del bagliore: un solo rettangolo additivo, quasi trasparente, acceso solo durante i lampi.
+	flash_overlay = ColorRect.new()
+	flash_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	flash_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash_overlay.color = Color(0.6, 0.7, 1.0, 0.0)
+	var add := CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	flash_overlay.material = add
+	flash_overlay.visible = false
+	layer.add_child(flash_overlay)
 
 
 func _build_puddles() -> void:
@@ -258,3 +294,76 @@ func _process(_delta: float) -> void:
 	# Polline: di giorno e col sereno, a zero di notte e con la pioggia.
 	if motes:
 		motes.emitting = clock.night_amount() < 0.6 and rain < 0.15
+	_update_lightning(_delta, rain)
+
+
+## Avvia subito un temporale di bagliori (test, demo).
+func force_flash() -> void:
+	_start_flash_event()
+
+
+func _start_flash_event() -> void:
+	_event_pulses.clear()
+	var start := 0.0
+	var count := _flash_rng.randi_range(1, 3)
+	for i in count:
+		var peak := 1.0 if i == 0 else _flash_rng.randf_range(0.45, 0.9)
+		var length := _flash_rng.randf_range(0.1, 0.28)
+		_event_pulses.append(Vector3(start, peak, length))
+		start += length * 0.5 + _flash_rng.randf_range(0.05, 0.16)
+	_event_end = 0.0
+	for p in _event_pulses:
+		_event_end = maxf(_event_end, p.x + p.z + 0.05)
+	_event_t = 0.0
+	# Zona del cielo da cui arriva la luce (lontana, bassa sull'orizzonte): cambia a ogni scarica.
+	if _sky:
+		var az := _flash_rng.randf() * TAU
+		var el := _flash_rng.randf_range(0.12, 0.5)
+		_sky.set_shader_parameter(&"flash_dir", Vector3(cos(az) * cos(el), sin(el), sin(az) * cos(el)))
+
+
+func _update_lightning(delta: float, rain: float) -> void:
+	if not lightning_enabled:
+		return
+	var active := not _event_pulses.is_empty()
+	if not active and rain > STORM_MIN_RAIN:
+		_flash_timer -= delta
+		if _flash_timer <= 0.0:
+			# Intervalli irregolari: spesso 3-8 s, ogni tanto una pausa lunga.
+			var r := _flash_rng.randf()
+			_flash_timer = 3.0 + r * r * 16.0 + (_flash_rng.randf_range(6.0, 14.0) if _flash_rng.randf() < 0.15 else 0.0)
+			_start_flash_event()
+			active = true
+	var f := 0.0
+	if active:
+		_event_t += delta
+		for p in _event_pulses:
+			var x := _event_t - p.x
+			if x < 0.0:
+				continue
+			# Attacco quasi istantaneo, poi spegnimento con un lieve tremolio.
+			var env_v := clampf(x / 0.025, 0.0, 1.0) * pow(clampf(1.0 - x / p.z, 0.0, 1.0), 2.0)
+			env_v *= 0.85 + 0.15 * sin(x * 90.0)
+			f = maxf(f, env_v * p.y)
+		if _event_t >= _event_end:
+			_event_pulses.clear()
+			f = 0.0
+	flash = f
+	var night := clock.night_amount()
+	# Di giorno il cielo è già chiaro, quindi il bagliore è più contenuto; di notte è molto più evidente.
+	var strength := f * lerpf(0.55, 1.0, night)
+	if strength > 0.002:
+		_flash_sky_dirty = true
+		if _sky:
+			_sky.set_shader_parameter(&"flash", strength * 1.1)
+		if _env:
+			_env.ambient_light_energy += strength * lerpf(0.7, 1.3, night)
+			_env.ambient_light_color = _env.ambient_light_color.lerp(Color(0.72, 0.8, 1.0), clampf(strength * 0.6, 0.0, 0.6))
+			_env.fog_light_color = _env.fog_light_color.lerp(Color(0.7, 0.78, 1.0), clampf(strength * 0.5, 0.0, 0.5))
+		flash_overlay.visible = true
+		flash_overlay.color.a = strength * 0.1
+	elif _flash_sky_dirty:
+		_flash_sky_dirty = false
+		if _sky:
+			_sky.set_shader_parameter(&"flash", 0.0)
+		flash_overlay.visible = false

@@ -23,7 +23,7 @@ var is_defeated := false
 @export var attack_damage := 30
 @export var attack_cooldown := 0.5
 ## Movimento libero: velocità (m/s), raggio del corpo e portata della spada.
-@export var move_speed := 4.4
+@export var move_speed := 3.3  # ridotta di circa un quarto (era 4.4)
 @export var body_radius := 0.3
 @export var attack_range := 1.7
 @export var turn_speed := 14.0

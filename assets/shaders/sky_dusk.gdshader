@@ -21,6 +21,9 @@ uniform float night : hint_range(0.0, 1.0) = 0.0;
 uniform vec3 moon_dir = vec3(0.5, 0.6, 0.4);
 uniform float rain_amount : hint_range(0.0, 1.0) = 0.0;
 uniform int octaves : hint_range(1, 6) = 4;
+// Bagliori di temporale (WeatherFx): luce diffusa dietro le nuvole, lontana, mai un fulmine visibile.
+uniform float flash : hint_range(0.0, 2.0) = 0.0;
+uniform vec3 flash_dir = vec3(0.6, 0.3, -0.7);
 
 float hash(vec2 p) {
 	p = fract(p * vec2(123.34, 456.21));
@@ -62,6 +65,7 @@ void sky() {
 	col += sun_color * pow(sun_amount, 64.0) * 0.9;
 	col = mix(col, sun_color * 1.6, smoothstep(0.9995, 0.9999, sun_amount));
 	// Nuvole stratificate: piano proiettato, stirato in orizzontale.
+	float cloud_amount = 0.0;
 	if (dir.y > 0.01) {
 		vec2 uv = dir.xz / (dir.y + 0.18) * cloud_scale;
 		uv.x *= 0.45;
@@ -78,6 +82,7 @@ void sky() {
 		// Verso l'orizzonte le nuvole si dissolvono nella foschia dorata.
 		float fade = smoothstep(0.01, 0.2, dir.y);
 		col = mix(col, cloud, cov * fade * 0.92);
+		cloud_amount = cov * fade;
 	}
 	// Sotto l'orizzonte: terra calda (la scena la copre quasi sempre).
 	col = mix(col, ground_color, smoothstep(0.0, -0.15, dir.y));
@@ -99,6 +104,13 @@ void sky() {
 		col = mix(col, ncol, night);
 		// Pioggia: cielo coperto e grigio.
 		col = mix(col, vec3(lum) * vec3(0.8, 0.85, 0.95) * 0.7, rain_amount * 0.7);
+	}
+	// Bagliore: tutto il cielo si schiarisce di bianco-azzurro, più forte dove sono le nuvole e verso
+	// la zona del lampo (nessuna saetta disegnata).
+	if (flash > 0.001) {
+		float toward = pow(max(dot(dir, normalize(flash_dir)), 0.0), 2.0);
+		float lit = flash * (0.3 + 1.1 * cloud_amount) * (0.45 + 0.55 * toward) * smoothstep(-0.1, 0.15, dir.y);
+		col += vec3(0.62, 0.72, 1.0) * lit;
 	}
 	COLOR = col;
 }

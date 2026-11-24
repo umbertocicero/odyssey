@@ -8,7 +8,7 @@ extends Node3D
 ## Altezza (m, nello spazio della barca) del pavimento su cui poggiano i piedi e del piano del banco.
 const FLOOR_Y := 0.2
 const SEAT_Y := 0.6
-const SEAT_SIZE := Vector3(1.05, 0.05, 0.3)
+const SEAT_SIZE := Vector3(0.78, 0.05, 0.26)
 const OAR_INBOARD := 0.62
 const OAR_OUTBOARD := 1.55
 
