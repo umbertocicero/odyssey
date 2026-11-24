@@ -127,3 +127,17 @@ scenes/demo/run_demo4.sh --record=/tmp/v.avi --quality=high
 Opzioni: `--seed=N` (cambia momento e durata della pioggia), `--clean`, `--auto-quit`,
 `--shots=DIR --shot-times=3,20,...`, `--timescale=N` (solo prove). Tasti: `Space` pausa, `R` ricomincia, `Esc` esce.
 Codice: `scripts/demo/level_demo4.gd` (orari: `HOUR_KEYS`, camera: `CAM_KEYS`, testi: `CAPTIONS`).
+
+## Demo 5 (animali)
+
+`scenes/demo/demo5.tscn` (**F6**) mostra in ~90 s gli animali del livello 1: gregge e maiali che brucano e fanno
+qualche passo senza girare su se stessi, cavalli fermi (respiro, testa, ogni tanto un cenno o uno zoccolo), cavalli sui
+rilievi vicino alle mura con i piedi sul terreno. Livello vero, tramonto fisso, camera con Catmull-Rom e didascalie in inglese.
+
+```bash
+scenes/demo/run_demo5.sh                    # finestra (qualità alta)
+scenes/demo/run_demo5.sh --record           # video in out/demo5.avi
+```
+
+Opzioni come la demo 4 (`--clean`, `--auto-quit`, `--shots=DIR --shot-times=...`, `--timescale=N`, `--quality=...`).
+Codice: `scripts/demo/level_demo5.gd` (camera: `CAM_KEYS`, testi: `CAPTIONS`). Animali: `scripts/props/animal_idle.gd` + `assets/shaders/animal_rig.gdshader`.

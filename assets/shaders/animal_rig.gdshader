@@ -21,7 +21,7 @@ instance uniform vec4 dims2 = vec4(0.5, -0.22, 0.8, 0.25);
 instance uniform vec4 style = vec4(0.4, 0.5, 0.05, 0.02);
 // (camminata 0..1, fase andatura rad, testa -1 giu .. +1 su, sguardo -1..1)
 instance uniform vec4 pose = vec4(0.0);
-// (zampata 0..1, seme, respiro, 0)
+// (zampata 0..1, seme, respiro, quota hy fino a cui arrivano le zampe)
 instance uniform vec4 extra = vec4(0.0);
 
 vec3 rot_x(vec3 p, vec3 pivot, float a) {
@@ -53,20 +53,21 @@ void vertex() {
 	float leg_amp = style.x;
 
 	// --- Zampe: oscillazione attorno all'anca, piede che si solleva, ginocchio piegato.
-	float lm = 1.0 - smoothstep(0.38, 0.58, hy);               // 1 ai piedi, 0 nel corpo
+	float lt = extra.w;                                        // quota (hy) dove finiscono le zampe
+	float lm = 1.0 - smoothstep(lt - 0.2, lt, hy);               // 1 ai piedi, 0 nel corpo
 	float sx = clamp(xw / 0.12, -1.0, 1.0);
 	float sz = clamp(zf / 0.10, -1.0, 1.0);
 	float ph = gait + 1.5707963 * (sx + 1.0) + 1.5707963 * (sz + 1.0);   // diagonali in coppia
-	float hip = 0.58 * H;
+	float hip = lt * H;
 	float below = max(hip - (p.y - y0), 0.0);
 	float swing = sin(ph) * leg_amp * walk;
 	float lift = max(cos(ph), 0.0) * walk;
-	p.z += sin(swing) * below * lm * (0.6 + 0.4 * (1.0 - hy));
-	p.y += lift * 0.07 * H * lm * (1.0 - hy / 0.58);
+	p.z += sin(swing) * below * lm * (0.6 + 0.4 * (1.0 - hy / lt));
+	p.y += lift * 0.07 * H * lm * (1.0 - hy / lt);
 	// Zampata del piede anteriore sinistro (x > 0): si alza e si piega.
 	float fl = smoothstep(0.0, 1.0, sx) * smoothstep(0.0, 1.0, -sz);
 	float st = extra.x;
-	p.y += st * fl * lm * 0.13 * H * (1.0 - hy / 0.58);
+	p.y += st * fl * lm * 0.13 * H * (1.0 - hy / lt);
 	p.z -= st * fl * lm * 0.05 * H;
 
 	// --- Schiena: onda laterale lungo il corpo mentre cammina + dondolio del bacino.

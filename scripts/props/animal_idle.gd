@@ -15,14 +15,14 @@ const SHADER := preload("res://assets/shaders/animal_rig.gdshader")
 ## stile shader (zampe rad, testa rad, coda m, schiena m).
 const KINDS := {
 	"horse": {"breath_period": 4.2, "breath": 0.012, "dip_every": Vector2(9.0, 18.0),
-		"speed": 0.7, "stride": 0.75, "rest": Vector2(6.0, 14.0), "turn": 1.2, "stomp": true,
-		"neck": Vector4(-0.22, 0.80, 0.26, 0.0), "style": Vector4(0.40, 0.65, 0.07, 0.025)},
+		"speed": 0.7, "stride": 0.75, "rest": Vector2(6.0, 14.0), "turn": 0.8, "stomp": true,
+		"neck": Vector4(-0.22, 0.80, 0.26, 0.58), "style": Vector4(0.40, 0.55, 0.07, 0.025)},
 	"sheep": {"breath_period": 2.6, "breath": 0.016, "dip_every": Vector2(4.0, 9.0),
-		"speed": 0.35, "stride": 0.36, "rest": Vector2(5.0, 12.0), "turn": 1.8, "stomp": false,
-		"neck": Vector4(-0.25, 0.78, 0.22, 0.0), "style": Vector4(0.45, 0.75, 0.025, 0.015)},
+		"speed": 0.35, "stride": 0.36, "rest": Vector2(5.0, 12.0), "turn": 0.9, "stomp": false,
+		"neck": Vector4(-0.25, 0.78, 0.22, 0.40), "style": Vector4(0.28, 0.28, 0.025, 0.008)},
 	"pig": {"breath_period": 2.2, "breath": 0.018, "dip_every": Vector2(3.0, 8.0),
-		"speed": 0.35, "stride": 0.34, "rest": Vector2(5.0, 11.0), "turn": 1.9, "stomp": false,
-		"neck": Vector4(-0.25, 0.80, 0.22, 0.0), "style": Vector4(0.45, 0.45, 0.04, 0.02)},
+		"speed": 0.35, "stride": 0.34, "rest": Vector2(5.0, 11.0), "turn": 0.9, "stomp": false,
+		"neck": Vector4(-0.25, 0.80, 0.22, 0.42), "style": Vector4(0.28, 0.30, 0.04, 0.01)},
 }
 
 static var _mats := {}
@@ -58,6 +58,9 @@ var _params: Dictionary
 var _rigged: Node3D
 var _meshes: Array[MeshInstance3D] = []
 var _seed := 0.0
+var _leg_top := 0.58
+var _toss_left := 0.0
+var _next_toss := 12.0
 
 
 func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit_deg := 180.0) -> void:
@@ -66,6 +69,7 @@ func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit
 	wander = maxf(wander_radius, 0.0)
 	max_turn_deg = turn_limit_deg
 	_params = KINDS[kind]
+	_leg_top = (_params["neck"] as Vector4).w
 	var p := prop.global_position
 	_rng.seed = hash(Vector3i(roundi(p.x * 10.0), roundi(p.y * 10.0), roundi(p.z * 10.0)))
 	_seed = _rng.randf() * 50.0
@@ -73,6 +77,7 @@ func setup(prop: GridProp, animal_kind: String, wander_radius: float, turn_limit
 	_rest_left = _rng.randf_range(0.5, 5.0)
 	_next_dip = _rng.randf_range(1.0, 6.0)
 	_next_stomp = _rng.randf_range(6.0, 25.0)
+	_next_toss = _rng.randf_range(5.0, 20.0)
 	set_process(true)
 
 
@@ -96,7 +101,13 @@ func _process(delta: float) -> void:
 		var env := _smoother(0.0, 0.3, k) * (1.0 - _smoother(0.72, 1.0, k))
 		head = lerpf(head, -1.0, env) + sin(_t * 5.5) * 0.03 * env
 	head += sin(_gait) * 0.12 * _walk
-	var look := sin(_t * 0.31 + _seed * 3.0) * 0.5 * (1.0 - _walk)
+	var toss := 0.0
+	if _toss_left > 0.0:
+		var kt := 1.0 - _toss_left / 1.6
+		toss = sin(kt * PI)
+		toss = toss * toss
+		head = lerpf(head, 0.55, toss) + sin(kt * TAU * 2.0) * 0.08 * toss
+	var look := sin(_t * 0.31 + _seed * 3.0) * 0.5 * (1.0 - _walk) + toss * 0.6
 	var stomp := 0.0
 	if _stomp_left > 0.0:
 		var ks := 1.0 - _stomp_left / 1.1
@@ -136,7 +147,7 @@ func _process(delta: float) -> void:
 	visual.transform = Transform3D(yaw_b * body, Vector3(_pos.x, _ground_y + bob, _pos.y))
 
 	var pose := Vector4(_walk, _gait, head, look)
-	var extra := Vector4(stomp, _seed, breath, 0.0)
+	var extra := Vector4(stomp, _seed, breath, _leg_top)
 	for mi in _meshes:
 		mi.set_instance_shader_parameter("pose", pose)
 		mi.set_instance_shader_parameter("extra", extra)
@@ -193,6 +204,13 @@ func _update_events(delta: float) -> void:
 			_dip_left = _dip_total
 			var every: Vector2 = _params["dip_every"]
 			_next_dip = _rng.randf_range(every.x, every.y)
+	if _toss_left > 0.0:
+		_toss_left -= delta
+	elif bool(_params["stomp"]) and not _walking and _dip_left <= 0.0:
+		_next_toss -= delta
+		if _next_toss <= 0.0:
+			_toss_left = 1.6
+			_next_toss = _rng.randf_range(12.0, 28.0)
 	if _stomp_left > 0.0:
 		_stomp_left -= delta
 	elif bool(_params["stomp"]) and not _walking and _dip_left <= 0.0:
@@ -209,8 +227,12 @@ func _update_walk(delta: float) -> void:
 		if not _walking:
 			_rest_left -= delta
 			if _rest_left <= 0.0 and _dip_left <= 0.0 and _stomp_left <= 0.0:
-				var a := _rng.randf() * TAU
-				_target = Vector2(cos(a), sin(a)) * wander * sqrt(_rng.randf())
+				# Meta davanti al muso (±55°) se possibile: si cammina in avanti, non si gira su se stessi.
+				var fwd := Vector2(-sin(_yaw), -cos(_yaw))
+				var cand := _pos + fwd.rotated(_rng.randf_range(-0.95, 0.95)) * _rng.randf_range(0.25, maxf(wander, 0.3) * 0.9)
+				if cand.length() > wander:
+					cand = -_pos.normalized().rotated(_rng.randf_range(-0.6, 0.6)) * wander * _rng.randf_range(0.2, 0.6)
+				_target = cand
 				_walking = true
 		else:
 			var to := _target - _pos
@@ -228,7 +250,7 @@ func _update_walk(delta: float) -> void:
 				var desired_vel := clampf(diff * 2.5, -float(_params["turn"]), float(_params["turn"]))
 				_yaw_vel = lerpf(_yaw_vel, desired_vel, 1.0 - exp(-delta * 5.0))
 				_yaw += _yaw_vel * delta
-				var aligned := 1.0 - smoothstep(0.35, 1.0, absf(diff))
+				var aligned := 1.0 - smoothstep(0.7, 1.5, absf(diff))
 				target_speed = vmax * aligned * clampf(dist * 1.6, 0.0, 1.0) if dist > 0.05 else 0.0
 	if not _walking:
 		_yaw_vel = lerpf(_yaw_vel, 0.0, 1.0 - exp(-delta * 6.0))
@@ -239,8 +261,11 @@ func _update_walk(delta: float) -> void:
 		var heading := Vector2(-sin(_yaw), -cos(_yaw))
 		_pos += heading * _speed * delta
 		_pos = _pos.limit_length(wander)
-	_gait = fmod(_gait + _speed / float(_params["stride"]) * TAU * delta, TAU * 4.0)
-	_walk = lerpf(_walk, clampf(_speed / vmax, 0.0, 1.0), 1.0 - exp(-delta * 6.0))
+	# Girando sul posto gli animali "passettano" invece di scivolare: l'andatura segue anche la rotazione.
+	var step_turn := clampf(absf(_yaw_vel) / float(_params["turn"]), 0.0, 1.0) * 0.5
+	var step_rate := _speed / float(_params["stride"]) + step_turn * 0.9
+	_gait = fmod(_gait + step_rate * TAU * delta, TAU * 4.0)
+	_walk = lerpf(_walk, clampf(maxf(_speed / vmax, step_turn), 0.0, 1.0), 1.0 - exp(-delta * 4.0))
 
 
 func _ground(x: float, z: float) -> float:
