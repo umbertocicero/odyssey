@@ -34,6 +34,18 @@ extends Control
 		depth_of_field_amount = value
 		_apply()
 
+## Effetto pixel art sperimentale, spento di default. F9 lo fa ciclare:
+## 0 = spento, 1 = palette fissa + dither Bayer, 2 = rampa di luminanza + dither.
+@export_range(0, 2) var pixelart_mode := 0:
+	set(value):
+		pixelart_mode = value
+		_apply()
+## Dimensione dei pixel con l'effetto attivo (si somma a pixel_size solo quando è attivo).
+@export_range(2, 8) var pixelart_pixel_size := 3:
+	set(value):
+		pixelart_pixel_size = value
+		_apply()
+
 @onready var game_view: SubViewportContainer = $GameView
 @onready var game_viewport: SubViewport = $GameView/GameViewport
 
@@ -45,8 +57,15 @@ func _ready() -> void:
 func _apply() -> void:
 	if not is_node_ready():
 		return
-	game_view.stretch_shrink = pixel_size
+	game_view.stretch_shrink = pixelart_pixel_size if pixelart_mode > 0 else pixel_size
 	game_view.material = post_process_material
 	if post_process_material is ShaderMaterial:
 		var amount := depth_of_field_amount if depth_of_field else 0.0
 		(post_process_material as ShaderMaterial).set_shader_parameter(&"blur_amount", amount)
+		(post_process_material as ShaderMaterial).set_shader_parameter(&"pixelart_mode", pixelart_mode)
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	var key := event as InputEventKey
+	if key and key.pressed and not key.echo and key.keycode == KEY_F9:
+		pixelart_mode = (pixelart_mode + 1) % 3

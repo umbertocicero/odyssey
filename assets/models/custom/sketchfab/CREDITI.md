@@ -39,3 +39,8 @@ Modifiche: pulizia, decimazione, riorientamento, ridimensionamento delle texture
 - This work is based on "Male Deer Animal 3d model free" (https://sketchfab.com/3d-models/male-deer-animal-3d-model-free-0793c1cf39464dd19fbda9a07c27902e) by iRahulRajput (https://sketchfab.com/rt699448) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 - This work is based on "Realistic Cheetah - Spotted Big Cat" (https://sketchfab.com/3d-models/realistic-cheetah-spotted-big-cat-6903ae10e89a484aada8830b3215d2c2) by Pigcraft (https://sketchfab.com/s8819296) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 - "Horse" (https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9) by henrysteve973: CC-BY-4.0, scaricato ma non convertito.
+
+## Pixel art post-process (sperimentale, F9)
+
+- Palette PICO-8 / Sweetie 16 / Endesga 32, Bayer e logica di quantizzazione: "Pixel Dither" di Francisco Cidade (https://store.godotengine.org/asset/fcidade/pixel-dither-godot-shader/), CC0. Palette di Lexaloffle (PICO-8), GrafxKid (Sweetie 16), Endesga (Endesga 32).
+- Idea del dither sulla luminanza tra due toni adiacenti: samuelbigos/godot_dither_shader (https://github.com/samuelbigos/godot_dither_shader), MIT, (c) 2021 Sam Bigos. Reimplementata da zero in Godot 4, non copiata.
