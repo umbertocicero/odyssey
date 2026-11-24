@@ -1502,11 +1502,12 @@ hide_materials = PackedStringArray()
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 19.5)
 script = ExtResource("s_prop")
 low_quality_model = ExtResource("n_fir_c")
-lazy_model_path = "res://assets/models/custom/polyhaven/alberi/fir_tree_01/fir_tree_01_c.gltf"
+lazy_model_path = "res://assets/models/custom/polyhaven/alberi/island_tree_02/island_tree_02_geometry_nodes.gltf"
 fit_axis = 2
-fit_size = 5.5
-trunk_radius = 0.25
-foliage_gain = Color(8.5, 15, 6.5, 1)
+fit_size = 4.4
+footprint = Vector2i(2, 2)
+trunk_radius = 0.3
+foliage_gain = Color(2.2, 3, 1.5, 1)
 hide_materials = PackedStringArray()
 
 [node name="Cespuglio1" type="Node3D" parent="Scenario/Pianura" unique_id=115716312]
