@@ -8,7 +8,7 @@ extends Node
 ## auto-start): la demo pilota soltanto l'ora (LevelClock.time_of_day) e fa partire la pioggia.
 ##
 ## Argomenti (dopo "--"): --auto-quit, --clean (niente aiuto tasti), --seed=N,
-## --shots=DIR --shot-times=a,b,c, --timescale=N (solo prove), --quality=low|medium|high.
+## --pixelart=0|1|2, --shots=DIR --shot-times=a,b,c, --timescale=N (solo prove), --quality=low|medium|high.
 ## Tasti: Space pausa, R ricomincia, Esc esce.
 
 const MAIN_SCENE := "res://scenes/main/main.tscn"
@@ -58,6 +58,8 @@ var _shots := ""
 var _shot_times: Array[float] = []
 var _next_shot := 0
 var _timescale := 1.0
+## 0 = look normale, 1/2 = pixel art (vedi RenderPipeline.pixelart_mode). La demo 6 parte da 1.
+var _pixelart := 0
 var _paused := false
 var _booting := true
 var _gen := 0
@@ -81,6 +83,8 @@ func _ready() -> void:
 		elif arg.begins_with("--shot-times="):
 			for s in arg.substr(13).split(",", false):
 				_shot_times.append(float(s))
+		elif arg.begins_with("--pixelart="):
+			_pixelart = clampi(int(arg.substr(11)), 0, 2)
 		elif arg.begins_with("--timescale="):
 			_timescale = clampf(float(arg.substr(12)), 0.1, 16.0)
 	if _timescale != 1.0:
@@ -109,6 +113,8 @@ func _boot() -> void:
 	director.next_level_path = ""
 	director.auto_start = false   # niente ondate, feriti o banner: solo il diorama
 	add_child(main)
+	if _pixelart > 0:
+		main.set(&"pixelart_mode", _pixelart)
 	for i in 8:
 		await get_tree().process_frame
 	if gen != _gen:

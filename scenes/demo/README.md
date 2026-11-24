@@ -141,3 +141,10 @@ scenes/demo/run_demo5.sh --record           # video in out/demo5.avi
 
 Opzioni come la demo 4 (`--clean`, `--auto-quit`, `--shots=DIR --shot-times=...`, `--timescale=N`, `--quality=...`).
 Codice: `scripts/demo/level_demo5.gd` (camera: `CAM_KEYS`, testi: `CAPTIONS`). Animali: `scripts/props/animal_idle.gd` + `assets/shaders/animal_rig.gdshader`.
+
+## Demo 6 (pixel art)
+
+`scenes/demo/demo6.tscn` (**F6**) è la demo 4 (stesso percorso di ~95 s, stesse opzioni) con il pixel art
+opzione 1: pixel da 3x3, palette Endesga 32 e dither Bayer. `--pixelart=2` usa la rampa di luminanza,
+`--pixelart=0` lo spegne (anche `--pixelart=N` sulla demo 4). Nel gioco normale l'effetto si cicla con **F9**.
+Codice: `scripts/demo/level_demo6.gd`; script di avvio: `scenes/demo/run_demo6.sh`.
