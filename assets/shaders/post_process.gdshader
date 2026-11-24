@@ -66,6 +66,24 @@ const vec3 PA_RAMP[6] = vec3[6](
 	vec3(0.06, 0.04, 0.05), vec3(0.24, 0.15, 0.13), vec3(0.45, 0.30, 0.20),
 	vec3(0.66, 0.48, 0.28), vec3(0.86, 0.72, 0.46), vec3(0.97, 0.91, 0.72));
 
+// Palette del livello: 20 colori ricavati (k-means in CIELAB) dagli screenshot di accampamento,
+// pianura, mura, tramonto e notte, più 12 accenti saturi (fiamme, mare, erba, cielo) presi da
+// Endesga 32: i soli centroidi erano troppo spenti e perdevano fiamme e stendardi.
+const vec3 PA_LEVEL[32] = vec3[32](
+	vec3(10.0, 6.0, 8.0), vec3(43.0, 19.0, 12.0), vec3(29.0, 30.0, 52.0), vec3(52.0, 32.0, 26.0),
+	vec3(55.0, 46.0, 24.0), vec3(70.0, 42.0, 30.0), vec3(101.0, 46.0, 19.0), vec3(86.0, 62.0, 33.0),
+	vec3(81.0, 64.0, 66.0), vec3(115.0, 69.0, 40.0), vec3(104.0, 80.0, 37.0), vec3(127.0, 88.0, 69.0),
+	vec3(133.0, 100.0, 50.0), vec3(152.0, 103.0, 73.0), vec3(208.0, 110.0, 40.0), vec3(196.0, 130.0, 73.0),
+	vec3(221.0, 150.0, 81.0), vec3(236.0, 174.0, 98.0), vec3(229.0, 187.0, 110.0), vec3(233.0, 210.0, 133.0),
+	vec3(254.0, 174.0, 52.0), vec3(247.0, 118.0, 34.0), vec3(254.0, 231.0, 97.0), vec3(228.0, 59.0, 68.0),
+	vec3(99.0, 199.0, 77.0), vec3(62.0, 137.0, 72.0), vec3(0.0, 153.0, 219.0), vec3(44.0, 232.0, 245.0),
+	vec3(234.0, 212.0, 170.0), vec3(255.0, 255.0, 255.0), vec3(115.0, 62.0, 57.0), vec3(18.0, 78.0, 137.0)
+);
+// Variante del modo 1: 0 = com'era (Endesga 32, dither 0.5), 1 = dither morbido solo sulle ombre,
+// 2 = palette del livello + dither morbido, 3 = come 2 + contorni leggeri.
+uniform int pixelart_variant : hint_range(0, 3) = 0;
+uniform float pixelart_outline : hint_range(0.0, 0.3) = 0.1;
+
 const int PA_BAYER4[16] = int[16](0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5);
 const int PA_BAYER2[4] = int[4](0, 2, 3, 1);
 
@@ -84,6 +102,30 @@ vec3 pa_nearest(vec3 c, int start, int count) {
 		if (dist < best) { best = dist; result = p; }
 	}
 	return result;
+}
+
+vec3 pa_nearest_level(vec3 c) {
+	float best = 1e9;
+	vec3 result = vec3(0.0);
+	for (int i = 0; i < 32; i++) {
+		vec3 p = PA_LEVEL[i] / 255.0;
+		vec3 d = c - p;
+		float dist = dot(d * d, vec3(0.3, 0.59, 0.11));
+		if (dist < best) { best = dist; result = p; }
+	}
+	return result;
+}
+
+// Varianti 1-3: Bayer 4x4 a intensità ridotta, che sfuma verso zero nelle luci (dove il
+// rumore dava più fastidio); la 2 e la 3 usano la palette del livello.
+vec3 pixelart_soft(vec3 col, ivec2 cell, float edge) {
+	vec3 c = (col - 0.5) * pixelart_contrast + 0.5;
+	float lum = dot(c, vec3(0.299, 0.587, 0.114));
+	float th = (float(PA_BAYER4[(cell.y & 3) * 4 + (cell.x & 3)]) + 0.5) / 16.0;
+	float strength = pixelart_dither * 0.5 * smoothstep(0.8, 0.25, lum);
+	c = clamp(c + (th - 0.5) * strength * 0.2, 0.0, 1.0);
+	vec3 r = pixelart_variant == 1 ? pa_nearest(c, 32, 32) : pa_nearest_level(c);
+	return r * (1.0 - edge);
 }
 
 vec3 pixelart_apply(vec3 col, ivec2 cell) {
@@ -147,7 +189,22 @@ void fragment() {
 	float glum = dot(col, vec3(0.299, 0.587, 0.114));
 	col += (n - 0.5) * (grain * (1.0 - glum * 0.6) + 1.0 / 255.0);
 	if (pixelart_mode > 0) {
-		col = pixelart_apply(clamp(col, 0.0, 1.0), ivec2(floor(UV / px)));
+		ivec2 pcell = ivec2(floor(UV / px));
+		if (pixelart_mode == 1 && pixelart_variant > 0) {
+			float edge = 0.0;
+			if (pixelart_variant == 3) {
+				// Contorno leggero: un pixel molto più scuro di un vicino si scurisce ancora un po'.
+				float l0 = dot(texture(TEXTURE, UV).rgb, vec3(0.299, 0.587, 0.114));
+				float m = max(max(dot(texture(TEXTURE, UV + vec2(px.x, 0.0)).rgb, vec3(0.299, 0.587, 0.114)),
+					dot(texture(TEXTURE, UV - vec2(px.x, 0.0)).rgb, vec3(0.299, 0.587, 0.114))),
+					max(dot(texture(TEXTURE, UV + vec2(0.0, px.y)).rgb, vec3(0.299, 0.587, 0.114)),
+					dot(texture(TEXTURE, UV - vec2(0.0, px.y)).rgb, vec3(0.299, 0.587, 0.114))));
+				edge = smoothstep(0.05, 0.18, m - l0) * pixelart_outline * 5.0;
+			}
+			col = pixelart_soft(clamp(col, 0.0, 1.0), pcell, edge);
+		} else {
+			col = pixelart_apply(clamp(col, 0.0, 1.0), pcell);
+		}
 	}
 	COLOR = vec4(col, 1.0);
 }

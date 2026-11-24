@@ -14,6 +14,9 @@ func _run() -> void:
 	root.add_child(main)
 	for i in 60:
 		await process_frame
+	var ui := main.get_node_or_null(^"UI") as CanvasLayer
+	if ui:
+		ui.visible = false   # niente HUD né schermata di fine livello: si confronta solo il 3D
 	var clock := get_first_node_in_group(&"level_clock") as LevelClock
 	clock.running = false
 	clock.rain_chance = 0.0
@@ -30,8 +33,11 @@ func _run() -> void:
 	]
 	for s in shots:
 		clock.time_of_day = s[1]
-		for mode in 3:
-			main.pixelart_mode = mode
+		# colonne: originale, opzione 1 attuale, varianti 1-3 del modo 1
+		for col in 5:
+			main.pixelart_mode = 0 if col == 0 else 1
+			main.pixelart_variant = maxi(col - 1, 0)
+			var mode := col
 			for i in 40:
 				cam.fov = s[4]
 				cam.global_position = s[2]
@@ -43,6 +49,6 @@ func _run() -> void:
 					cam.global_position = s[2]
 					cam.look_at(s[3], Vector3.UP)
 					await process_frame
-				print("FPS modo %d: %.1f" % [mode, 200000.0 / (Time.get_ticks_msec() - t0)])
-			root.get_texture().get_image().save_png("%s/%s_modo%d.png" % [dir, s[0], mode])
+				print("FPS colonna %d: %.1f" % [mode, 200000.0 / (Time.get_ticks_msec() - t0)])
+			root.get_texture().get_image().save_png("%s/%s_var%d.png" % [dir, s[0], mode])
 	quit()

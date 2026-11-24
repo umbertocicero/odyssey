@@ -46,6 +46,13 @@ extends Control
 		pixelart_pixel_size = value
 		_apply()
 
+## Variante del modo 1 (vedi post_process.gdshader): 0 = originale, 1 = dither morbido,
+## 2 = palette del livello, 3 = palette del livello + contorni leggeri.
+@export_range(0, 3) var pixelart_variant := 0:
+	set(value):
+		pixelart_variant = value
+		_apply()
+
 @onready var game_view: SubViewportContainer = $GameView
 @onready var game_viewport: SubViewport = $GameView/GameViewport
 
@@ -63,6 +70,7 @@ func _apply() -> void:
 		var amount := depth_of_field_amount if depth_of_field else 0.0
 		(post_process_material as ShaderMaterial).set_shader_parameter(&"blur_amount", amount)
 		(post_process_material as ShaderMaterial).set_shader_parameter(&"pixelart_mode", pixelart_mode)
+		(post_process_material as ShaderMaterial).set_shader_parameter(&"pixelart_variant", pixelart_variant)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
