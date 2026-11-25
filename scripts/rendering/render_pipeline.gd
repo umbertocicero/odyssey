@@ -34,7 +34,7 @@ extends Control
 		depth_of_field_amount = value
 		_apply()
 
-## Effetto pixel art sperimentale, spento di default. F9 lo fa ciclare:
+## Effetto pixel art sperimentale, spento di default. K lo fa ciclare:
 ## 0 = spento, 1 = palette fissa + dither Bayer, 2 = rampa di luminanza + dither.
 @export_range(0, 2) var pixelart_mode := 0:
 	set(value):
@@ -75,5 +75,5 @@ func _apply() -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
-	if key and key.pressed and not key.echo and key.keycode == KEY_F9:
+	if key and key.pressed and not key.echo and key.keycode == KEY_K:
 		pixelart_mode = (pixelart_mode + 1) % 3

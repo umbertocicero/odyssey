@@ -146,5 +146,5 @@ Codice: `scripts/demo/level_demo5.gd` (camera: `CAM_KEYS`, testi: `CAPTIONS`). A
 
 `scenes/demo/demo6.tscn` (**F6**) è la demo 4 (stesso percorso di ~95 s, stesse opzioni) con il pixel art
 opzione 1: pixel da 3x3, palette Endesga 32 e dither Bayer. `--pixelart=2` usa la rampa di luminanza,
-`--pixelart=0` lo spegne (anche `--pixelart=N` sulla demo 4). Nel gioco normale l'effetto si cicla con **F9**.
+`--pixelart=0` lo spegne (anche `--pixelart=N` sulla demo 4). Nel gioco normale l'effetto si cicla con **K**.
 Codice: `scripts/demo/level_demo6.gd`; script di avvio: `scenes/demo/run_demo6.sh`.
