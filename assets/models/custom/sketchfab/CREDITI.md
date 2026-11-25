@@ -43,3 +43,8 @@ Modifiche: pulizia, decimazione, riorientamento, ridimensionamento delle texture
 ## Da verificare: Wooden_Cart_3.blend
 `campo/carri/carro_4_ruote` deriva da `Wooden_Cart_3.blend` (carro centrale a 4 ruote) scaricato da Umberto, con texture `uploads_files_958127_wooden_cart01/02/04`, `T_Table_Albedo`, `Metal29_col`, `Metal_BronzeBare_1K_albedo`. Autore e licenza non sono indicati nel file: **da verificare alla fonte del download** prima della pubblicazione e, se serve, aggiungere qui il credito.
 Modifiche: tenuto solo il carro a 4 ruote (il blend ne contiene 3), unito in una mesh, ruotato col fronte su +Y, appoggiato a terra, texture ridotte (512-1.024 px) e ricodificate in JPEG, esportazione in glTF.
+
+## Pixel art post-process (sperimentale, tasto K)
+
+- Palette PICO-8 / Sweetie 16 / Endesga 32, Bayer e logica di quantizzazione: "Pixel Dither" di Francisco Cidade (https://store.godotengine.org/asset/fcidade/pixel-dither-godot-shader/), CC0. Palette di Lexaloffle (PICO-8), GrafxKid (Sweetie 16), Endesga (Endesga 32).
+- Idea del dither sulla luminanza tra due toni adiacenti: samuelbigos/godot_dither_shader (https://github.com/samuelbigos/godot_dither_shader), MIT, (c) 2021 Sam Bigos. Reimplementata da zero in Godot 4, non copiata.
