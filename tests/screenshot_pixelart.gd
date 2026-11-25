@@ -34,9 +34,9 @@ func _run() -> void:
 	for s in shots:
 		clock.time_of_day = s[1]
 		# colonne: originale, opzione 1 attuale, varianti 1-3 del modo 1
-		for col in 5:
-			main.pixelart_mode = 0 if col == 0 else 1
-			main.pixelart_variant = maxi(col - 1, 0)
+		for col in 3:
+			main.pixelart_mode = [0, 1, 3][col]
+			main.pixelart_variant = 1
 			var mode := col
 			for i in 40:
 				cam.fov = s[4]

@@ -36,8 +36,10 @@ uniform float haze_reach : hint_range(0.1, 1.0) = 0.6;
 // pixelart_mode: 0 = spento (non costa nulla), 1 = palette fissa + Bayer (da "Pixel Dither"
 // di Francisco Cidade, CC0), 2 = rampa di luminanza a pochi toni + Bayer 8x8 (idea di
 // samuelbigos/godot_dither_shader, MIT: dither sulla luminosità tra due toni adiacenti).
+// 3 = "32 bit" in stile PS1/Saturn ma più ricco: pixel piccoli (2x), colore a 15 bit (32 livelli per
+// canale, ~32 mila colori) con dither Bayer 4x4 leggero prima del troncamento, nessuna palette fissa.
 // I pixel grossi li dà RenderPipeline (stretch_shrink): qui una cella = un texel.
-uniform int pixelart_mode : hint_range(0, 2) = 0;
+uniform int pixelart_mode : hint_range(0, 3) = 0;
 // Solo modo 1: 0 = PICO-8, 1 = Sweetie 16, 2 = Endesga 32.
 uniform int pixelart_palette : hint_range(0, 2) = 2;
 uniform float pixelart_dither : hint_range(0.0, 1.0) = 0.5;
@@ -128,7 +130,17 @@ vec3 pixelart_soft(vec3 col, ivec2 cell, float edge) {
 	return r * (1.0 - edge);
 }
 
+// Modo 3: colore a 15 bit con il dither ordinato tipico della PS1 (ampiezza = un livello).
+uniform float retro_dither : hint_range(0.0, 1.0) = 0.8;
+vec3 retro_apply(vec3 col, ivec2 cell) {
+	float th = (float(PA_BAYER4[(cell.y & 3) * 4 + (cell.x & 3)]) + 0.5) / 16.0;
+	return floor(col * 31.0 + th * retro_dither + (1.0 - retro_dither) * 0.5) / 31.0;
+}
+
 vec3 pixelart_apply(vec3 col, ivec2 cell) {
+	if (pixelart_mode == 3) {
+		return retro_apply(col, cell);
+	}
 	vec3 c = (col - 0.5) * pixelart_contrast + 0.5;
 	float th = pa_bayer8(cell);
 	if (pixelart_mode == 1) {

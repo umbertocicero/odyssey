@@ -1,5 +1,5 @@
 #!/bin/sh
-# Demo 6: come la demo 4 ma con il pixel art (opzione 1) (~95 s, vedi scenes/demo/README.md).
+# Demo 6: come la demo 4 ma con il pixel art (effetto 32 bit) (~95 s, vedi scenes/demo/README.md).
 # Uso: scenes/demo/run_demo6.sh [--record[=file.avi]] [--auto-quit] [--clean] [--seed=N] [--quality=low|medium|high]
 cd "$(dirname "$0")/../.." || exit 1
 REC=""

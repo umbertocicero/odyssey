@@ -35,8 +35,9 @@ extends Control
 		_apply()
 
 ## Effetto pixel art sperimentale, spento di default. K lo fa ciclare:
-## 0 = spento, 1 = palette fissa + dither Bayer, 2 = rampa di luminanza + dither.
-@export_range(0, 2) var pixelart_mode := 0:
+## 0 = spento, 1 = palette fissa + dither Bayer, 2 = rampa di luminanza + dither,
+## 3 = "32 bit" (pixel 2x, colore a 15 bit con dither leggero).
+@export_range(0, 3) var pixelart_mode := 0:
 	set(value):
 		pixelart_mode = value
 		_apply()
@@ -53,6 +54,12 @@ extends Control
 		pixelart_variant = value
 		_apply()
 
+## Dimensione dei pixel nel modo 3 ("32 bit").
+@export_range(1, 4) var retro_pixel_size := 2:
+	set(value):
+		retro_pixel_size = value
+		_apply()
+
 @onready var game_view: SubViewportContainer = $GameView
 @onready var game_viewport: SubViewport = $GameView/GameViewport
 
@@ -64,7 +71,7 @@ func _ready() -> void:
 func _apply() -> void:
 	if not is_node_ready():
 		return
-	game_view.stretch_shrink = pixelart_pixel_size if pixelart_mode > 0 else pixel_size
+	game_view.stretch_shrink = (retro_pixel_size if pixelart_mode == 3 else pixelart_pixel_size) if pixelart_mode > 0 else pixel_size
 	game_view.material = post_process_material
 	if post_process_material is ShaderMaterial:
 		var amount := depth_of_field_amount if depth_of_field else 0.0
@@ -76,4 +83,4 @@ func _apply() -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key and key.pressed and not key.echo and key.keycode == KEY_K:
-		pixelart_mode = (pixelart_mode + 1) % 3
+		pixelart_mode = (pixelart_mode + 1) % 4
