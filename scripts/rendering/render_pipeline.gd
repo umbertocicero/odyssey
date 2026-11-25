@@ -36,8 +36,9 @@ extends Control
 
 ## Effetto pixel art sperimentale, spento di default. K lo fa ciclare:
 ## 0 = spento, 1 = palette fissa + dither Bayer, 2 = rampa di luminanza + dither,
-## 3 = "32 bit" (pixel 2x, colore a 15 bit con dither leggero).
-@export_range(0, 3) var pixelart_mode := 0:
+## 3 = "32 bit" (pixel 2x, colore a 15 bit con dither leggero),
+## 4 = intermedio (pixel 3x, colore a 12 bit con dither leggero).
+@export_range(0, 4) var pixelart_mode := 0:
 	set(value):
 		pixelart_mode = value
 		_apply()
@@ -83,4 +84,4 @@ func _apply() -> void:
 func _unhandled_key_input(event: InputEvent) -> void:
 	var key := event as InputEventKey
 	if key and key.pressed and not key.echo and key.keycode == KEY_K:
-		pixelart_mode = (pixelart_mode + 1) % 4
+		pixelart_mode = (pixelart_mode + 1) % 5

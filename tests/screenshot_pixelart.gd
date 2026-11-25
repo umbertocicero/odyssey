@@ -34,8 +34,8 @@ func _run() -> void:
 	for s in shots:
 		clock.time_of_day = s[1]
 		# colonne: originale, opzione 1 attuale, varianti 1-3 del modo 1
-		for col in 3:
-			main.pixelart_mode = [0, 1, 3][col]
+		for col in 4:
+			main.pixelart_mode = [0, 1, 4, 3][col]
 			main.pixelart_variant = 1
 			var mode := col
 			for i in 40:

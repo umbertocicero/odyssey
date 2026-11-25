@@ -38,8 +38,10 @@ uniform float haze_reach : hint_range(0.1, 1.0) = 0.6;
 // samuelbigos/godot_dither_shader, MIT: dither sulla luminosità tra due toni adiacenti).
 // 3 = "32 bit" in stile PS1/Saturn ma più ricco: pixel piccoli (2x), colore a 15 bit (32 livelli per
 // canale, ~32 mila colori) con dither Bayer 4x4 leggero prima del troncamento, nessuna palette fissa.
+// 4 = intermedio: pixel 3x3 e colore a 12 bit (16 livelli per canale, ~4096 colori) con dither Bayer
+// 4x4 leggero: più colorato del modo 1, meno dettagliato del 32 bit.
 // I pixel grossi li dà RenderPipeline (stretch_shrink): qui una cella = un texel.
-uniform int pixelart_mode : hint_range(0, 3) = 0;
+uniform int pixelart_mode : hint_range(0, 4) = 0;
 // Solo modo 1: 0 = PICO-8, 1 = Sweetie 16, 2 = Endesga 32.
 uniform int pixelart_palette : hint_range(0, 2) = 2;
 uniform float pixelart_dither : hint_range(0.0, 1.0) = 0.5;
@@ -134,11 +136,12 @@ vec3 pixelart_soft(vec3 col, ivec2 cell, float edge) {
 uniform float retro_dither : hint_range(0.0, 1.0) = 0.8;
 vec3 retro_apply(vec3 col, ivec2 cell) {
 	float th = (float(PA_BAYER4[(cell.y & 3) * 4 + (cell.x & 3)]) + 0.5) / 16.0;
-	return floor(col * 31.0 + th * retro_dither + (1.0 - retro_dither) * 0.5) / 31.0;
+	float steps = pixelart_mode == 4 ? 15.0 : 31.0;
+	return floor(col * steps + th * retro_dither + (1.0 - retro_dither) * 0.5) / steps;
 }
 
 vec3 pixelart_apply(vec3 col, ivec2 cell) {
-	if (pixelart_mode == 3) {
+	if (pixelart_mode >= 3) {
 		return retro_apply(col, cell);
 	}
 	vec3 c = (col - 0.5) * pixelart_contrast + 0.5;

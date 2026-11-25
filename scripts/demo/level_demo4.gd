@@ -58,7 +58,7 @@ var _shots := ""
 var _shot_times: Array[float] = []
 var _next_shot := 0
 var _timescale := 1.0
-## 0 = look normale, 1/2/3 = pixel art (vedi RenderPipeline.pixelart_mode). La demo 6 parte da 1.
+## 0 = look normale, 1-4 = pixel art (vedi RenderPipeline.pixelart_mode). La demo 6 parte da 1.
 var _pixelart := 0
 var _paused := false
 var _booting := true
@@ -84,7 +84,7 @@ func _ready() -> void:
 			for s in arg.substr(13).split(",", false):
 				_shot_times.append(float(s))
 		elif arg.begins_with("--pixelart="):
-			_pixelart = clampi(int(arg.substr(11)), 0, 3)
+			_pixelart = clampi(int(arg.substr(11)), 0, 4)
 		elif arg.begins_with("--timescale="):
 			_timescale = clampf(float(arg.substr(12)), 0.1, 16.0)
 	if _timescale != 1.0:
