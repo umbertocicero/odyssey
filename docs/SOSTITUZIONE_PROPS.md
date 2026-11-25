@@ -12,7 +12,7 @@ Dopo (`tests/screenshots/props_after/`) e prima (`tests/screenshots/props_before
 | Scudi Quaternius | Scudo*, ScudoAcc*, ScudoOvest | `scudo_oplita_bronzo/nero/nero_usurato` (6,1k tris; a bassa/media `stendardi/scudo_acheo`, 244 tris) |
 | Tende Quaternius/Kenney | Tenda*, TendaPiccola* | `tenda_padiglione`, `tenda_padiglione_piccola` |
 | Stendardi e bandiere Quaternius | Stendardo*, BandieraPorta* | `stendardo_acheo`, `stendardo_troiano` |
-| Carro coperto (Konta) | CarroCoperto | `carro_coperto` |
+| Carro coperto (Konta) | CarroCoperto | `carri/carro_4_ruote` (da Wooden_Cart_3.blend) |
 | Botti, casse Quaternius | Botte*, Cassa* | Poly Haven `wooden_barrels_01_barrel01/02`, `wooden_crate_01`, `treasure_chest` (a bassa: cassa) |
 | Cespugli Quaternius | Cespuglio* | `othonna_cerarioides_c` (5k; a bassa/media `fern_02_d`), `flower_heliophila_medium` (a bassa `periwinkle_plant_01`); sparsi: `othonna_b`, `heliophila_small`, `celandine_01_a`, `dandelion_01_a` |
 | Rastrelliere/lance dritte | Lance1-3, LancePosto1-2 | `rastrelliera_lance` |

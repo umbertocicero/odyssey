@@ -26,7 +26,7 @@ func _run() -> void:
 	sun.rotation_degrees = Vector3(-45, -30, 0)
 	world.add_child(sun)
 	var items := {
-		"coperto": "res://assets/models/custom/accampamento/carro_coperto.glb",
+		"coperto": "res://assets/models/custom/campo/carri/carro_4_ruote/carro_4_ruote.gltf",
 		"guerra": "res://assets/models/custom/campo/macchine/carro/carro.gltf",
 		"rotto": "res://assets/models/custom/campo/carri/carro_rotto/carro_rotto.gltf",
 	}

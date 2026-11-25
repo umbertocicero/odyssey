@@ -21,7 +21,7 @@ Modelli low-poly generati da script Blender (5.3, headless) nello stile di `STYL
 | accampamento | `tenda_padiglione.glb` | Tenda a padiglione rotonda a strisce rosse e crema (Ø 2,6 m, alta 2,8 m), tiranti e picchetti | ~800 |
 | accampamento | `tenda_padiglione_piccola.glb` | Variante piccola (Ø 1,7 m) | ~680 |
 | accampamento | `rastrelliera_lance.glb` | Rastrelliera con 7 lance e uno scudo acheo appoggiato (1,6 × 0,7 m) | ~1.470 |
-| accampamento | `carro_coperto.glb` | Carro a quattro ruote con telone su archi, sacchi e timone (lungo 3 m) | ~2.500 |
+| campo/carri | `carro_4_ruote/carro_4_ruote.gltf` | Carro di legno a quattro ruote con sponde e due stanghe (0,95 × 3,0 × 0,9 m), da `Wooden_Cart_3.blend` (sostituisce `carro_coperto.glb`); script `_source/scripts/build_carro4.py` | 13.312 |
 | navi | `trireme.glb` | Trireme: scafo nero di pece con fascia rossa, rostro di bronzo, occhi a prua, aplustre, 44 remi su due file, scudi sulla murata, vela rossa | ~4.470 |
 | stendardi | `scudo_acheo.glb` / `scudo_ulisse.glb` / `scudo_troiano.glb` | Scudi rotondi (Ø 0,85 m) in piedi sul bordo, da appoggiare | 240–320 |
 | stendardi | `stendardo_acheo.glb` / `stendardo_troiano.glb` | Stendardo su asta con base in pietra (alto 2,95 m) | ~620 |

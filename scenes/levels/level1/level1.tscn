@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://cd7gc33iqtwxm" path="res://assets/models/custom/campo/luci/braciere_bronzo_spento/braciere_bronzo_spento.gltf" id="n_braciere_off"]
 [ext_resource type="PackedScene" uid="uid://dkk8vtmrfdd56" path="res://assets/models/custom/campo/luci/braciere_bronzo_acceso/braciere_bronzo_acceso.gltf" id="n_braciere_on"]
 [ext_resource type="PackedScene" uid="uid://brxnb77nhpasa" path="res://assets/models/custom/polyhaven/oggetti/wooden_bucket_02/wooden_bucket_02.gltf" id="n_bucket"]
-[ext_resource type="PackedScene" uid="uid://baalqulgu5yhr" path="res://assets/models/custom/accampamento/carro_coperto.glb" id="n_carro"]
+[ext_resource type="PackedScene" uid="uid://l0pnhl6pb4qx" path="res://assets/models/custom/campo/carri/carro_4_ruote/carro_4_ruote.gltf" id="n_carro"]
 [ext_resource type="PackedScene" uid="uid://tcaq04ico3w2" path="res://assets/models/custom/campo/macchine/carro/carro.gltf" id="n_carro_guerra"]
 [ext_resource type="PackedScene" uid="uid://d0ibyoue8e6wk" path="res://assets/models/custom/campo/carri/carro_rotto/carro_rotto.gltf" id="n_carro_rotto"]
 [ext_resource type="PackedScene" uid="uid://bhv58j5brjaxc" path="res://assets/models/custom/polyhaven/vegetazione/celandine_01/celandine_01_a.gltf" id="n_celandine"]

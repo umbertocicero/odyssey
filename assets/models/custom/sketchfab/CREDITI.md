@@ -39,3 +39,7 @@ Modifiche: pulizia, decimazione, riorientamento, ridimensionamento delle texture
 - This work is based on "Male Deer Animal 3d model free" (https://sketchfab.com/3d-models/male-deer-animal-3d-model-free-0793c1cf39464dd19fbda9a07c27902e) by iRahulRajput (https://sketchfab.com/rt699448) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 - This work is based on "Realistic Cheetah - Spotted Big Cat" (https://sketchfab.com/3d-models/realistic-cheetah-spotted-big-cat-6903ae10e89a484aada8830b3215d2c2) by Pigcraft (https://sketchfab.com/s8819296) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
 - "Horse" (https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9) by henrysteve973: CC-BY-4.0, scaricato ma non convertito.
+
+## Da verificare: Wooden_Cart_3.blend
+`campo/carri/carro_4_ruote` deriva da `Wooden_Cart_3.blend` (carro centrale a 4 ruote) scaricato da Umberto, con texture `uploads_files_958127_wooden_cart01/02/04`, `T_Table_Albedo`, `Metal29_col`, `Metal_BronzeBare_1K_albedo`. Autore e licenza non sono indicati nel file: **da verificare alla fonte del download** prima della pubblicazione e, se serve, aggiungere qui il credito.
+Modifiche: tenuto solo il carro a 4 ruote (il blend ne contiene 3), unito in una mesh, ruotato col fronte su +Y, appoggiato a terra, texture ridotte (512-1.024 px) e ricodificate in JPEG, esportazione in glTF.
