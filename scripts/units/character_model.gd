@@ -138,6 +138,7 @@ func _ready() -> void:
 	var sk := instance.find_children("*", "Skeleton3D", true, false)
 	if not sk.is_empty():
 		skeleton = sk[0]
+		ArmHelpers.attach(skeleton)
 	for mesh: MeshInstance3D in instance.find_children("*", "MeshInstance3D", true, false):
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 		if humanize and skeleton:

@@ -70,6 +70,7 @@ func _setup_animation() -> void:
 		glb.stop()
 		glb.active = false
 	var sk := sk_list[0] as Skeleton3D
+	ArmHelpers.attach(sk)
 	for m in instance.find_children("*", "MeshInstance3D", true, false):
 		(m as MeshInstance3D).mesh = HandFist.fisted((m as MeshInstance3D).mesh, sk)
 	var bow := weapon_path != "" and weapon_kind == 2

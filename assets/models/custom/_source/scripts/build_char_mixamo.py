@@ -201,8 +201,12 @@ def armature_sided(name, J, JR, JL):
     add("neck", J["chest"], J["neck"], "spine", True)
     add("head", J["neck"], J["head_top"], "neck", True)
     for sd, K in (("R", JR), ("L", JL)):
+        # ossa di supporto, pilotate a runtime da ArmHelpers (scripts/units/arm_helpers.gd): clavicola (segue in parte il braccio) e twist
+        # dell'avambraccio (segue in parte la rotazione della mano). Non fanno parte della catena delle animazioni.
+        add(f"clavicle.{sd}", K["clav"], K["shoulder"], "spine")
         add(f"upperarm.{sd}", K["shoulder"], K["elbow"], "spine")
         add(f"forearm.{sd}", K["elbow"], K["wrist"], f"upperarm.{sd}", True)
+        add(f"forearm_twist.{sd}", (K["elbow"] + K["wrist"]) * 0.5, K["wrist"], f"forearm.{sd}")
         add(f"hand.{sd}", K["wrist"], K["hand_end"], f"forearm.{sd}", True)
         add(f"thigh.{sd}", K["hip"], K["knee"], "hips")
         add(f"shin.{sd}", K["knee"], K["ankle"], f"thigh.{sd}", True)
@@ -265,7 +269,7 @@ def game_group(mx_name):
     for side, gs in (("Left", "R"), ("Right", "L")):
         if not n.startswith(side): continue
         k = n[len(side):]
-        if k == "Shoulder": return [("spine", 0.5), (f"upperarm.{gs}", 0.5)]
+        if k == "Shoulder": return [(f"clavicle.{gs}", 1.0)]
         if k == "Arm": return [(f"upperarm.{gs}", 1.0)]
         if k == "ForeArm": return [(f"forearm.{gs}", 1.0)]
         if k.startswith("Hand"): return [(f"hand.{gs}", 1.0)]
@@ -315,7 +319,7 @@ def collapse_weights(ob, arm, shield, xs=0.19, zs=1.12, joints=None):
         m *= 1.0 - 0.35 * smoothstep(0.0, 0.08, v.co.z - zs)
         if m < 1.0:
             for k in [k for k in acc if k.startswith("upperarm.")]:
-                moved = acc[k] * (1 - m); acc[k] -= moved; acc["spine"] = acc.get("spine", 0) + moved
+                moved = acc[k] * (1 - m); acc[k] -= moved; cv = "clavicle." + k.split(".")[1]; acc[cv] = acc.get(cv, 0) + moved
         # gomito: lo skinning Mixamo sfuma braccio/avambraccio su ~11 cm (gomma sottile e storta quando si piega): transizione stretta (+-3 cm)
         if joints:
             sd = "R" if v.co.x > 0 else "L"
@@ -329,6 +333,11 @@ def collapse_weights(ob, arm, shield, xs=0.19, zs=1.12, joints=None):
                     ss = s1 if d1 < d2 else L1 + s2
                     f = smoothstep(L1 - 0.03, L1 + 0.03, ss)
                     acc[ka] = T * (1 - f); acc[kf] = T * f
+                    L2 = (K["wrist"] - K["elbow"]).length
+                    u = (ss - L1) / max(L2, 1e-6)
+                    wt = acc[kf] * 0.75 * smoothstep(0.25, 0.95, u)       # twist dell'avambraccio: cresce verso il polso
+                    if wt > 0.0:
+                        acc[kf] -= wt; acc["forearm_twist." + sd] = wt
         s = sum(acc.values())
         new[v.index] = {k: x / s for k, x in acc.items()}
     if shield:
@@ -562,7 +571,7 @@ def build(src, name, fn, attack, debug=False):
         wrist = P("Hand")     # polso anatomico; HandFist.CENTER e' il baricentro della mano rispetto a questo punto (vedi HANDC)
         d = hand_c[sd] - wrist
         print("HANDC", name, sd, round(abs(d.x), 4), round(d.z, 4), round(-d.y, 4), "(x, y, z Godot, mano +X)")
-        return dict(shoulder=P("Arm"), elbow=P("ForeArm"), wrist=wrist, hand_end=knuckle,
+        return dict(clav=P("Shoulder"), shoulder=P("Arm"), elbow=P("ForeArm"), wrist=wrist, hand_end=knuckle,
                     hip=P("UpLeg"), knee=P("Leg"), ankle=ankle, toe=ankle + Vector((0.0, 0.12, -0.048)))   # osso del piede verso +Y come nei vecchi rig
     JR, JL = side_joints("Left"), side_joints("Right")
     J = dict(hips=Vector((0, pose["Hips"][0].y, pose["Hips"][0].z)), spine=Vector((0, pose["Spine"][0].y, pose["Spine"][0].z)),
