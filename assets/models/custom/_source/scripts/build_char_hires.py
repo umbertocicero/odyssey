@@ -17,7 +17,9 @@ SCALE = 0.8
 # giunti (m, prima della scala): x positivo = destra del personaggio
 J = dict(
     hips=(0, 0, 0.88), spine=(0, 0, 0.98), chest=(0, 0, 1.40), neck=(0, 0, 1.50), head_top=(0, 0, 1.80),
-    shoulder=(0.20, 0, 1.37), elbow=(0.40, 0, 1.11), wrist=(0.47, 0, 0.93), hand_end=(0.51, 0, 0.80),
+    # gomito e polso misurati sulle mesh scolpite (26/11/2026): prima erano ~6 e ~8 cm piu' in basso lungo il braccio
+    # (gomito a meta' avambraccio, polso sulle dita) e l'avambraccio piegato sembrava corto e tozzo
+    shoulder=(0.20, 0, 1.37), elbow=(0.31, 0, 1.19), wrist=(0.47, 0, 1.02), hand_end=(0.54, 0, 0.87),
     hip=(0.10, 0, 0.88), knee=(0.11, 0, 0.47), ankle=(0.11, 0, 0.09), toe=(0.11, 0.15, 0.03),
 )
 

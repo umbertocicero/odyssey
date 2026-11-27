@@ -93,9 +93,6 @@ func pick_target() -> GridUnit:
 			continue
 		if unit.has_method(&"is_targetable") and not unit.is_targetable():
 			continue
-		# Un ferito grave a terra sotto le mura non va colpito prima che la barella lo raggiunga.
-		if unit is WoundedSoldier and (unit as WoundedSoldier).severe and (unit as WoundedSoldier).state == WoundedSoldier.State.LYING:
-			continue
 		# Il rilievo in mezzo può coprire il bersaglio: niente tiro.
 		if not grid.has_line_of_fire(muzzle_position(), unit.global_position + Vector3.UP * 0.8):
 			continue

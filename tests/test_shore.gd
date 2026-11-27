@@ -65,6 +65,13 @@ func _check_level(level: Node, lvl: int) -> void:
 	if shore == null:
 		return
 	_check(shore.sand != null and shore.sand.mesh != null, "%s: mesh della sabbia" % tag)
+	# Cascata: il mare cade oltre il bordo ovest lungo il fianco del blocco.
+	var fall := level.get_node_or_null("Terreno/Mare/Cascata") as SeaFall
+	_check(fall != null, "%s: la cascata c'è" % tag)
+	if fall != null:
+		_check(absf(fall.edge_x - (-32.0)) < 0.01, "%s: la cascata parte dal bordo ovest del mare, ora a -32 (%.2f)" % [tag, fall.edge_x])
+		_check(int(fall.stats["fall_triangles"]) > 100 and int(fall.stats["fall_triangles"]) < 5000, "%s: triangoli della cascata %d" % [tag, fall.stats["fall_triangles"]])
+		_check(fall.get_node_or_null("Lastra") != null and fall.get_node_or_null("Nebbia") != null, "%s: lastra e nebbia" % tag)
 	_check(int(shore.stats["sand_triangles"]) > 1000 and int(shore.stats["sand_triangles"]) < 120000, "%s: triangoli della sabbia %d" % [tag, shore.stats["sand_triangles"]])
 	_check(int(shore.stats["debris_instances"]) > 100, "%s: detriti %d in %d MultiMesh" % [tag, shore.stats["debris_instances"], shore.stats["multimeshes"]])
 	_check(int(shore.stats["multimeshes"]) <= 8, "%s: al massimo 8 MultiMesh di detriti (%d)" % [tag, shore.stats["multimeshes"]])

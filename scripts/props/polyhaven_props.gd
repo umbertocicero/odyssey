@@ -20,8 +20,11 @@ extends Node3D
 @export_file("*.json") var data_path := ""
 ## Forza una qualità (-1 = automatica da Quality).
 @export var quality_override := -1
+## Sparsi (MultiMesh) definiti nella scena: se l'elenco non è vuoto sostituisce gli "scatters" del JSON,
+## così area, numero e seed si modificano dall'Inspector. Vuoto = valgono quelli del file di dati.
+@export var scatter_defs: Array[PolyhavenScatterDef] = []
 
-var stats := {"solid_nodes": 0, "solid_tris": 0, "scatter_instances": 0, "scatter_tris": 0, "multimeshes": 0, "skipped": []}
+var stats := {"in_scene": 0, "solid_nodes": 0, "solid_tris": 0, "scatter_instances": 0, "scatter_tris": 0, "multimeshes": 0, "skipped": []}
 
 ## Le texture del fogliame Poly Haven sono molto scure (media sRGB ~24,22,8, linear ~0.01):
 ## sotto la luce calda del diorama diventano nere. Il fogliame (materiali
@@ -42,8 +45,24 @@ func _ready() -> void:
 	if data.is_empty():
 		return
 	for item: Dictionary in data.get("items", []):
+		# Un oggetto già presente nella scena (nodo con lo stesso nome, modificabile nell'editor)
+		# non si genera una seconda volta.
+		if _in_scene(String(item.get("name", ""))):
+			stats["in_scene"] += 1
+			continue
 		_add_solid(item)
-	_build_scatters.call_deferred(data.get("scatters", []))
+	var scatters: Array = data.get("scatters", [])
+	if not scatter_defs.is_empty():
+		scatters = scatter_defs.map(func(d: PolyhavenScatterDef) -> Dictionary: return d.to_dict())
+	_build_scatters.call_deferred(scatters)
+
+
+## True se nella scena del livello esiste già un nodo con questo nome (fuori dai nodi generati qui).
+func _in_scene(item_name: String) -> bool:
+	if item_name == "" or get_parent() == null:
+		return false
+	var found := get_parent().find_child(item_name, true, false)
+	return found != null and found != self and not is_ancestor_of(found)
 
 
 func _load_data() -> Dictionary:

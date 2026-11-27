@@ -19,6 +19,8 @@ signal action_requested(action: StringName)
 var spawn_cell := Vector2i.ZERO
 ## Vero mentre gioca l'animazione di morte: i comandi sono bloccati.
 var is_defeated := false
+## Vero durante un duello in prima persona (vedi Duel): i comandi di movimento e attacco sono sospesi.
+var in_duel := false
 ## Danno e ritmo dell'attacco con la spada (sulla casella davanti a Ulisse).
 @export var attack_damage := 30
 @export var attack_cooldown := 0.5
@@ -40,6 +42,20 @@ var _queued_swipe := Vector2.ZERO
 var _swipe_dir := Vector2.ZERO
 var _swipe_time := 0.0
 var _face_yaw := 0.0
+## Fermo (aiuta un ferito a rialzarsi) fino a questo istante (s).
+var _locked_until := 0.0
+
+
+## Ulisse si ferma, si volta verso `target` (mondo) e si china ad aiutare: dura `seconds`.
+func start_help_up(target: Vector3, seconds: float) -> void:
+	_locked_until = Time.get_ticks_msec() / 1000.0 + seconds
+	is_moving = false
+	var d := Vector2(target.x - global_position.x, target.z - global_position.z)
+	if d.length() > 0.01:
+		_face_yaw = atan2(-d.x, -d.y)
+	var model := get_node_or_null(^"Model") as CharacterModel
+	if model:
+		model.play_help_up()
 
 
 func _ready() -> void:
@@ -101,7 +117,7 @@ func _nearest_free_cell(from: Vector2i) -> Vector2i:
 
 
 func _physics_process(delta: float) -> void:
-	if is_defeated:
+	if is_defeated or in_duel:
 		return
 	_attack_cd -= delta
 	for action: StringName in [&"attack", &"parry", &"dodge", &"interact", &"special"]:
@@ -119,6 +135,11 @@ func _physics_process(delta: float) -> void:
 ## Movimento continuo: direzione dall'input in coordinate di schermo, convertita
 ## nel mondo secondo la camera, poi collisione con scivolamento.
 func _free_move(delta: float) -> void:
+	if Time.get_ticks_msec() / 1000.0 < _locked_until:
+		is_moving = false
+		if _model:
+			_model.rotation.y = lerp_angle(_model.rotation.y, _face_yaw, minf(1.0, turn_speed * delta))
+		return
 	var input := Input.get_vector(&"move_left", &"move_right", &"move_up", &"move_down")
 	if input == Vector2.ZERO and _queued_swipe != Vector2.ZERO:
 		_swipe_dir = _queued_swipe
@@ -259,4 +280,7 @@ func _melee_attack() -> void:
 	if best:
 		var to := best.global_position - global_position
 		_face_yaw = atan2(-to.x, -to.z)
+		# Contro un soldato troiano il combattimento diventa un duello in prima persona.
+		if best is TrojanSoldier and Duel.try_begin(self, best):
+			return
 		melee_strike(best, attack_damage)

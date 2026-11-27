@@ -127,6 +127,8 @@ Da riga di comando: `godot --path /percorso/di/Odyssey` (aggiungere `--editor` p
 
 ## Prototipo del livello 1
 
+Quali oggetti sono nodi della scena (spostabili nell'editor) e quali restano generati a runtime, con i relativi parametri e seed: [docs/OGGETTI_LIVELLO1.md](docs/OGGETTI_LIVELLO1.md).
+
 Il prototipo contiene il diorama del livello 1 (`scenes/levels/level1/level1.tscn`), dalle navi achee alla porta di Troia, costruito con i modelli scaricati in `assets/models/troia/` (crediti in `assets/models/troia/CREDITS.md`):
 
 - **Diorama a blocco**: un unico blocco quadrato di 52×52 m, alto 8 m, con la superficie piatta in cima e i lati in sezione (erba, terra, roccia). Tutto sta sulla faccia superiore, compreso il mare incassato con le navi sul lato ovest. Dentro c'è la griglia giocabile di 40×40 caselle. Il percorso è a L: dall'accampamento acheo (angolo sud-ovest) attraversa la pianura verso est, poi sale a nord tra le rovine fino alla postazione troiana davanti alla porta, dove si affronta l'ufficiale troiano (`PuntoUfficiale`). Sul lato nord ci sono le mura e la porta di Troia, l'acropoli con il tempio e la città.
@@ -299,3 +301,6 @@ Cielo di tramonto procedurale (`assets/shaders/sky_dusk.gdshader`), sole basso a
 
 ### Demo e test
 `scenes/demo/run_demo.sh` e `run_demo2.sh` (demo automatiche, ~2 min; `--auto-quit`, `--shots=DIR`). Test headless: `godot --headless --path . -s res://tests/test_<nome>.gd`. Screenshot e misure: `tests/screenshot_*.gd`, `tests/perf_level1.gd`.
+
+## Audio
+Bus Music/SFX/Ambience creati da `scripts/audio/game_audio.gd` (`GameAudio`, pool di 6 voci 3D). Effetti di spada in `assets/audio/sfx/combat`. Vedi CREDITI.md.

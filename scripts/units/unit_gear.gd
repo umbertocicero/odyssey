@@ -24,7 +24,8 @@ extends Node
 @export_range(0.1, 3.0) var shield_scale := 0.55
 ## Scudo sull'avambraccio come lo usano le animazioni (consigliato). Se falso usa offset e rotazione liberi.
 @export var shield_aligned := true
-## Gira lo scudo se la faccia decorata finisce verso il braccio.
+## Gira lo scudo se la faccia decorata finisce verso il braccio. Gli hoplon di campo/equipaggiamento hanno la
+## faccia decorata su -Z del modello (+Z è l'interno di cuoio): con il valore predefinito la decorazione guarda fuori.
 @export var shield_flip := false
 ## Non più usati (vecchio aggancio alla mano), tenuti per compatibilità delle scene.
 @export var shield_hold_bone := &"hand.L"
@@ -141,7 +142,8 @@ func _attach_aligned(skeleton: Skeleton3D) -> Node3D:
 	var node := shield.instantiate() as Node3D
 	var center := _local_center(node)
 	var rest := skeleton.get_bone_global_rest(skeleton.find_bone(bone))
-	node.transform = rest.affine_inverse() * HumanoidAnims.shield_rest_transform(skeleton, bone, shield_scale, center, shield_flip)
+	# shield_rest_transform mette +Z del modello verso l'esterno: qui l'esterno deve essere -Z (la faccia decorata).
+	node.transform = rest.affine_inverse() * HumanoidAnims.shield_rest_transform(skeleton, bone, shield_scale, center, not shield_flip)
 	attachment.add_child(node)
 	return node
 

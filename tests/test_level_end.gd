@@ -1,5 +1,5 @@
 extends SceneTree
-## Il livello finisce quando TUTTI i feriti sono sulle navi o morti (senza timer), non prima.
+## Il livello finisce quando TUTTI i feriti sono sulle navi (senza timer), non prima.
 ## Avvio: godot --headless --path . -s res://tests/test_level_end.gd
 
 var _failures := 0
@@ -29,8 +29,15 @@ func _run() -> void:
 		director.wounded[i].state = WoundedSoldier.State.EVACUATED
 	await create_timer(1.2).timeout
 	_check(director.phase == LevelDirector.Phase.RUNNING, "con un ferito ancora a terra il livello continua")
-	director.wounded[director.wounded.size() - 1].state = WoundedSoldier.State.LOST
+	var last := director.wounded[director.wounded.size() - 1]
+	last.take_damage(1000)   # still lying: untouchable
 	await create_timer(1.2).timeout
-	_check(director.phase == LevelDirector.Phase.ENDED, "tutti salvati o persi: il livello finisce")
+	_check(director.phase == LevelDirector.Phase.RUNNING and last.health > 0, "a lying wounded man cannot die; the level keeps going")
+	var ulisse := get_first_node_in_group(&"player") as GridUnit
+	last.start_support(ulisse, WoundedSoldier.State.FOLLOWING)   # helped up: now he can be killed
+	last.take_damage(1000)
+	await create_timer(1.2).timeout
+	_check(last.state == WoundedSoldier.State.LOST and director.lost_count() == 1, "a raised wounded man can die and counts as lost")
+	_check(director.phase == LevelDirector.Phase.ENDED, "all wounded saved or lost: the level ends")
 	print("RISULTATO: ", "OK" if _failures == 0 else "%d FALLITI" % _failures)
 	quit(0 if _failures == 0 else 1)

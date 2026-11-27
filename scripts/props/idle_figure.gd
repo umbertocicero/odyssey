@@ -14,6 +14,8 @@ extends Node3D
 @export_file("*.gltf", "*.glb") var weapon_path := ""
 @export_file("*.gltf", "*.glb") var weapon_lod_path := ""
 @export_range(0, 2) var weapon_kind := 0
+## Scudo agganciato all'avambraccio (come UnitGear.shield): percorso del modello (es. hoplon_chevron.gltf).
+@export_file("*.gltf", "*.glb") var shield_path := ""
 @export var weapon_bone := &""
 
 ## Piccolo andirivieni e rotazioni a intervalli casuali, così le sentinelle non stanno immobili.
@@ -38,14 +40,16 @@ func _ready() -> void:
 		return
 	instance = scene.instantiate() as Node3D
 	add_child(instance)
-	if weapon_path != "":
+	if weapon_path != "" or shield_path != "":
 		var gear := UnitGear.new()
 		gear.min_quality = 0
+		if shield_path != "":
+			gear.shield = load(shield_path) as PackedScene
 		gear.weapon_path = weapon_path
 		gear.weapon_lod_path = weapon_lod_path
 		gear.weapon_kind = weapon_kind as UnitGear.WeaponKind
 		gear.weapon_bone = weapon_bone
-		gear.shield_aligned = false
+		gear.shield_aligned = shield_path != ""
 		add_child(gear)
 	_setup_animation()
 
@@ -73,7 +77,7 @@ func _setup_animation() -> void:
 	if weapon_path != "" and not bow:
 		right = HumanoidAnims.Hand.SPEAR if weapon_kind == 1 else HumanoidAnims.Hand.SWORD
 	var sets := PackedStringArray(["base", "bow" if bow else "leader"])
-	var lib := HumanoidAnims.library(sk, right, false, bow, sets)
+	var lib := HumanoidAnims.library(sk, right, shield_path != "" and not bow, bow, sets)
 	player = AnimationPlayer.new()
 	player.name = "HumanPlayer"
 	sk.add_child(player)

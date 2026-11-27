@@ -13,6 +13,9 @@ const OAR_INBOARD := 0.62
 const OAR_OUTBOARD := 1.55
 
 var rowers: Array[GridUnit] = []
+## Posizione (spazio barca) del soldato quando non rema: in piedi a poppa, rivolto alla riva, pronto ad aiutare a salire.
+const STAND_POS := Vector3(-0.38, FLOOR_Y, 0.72)
+var _seat_z: Array[float] = []
 var oars: Array[Node3D] = []
 var _wood: StandardMaterial3D
 var _blade: StandardMaterial3D
@@ -34,6 +37,7 @@ static func board(boat: Node3D, units_root: Node, seat_z: Array[float]) -> BoatR
 	var i := 0
 	for z in seat_z:
 		row._add_thwart(z)
+		row._seat_z.append(z)
 		var u := UnitFactory.make(AllySoldier, UnitFactory.MODEL_ACHEO, GridUnit.Team.ACHEI, 60, "Rower%d" % i) as AllySoldier
 		u.busy = true
 		u.show_health_bar = false
@@ -122,6 +126,19 @@ func _process(_delta: float) -> void:
 		var pivot := oars[i]
 		# Rotazione tenendo il remo "dritto" (pala piatta): -Z del pivot punta verso l'esterno.
 		pivot.basis = Basis.looking_at(dir.normalized(), Vector3.UP)
+
+
+## Il soldato fisso della barca: `on` = seduto sul banco a vogare (remi in acqua), altrimenti in piedi a poppa.
+func set_rowing(on: bool) -> void:
+	for o in oars:
+		o.visible = on
+	for i in rowers.size():
+		var u := rowers[i]
+		u.position = Vector3(0.0, FLOOR_Y, _seat_z[i]) if on else STAND_POS
+		u.rotation = Vector3.ZERO if on else Vector3(0.0, PI, 0.0)
+		var cm := u.get_node_or_null(^"Model") as CharacterModel
+		if cm:
+			cm.set_stance(&"row" if on else &"normal", true)
 
 
 ## Rematori in posa da seduti/voga (per i test).

@@ -23,10 +23,12 @@ const HEIGHT_TEX := preload("res://assets/environment/water/sea_height.png")
 @export var inland_x := -19.0
 
 var shore: SeaShore
+var fall: SeaFall
 
 
 func _ready() -> void:
 	var level: int = quality_override if quality_override >= 0 else int(Quality.current())
+	var west_edge := global_position.x - (mesh as BoxMesh).size.x * 0.5 if mesh is BoxMesh else -26.0
 	var photo := natural_shore and TerrainStyle.photo() and OS.get_environment("ODYSSEY_NO_SHORE") != "1"   # ODYSSEY_NO_SHORE=1: confronto prima/dopo
 	var mat := ShaderMaterial.new()
 	mat.shader = SHADER_LOW if level == Quality.Level.LOW else SHADER_FULL
@@ -40,6 +42,7 @@ func _ready() -> void:
 	material_override = mat
 	if photo:
 		_build_natural_shore()
+	_build_waterfall(west_edge)
 
 
 func _build_natural_shore() -> void:
@@ -55,3 +58,11 @@ func _build_natural_shore() -> void:
 	shore.name = "Riva"
 	shore.west_x = west
 	add_child(shore)
+
+
+## Il lato ovest del mare non finisce sul bordo del blocco: l'acqua cade lungo il fianco come una cascata.
+func _build_waterfall(west: float) -> void:
+	fall = SeaFall.new()
+	fall.name = "Cascata"
+	fall.edge_x = west
+	add_child(fall)

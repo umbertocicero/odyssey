@@ -29,7 +29,7 @@ func _run() -> void:
 	for i in range(1, allies.size()):
 		allies[i].busy = true
 	var mate := allies[0]
-	var spot := grid.world_to_cell(Vector3(-8.0, 0.0, 4.0))
+	var spot := grid.world_to_cell(Vector3(-9.5, 0.0, 10.5))
 	for r in 8:
 		if w.cell.distance_to(spot) < 1.0:
 			break
@@ -43,15 +43,20 @@ func _run() -> void:
 	var viewport: SubViewport = main.get_node("GameView/GameViewport")
 	var cam := viewport.get_camera_3d()
 	cam.set(&"_follow", null)
-	cam.set(&"distance", 3.6)
+	cam.set(&"distance", 2.6)
 	cam.set(&"pitch_degrees", -15.0)
-	var shots := [["solo", 200.0], ["solo_dietro", 20.0]]
+	for i in 200:
+		await process_frame   # Ulisse aiuta il ferito a rialzarsi
+	var shots := [["solo", 200.0], ["solo_dietro", 20.0], ["solo_alto", 110.0]]
 	for s in shots:
 		cam.set(&"yaw_degrees", s[1])
+		cam.set(&"pitch_degrees", -38.0 if s[0] == "solo_alto" else -22.0)
 		for i in 90:
 			cam.set(&"target", w.global_position + Vector3(0.0, 0.9, 0.0))
 			await process_frame
 		root.get_texture().get_image().save_png(ProjectSettings.globalize_path("res://screenshots/wounded_carry_%s.png" % s[0]))
+	quit()
+	return
 	# Con il compagno.
 	var placed := false
 	for dist in [4, 3, 2]:

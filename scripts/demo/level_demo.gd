@@ -90,6 +90,7 @@ var _next_shot := 0
 
 func _ready() -> void:
 	_parse_args()
+	Duel.enabled = false   # demo registrata: niente duelli in prima persona che ne cambino la sequenza
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
 	if _arg_timescale != 1.0:
@@ -394,7 +395,9 @@ func _run_chapter_run(gen: int) -> void:
 	# Lo scontro avviene davanti alla camera: quattro troiani escono davanti a Ulisse.
 	for i in 4:
 		director.wave = maxi(director.wave, 1)
-		director._spawn_trojan(Vector2(-0.5 + (i - 1.5) * 2.0, 3.0 - (i % 2) * 1.5))
+		var doors := director._side_doors()
+		if not doors.is_empty():
+			director._spawn_trojan(director.wave, i, doors[i % doors.size()])
 	await _fight_until(gen, end_t)
 
 

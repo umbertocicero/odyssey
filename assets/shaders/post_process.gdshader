@@ -41,7 +41,9 @@ uniform float haze_reach : hint_range(0.1, 1.0) = 0.6;
 // 4 = intermedio: pixel 3x3 e colore a 12 bit (16 livelli per canale, ~4096 colori) con dither Bayer
 // 4x4 leggero: più colorato del modo 1, meno dettagliato del 32 bit.
 // I pixel grossi li dà RenderPipeline (stretch_shrink): qui una cella = un texel.
-uniform int pixelart_mode : hint_range(0, 4) = 0;
+// 5 = PSX / lo-fi 3D: risoluzione interna ~320x240 (la sceglie RenderPipeline), colore a 15 bit con dither
+// forte, niente sfocatura/aberrazione/grana, colori più spenti e contrastati, nebbia più densa.
+uniform int pixelart_mode : hint_range(0, 5) = 0;
 // Solo modo 1: 0 = PICO-8, 1 = Sweetie 16, 2 = Endesga 32.
 uniform int pixelart_palette : hint_range(0, 2) = 2;
 uniform float pixelart_dither : hint_range(0.0, 1.0) = 0.5;
@@ -137,6 +139,10 @@ uniform float retro_dither : hint_range(0.0, 1.0) = 0.8;
 vec3 retro_apply(vec3 col, ivec2 cell) {
 	float th = (float(PA_BAYER4[(cell.y & 3) * 4 + (cell.x & 3)]) + 0.5) / 16.0;
 	float steps = pixelart_mode == 4 ? 15.0 : 31.0;
+	if (pixelart_mode == 5) {
+		col = clamp((col - 0.5) * 1.12 + 0.5, 0.0, 1.0);
+		th = (th - 0.5) * 1.6 + 0.5;
+	}
 	return floor(col * steps + th * retro_dither + (1.0 - retro_dither) * 0.5) / steps;
 }
 
@@ -166,13 +172,13 @@ void fragment() {
 	float radius = clamp(d, 0.0, 1.0) * blur_amount;
 	vec3 col = texture(TEXTURE, UV).rgb;
 	vec2 qc = UV - 0.5;
-	if (chroma > 0.0) {
+	if (chroma > 0.0 && pixelart_mode != 5) {
 		// Aberrazione cromatica da obiettivo: rosso e blu si separano verso i bordi.
 		vec2 off = qc * dot(qc, qc) * chroma * 14.0 * px;
 		col.r = texture(TEXTURE, UV + off).r;
 		col.b = texture(TEXTURE, UV - off).b;
 	}
-	if (radius > 0.25) {
+	if (radius > 0.25 && pixelart_mode != 5) {
 		// 8 letture in cerchio più il centro: sfocatura economica.
 		vec3 sum = col;
 		for (int i = 0; i < 8; i++) {
@@ -182,7 +188,7 @@ void fragment() {
 		col = sum / 9.0;
 	}
 	float grey = dot(col, vec3(0.299, 0.587, 0.114));
-	col = mix(vec3(grey), col, saturation) * warm_tint;
+	col = mix(vec3(grey), col, pixelart_mode == 5 ? saturation * 0.85 : saturation) * warm_tint;
 	// Color grading: split toning, curva a S attorno al grigio medio, neri alzati.
 	float lum = dot(col, vec3(0.299, 0.587, 0.114));
 	vec3 toned = col * mix(shadow_tint, highlight_tint, smoothstep(0.1, 0.7, lum));
@@ -190,10 +196,10 @@ void fragment() {
 	col = clamp((col - 0.5) * contrast + 0.5, 0.0, 1.0);
 	col = col * (1.0 - black_lift) + black_lift;
 	vec2 q = UV - 0.5;
-	col *= 1.0 - vignette * dot(q, q) * 2.0;
+	col *= 1.0 - (pixelart_mode == 5 ? vignette * 1.8 : vignette) * dot(q, q) * 2.0;
 	// Foschia: sfumata in modo morbido e solo sopra la zona di gioco.
 	float haze = smoothstep(haze_reach, 0.0, UV.y);
-	col = mix(col, haze_color * max(grey, 0.55), haze * haze * haze_strength);
+	col = mix(col, haze_color * max(grey, 0.55), haze * haze * (pixelart_mode == 5 ? haze_strength * 2.2 : haze_strength));
 	// Rumore minimo: elimina le bande nei gradienti (cielo, nebbia).
 	vec2 noise_px = FRAGCOORD.xy;
 	if (pixelart_mode > 0) {
@@ -202,7 +208,7 @@ void fragment() {
 	float n = fract(sin(dot(noise_px + fract(TIME) * 61.7, vec2(12.9898, 78.233))) * 43758.5453);
 	// Grana: più visibile nei mezzi toni, quasi nulla nei bianchi.
 	float glum = dot(col, vec3(0.299, 0.587, 0.114));
-	col += (n - 0.5) * (grain * (1.0 - glum * 0.6) + 1.0 / 255.0);
+	col += (n - 0.5) * ((pixelart_mode == 5 ? 0.0 : grain) * (1.0 - glum * 0.6) + 1.0 / 255.0);
 	if (pixelart_mode > 0) {
 		ivec2 pcell = ivec2(floor(UV / px));
 		if (pixelart_mode == 1 && pixelart_variant > 0) {

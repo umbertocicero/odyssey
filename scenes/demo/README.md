@@ -149,3 +149,30 @@ pixel 3x3, colore a 12 bit (16 livelli per canale) e dither Bayer 4x4 leggero. `
 Endesga 32, la rampa di luminanza o il "32 bit" (pixel 2x2, 15 bit), `--pixelart=0` lo spegne (vale anche sulla demo 4).
 Nel gioco normale l'effetto si cicla con **K** (spento, palette, rampa, 32 bit, intermedio).
 Codice: `scripts/demo/level_demo6.gd`; script di avvio: `scenes/demo/run_demo6.sh`.
+
+
+## Demo del livello 2 ("Il dono del mare")
+
+`scenes/demo/demo_level2.tscn` (o `scenes/demo/run_demo_level2.sh`): circa 5 minuti, un bot gioca il livello 2 con gli
+stessi input del giocatore (movimento, E, spada) usando il vero `Level2World` / `Level2Director`. Capitoli: la baia, legname
+e ruscello (abbatte e sfronda due abeti, li porta con un compagno, li fa galleggiare, li squadra), il cavallo che cresce con
+i soldati che aiutano Epeo, l'incursione notturna, l'entrata nel cavallo e il finale. Dopo un tratto di lavoro "il tempo
+passa" (le travi arrivano a ritmo serrato). Opzioni dopo `--`: `--chapter=N` (1-5), `--clean`, `--auto-quit`,
+`--shots=DIR`, `--shot-times=...`, `--timescale=N`, `--quality=...`. Esc esce.
+
+
+## Demo dei personaggi (rig a 17 ossa, skinning e clip Mixamo)
+
+`demo_characters.tscn`: i 15 personaggi di `personaggi_nuovi/` in tre file con il nome sopra la testa; un giro automatico di azioni (idle, walk, run,
+attack, block, death, get up) con clip Mixamo per camminata, corsa e morte e animazioni procedurali per il resto. Si puo' fermare e guidare a mano.
+
+```bash
+scenes/demo/run_demo_characters.sh                      # tutti in fila, giro automatico
+scenes/demo/run_demo_characters.sh --focus=menelao --zoom=1.7   # primo piano su un personaggio
+scenes/demo/run_demo_characters.sh --procedural         # clip procedurali (confronto)
+```
+
+Tasti: `1`-`7` azione, `Space` giro automatico, `Left`/`Right` primo piano, `Esc` tutti, trascina = ruota, rotella = zoom,
+`M` clip Mixamo/procedurali, `G` armi e scudi, `H` aiuto, `Q` esci. Opzioni: `--noauto`, `--nogear`, `--once` (esce a fine giro),
+`--shots=DIR` (un PNG a meta' di ogni azione). Nomi dei personaggi: Ulysses, Menelaus, Agamemnon, Elpenor, Eurylochus, Eurybates, Polites,
+Philoctetes (con e senza elmo), Perimedes, Trojan Infantry, Trojan Captain, Deiphobus A/B, Trojan Archer (Pandarus).

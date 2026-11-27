@@ -41,10 +41,19 @@ var _follow: Node3D
 
 func _ready() -> void:
 	_update_transform()
+	if not Engine.is_editor_hint():
+		_grow_bounds_to_grid()
 	if not Engine.is_editor_hint() and not follow_target.is_empty():
 		_follow = get_node_or_null(follow_target) as Node3D
 		if _follow:
 			target = _clamp_target(_follow.global_position)
+
+
+## La griglia ha caselle in più a est e a sud (extra_cells): il punto guardato può seguire le unità fin lì.
+func _grow_bounds_to_grid() -> void:
+	var grid := get_tree().get_first_node_in_group(&"diorama_grid") as DioramaGrid
+	if grid and follow_bounds.has_area():
+		follow_bounds.size += Vector2(grid.extra_cells) * grid.cell_size * 0.5
 
 
 func _process(delta: float) -> void:

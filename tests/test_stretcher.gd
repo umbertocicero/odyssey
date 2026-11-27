@@ -29,7 +29,7 @@ func _initialize() -> void:
 	for off in [Vector2i(1, 1), Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 		if ulisse.place_at(w.cell + off):
 			break
-	await create_timer(0.6).timeout
+	await create_timer(2.6).timeout   # Ulisse lo aiuta a rialzarsi (~2 s)
 	_check(w.state == WoundedSoldier.State.FOLLOWING, "il ferito grave si rialza e segue Ulisse")
 	_check(root.find_children("Stretcher*", "", true, false).is_empty(), "nessuna barella")
 	_check(get_nodes_in_group(&"achei").size() == before, "nessun compagno compare dal nulla")

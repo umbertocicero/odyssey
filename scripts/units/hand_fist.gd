@@ -13,7 +13,9 @@ extends RefCounted
 ## Rispetto al polso (origine a riposo dell'osso della mano), mano a +X.
 const FINGERS := Vector3(0.22, -0.79, 0.58)     # dal polso verso la punta delle dita
 const PALM := Vector3(-0.91, -0.38, -0.16)      # normale del palmo, verso il corpo
-const CENTER := Vector3(0.027, 0.0, 0.106)      # baricentro della mano
+## Baricentro della mano rispetto al polso anatomico (media sui 15 modelli Meshy/Mixamo del 27/11/2026, polso = osso Hand di Mixamo;
+## misura stampata da build_char_mixamo.py come HANDC). Prima: (0.027, -0.072, 0.106) misurato sui vecchi modelli con il polso 7 cm piu' in alto.
+const CENTER := Vector3(0.025, -0.048, 0.055)   # baricentro della mano
 ## Nocche: dove cominciano a piegarsi le dita (distanza dal baricentro lungo FINGERS).
 const KNUCKLE := 0.012
 ## Raggio della curva delle dita (manico ~1,5 cm di raggio + metà dello spessore delle dita).

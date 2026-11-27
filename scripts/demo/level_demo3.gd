@@ -70,6 +70,7 @@ var _hazard_age := 0.0
 
 func _ready() -> void:
 	_parse_args()
+	Duel.enabled = false   # demo registrata: niente duelli in prima persona che ne cambino la sequenza
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
 	if _arg_timescale != 1.0:
@@ -544,8 +545,8 @@ func _dodge_hazard_only() -> void:
 ## Percorso più breve (Dijkstra con coda a heap) verso la più vicina delle caselle `goals`.
 ## Con `allow_vault` conta anche gli ostacoli bassi scavalcabili da Ulisse (un ferito non li scavalca).
 func _find_path(from: Vector2i, goals: Dictionary, allow_vault: bool) -> Array[Vector2i]:
-	var w := grid.size.x
-	var n := w * grid.size.y
+	var w := grid.total_size().x
+	var n := w * grid.total_size().y
 	var dist := PackedFloat32Array()
 	dist.resize(n)
 	dist.fill(INF)

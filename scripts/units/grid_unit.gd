@@ -153,6 +153,8 @@ func take_melee(amount: int, attacker: Node3D) -> void:
 ## dimezzato, e il parante contrattacca subito. Schivata: colpo a vuoto, l'attaccante resta scoperto.
 ## Colpo a segno: spruzzo di sangue, reazione, macchie.
 func melee_strike(target: GridUnit, amount: int) -> void:
+	if Duel.blocks_attack(target, self):
+		return   # duello in prima persona in corso: uno contro uno, nessuno si intromette
 	var m := _model as CharacterModel
 	var tm := target._model as CharacterModel if target else null
 	if m == null or tm == null or target.health <= 0 or health <= 0:
@@ -162,6 +164,11 @@ func melee_strike(target: GridUnit, amount: int) -> void:
 			target.take_melee(amount, self)
 		return
 	m.play_attack()
+	if not has_meta(&"drew_sword"):
+		set_meta(&"drew_sword", true)
+		GameAudio.draw(self, global_position + Vector3.UP)
+	else:
+		GameAudio.swing(self, global_position + Vector3.UP)
 	var t_hit := m.attack_impact_remaining()
 	var kind := tm.plan_defense()
 	if kind != &"hit":
@@ -173,6 +180,8 @@ func melee_strike(target: GridUnit, amount: int) -> void:
 func _resolve_strike(target: GridUnit, amount: int, kind: StringName) -> void:
 	if not is_inside_tree() or health <= 0 or not is_instance_valid(target) or not target.is_inside_tree():
 		return
+	if Duel.blocks_attack(target, self):
+		return   # nel frattempo è cominciato un duello: il colpo non arriva
 	var to := target.global_position - global_position
 	to.y = 0.0
 	var dir := to.normalized() if to.length() > 0.01 else Vector3(-sin(_model.global_rotation.y), 0, -cos(_model.global_rotation.y))
@@ -180,6 +189,11 @@ func _resolve_strike(target: GridUnit, amount: int, kind: StringName) -> void:
 	if target.health <= 0 or to.length() > 2.4:
 		return   # il bersaglio è caduto o si è allontanato: colpo a vuoto
 	if kind == &"hit":
+		var lethal := target.health <= amount
+		if lethal:
+			GameAudio.slash_kill(self, target.global_position + Vector3.UP)
+		else:
+			GameAudio.hit(self, target.global_position + Vector3.UP)
 		target.take_damage(amount, dir)
 		target._shove(dir)
 		return
@@ -187,6 +201,7 @@ func _resolve_strike(target: GridUnit, amount: int, kind: StringName) -> void:
 		var shield := tm.has_shield()
 		var contact := (tm.guard_point(shield) + (_model as CharacterModel).guard_point(false)) * 0.5
 		ClashFx.sparks(self, contact, -dir + Vector3.UP * 0.4)
+		GameAudio.clash(self, contact)
 		target._shove(dir * 0.5)
 		if amount / 2 > 0:
 			target.take_damage(amount / 2, dir, false)

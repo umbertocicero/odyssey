@@ -40,6 +40,7 @@ var _heights: Dictionary = {}   # Vector2i -> altezza (m) dell'ostacolo più alt
 var _occupants: Dictionary = {} # Vector2i -> Node
 var _bodies: Dictionary = {}     # Node -> {"circles": PackedVector3Array (x, z, raggio), "cells": Array[Vector2i]}: ingombri dinamici (animali)
 var _body_cells: Dictionary = {} # Vector2i -> numero di corpi che toccano la casella
+var _fire: Dictionary = {}       # Vector2i -> true: caselle in fiamme, non attraversabili né scavalcabili
 var _tiles: MultiMeshInstance3D
 var _thin: Array = []            # cerchi {center: Vector2, radius: float} di tronchi e pali
 var _thin_cells: Dictionary = {} # caselle di tronchi/pali: per il movimento libero non sono quadrate
@@ -55,12 +56,26 @@ func _ready() -> void:
 ## Dislivello massimo (in livelli) che si supera con un passo: 1 = scalino.
 @export var max_step_levels := 1
 
+## Caselle aggiunte a `size` verso est (+X) e sud (+Z), fino ai bordi reali del terreno del livello 1
+## (la mappa del rilievo arriva a x 26 e z 22). L'angolo nord-ovest e le coordinate delle caselle non cambiano.
+@export var extra_cells := Vector2i(6, 2)
+
 var _relief: TerrainRelief
 var _relief_searched := false
 
 
+## Metà del rettangolo centrato di partenza: l'angolo nord-ovest della griglia resta fermo
+## anche quando si aggiungono caselle extra a est e a sud.
+func total_size() -> Vector2i:
+	return size + extra_cells
+
+
+func _offset() -> Vector2:
+	return Vector2(size) * cell_size * 0.5
+
+
 func cell_to_world(cell: Vector2i) -> Vector3:
-	var offset := Vector2(size) * cell_size * 0.5
+	var offset := _offset()
 	var local := Vector3((cell.x + 0.5) * cell_size - offset.x, 0.0, (cell.y + 0.5) * cell_size - offset.y)
 	var world := to_global(local)
 	world.y += get_height_at_world(world)
@@ -80,7 +95,7 @@ func get_level(cell: Vector2i) -> int:
 	var relief := get_relief()
 	if relief == null:
 		return 0
-	var offset := Vector2(size) * cell_size * 0.5
+	var offset := _offset()
 	var local := Vector3((cell.x + 0.5) * cell_size - offset.x, 0.0, (cell.y + 0.5) * cell_size - offset.y)
 	var world := to_global(local)
 	return relief.level_at_world(world.x, world.z)
@@ -118,17 +133,30 @@ func has_line_of_fire(from: Vector3, to: Vector3) -> bool:
 
 func world_to_cell(world_position: Vector3) -> Vector2i:
 	var local := to_local(world_position)
-	var offset := Vector2(size) * cell_size * 0.5
+	var offset := _offset()
 	return Vector2i(floori((local.x + offset.x) / cell_size), floori((local.z + offset.y) / cell_size))
 
 
 func is_inside(cell: Vector2i) -> bool:
-	return cell.x >= 0 and cell.y >= 0 and cell.x < size.x and cell.y < size.y
+	return cell.x >= 0 and cell.y >= 0 and cell.x < total_size().x and cell.y < total_size().y
 
 
 ## Casella bloccata da un ostacolo fisso o dal corpo di un animale (che si sposta di poco).
 func is_blocked(cell: Vector2i) -> bool:
 	return _blocked.has(cell) or _body_cells.has(cell)
+
+
+## Accende/spegne il fuoco su una casella: finché brucia non si cammina, non si salta e non ci si
+## arrampica attraverso (le unità già sopra vengono spinte fuori dal movimento libero).
+func set_fire(cell: Vector2i, burning: bool) -> void:
+	if burning:
+		_fire[cell] = true
+	else:
+		_fire.erase(cell)
+
+
+func has_fire(cell: Vector2i) -> bool:
+	return _fire.has(cell)
 
 
 ## Casella bloccata solo da ostacoli fissi.
@@ -234,7 +262,7 @@ func can_vault_over(from: Vector2i, dir: Vector2i) -> bool:
 	var landing := over + dir
 	if not is_inside(over) or not is_inside(landing) or not is_vaultable(over):
 		return false
-	if is_blocked(landing) or _occupants.has(landing):
+	if is_blocked(landing) or _fire.has(landing) or _fire.has(over) or _occupants.has(landing):
 		return false
 	return step_allowed(from, over) and step_allowed(over, landing)
 
@@ -258,7 +286,7 @@ func can_climb_over(from: Vector2i, dir: Vector2i) -> bool:
 	var landing := over + dir
 	if not is_inside(over) or not is_inside(landing) or not is_climbable(over):
 		return false
-	if is_blocked(landing) or _occupants.has(landing):
+	if is_blocked(landing) or _fire.has(landing) or _fire.has(over) or _occupants.has(landing):
 		return false
 	return step_allowed(from, over) and step_allowed(over, landing)
 
@@ -274,7 +302,7 @@ func get_solid_cells() -> Array[Vector2i]:
 
 
 func is_walkable(cell: Vector2i) -> bool:
-	return is_inside(cell) and not is_blocked(cell) and not _occupants.has(cell)
+	return is_inside(cell) and not is_blocked(cell) and not _fire.has(cell) and not _occupants.has(cell)
 
 
 func set_blocked(cell: Vector2i, blocked: bool) -> void:
@@ -307,8 +335,8 @@ func find_unreachable_cells(start: Vector2i) -> Array[Vector2i]:
 				reached[next] = true
 				frontier.append(next)
 	var unreachable: Array[Vector2i] = []
-	for y in size.y:
-		for x in size.x:
+	for y in total_size().y:
+		for x in total_size().x:
 			var c := Vector2i(x, y)
 			if not _blocked.has(c) and not reached.has(c):
 				unreachable.append(c)
@@ -377,12 +405,12 @@ func _rebuild_tiles() -> void:
 	multimesh.transform_format = MultiMesh.TRANSFORM_3D
 	multimesh.use_colors = true
 	multimesh.mesh = mesh
-	multimesh.instance_count = size.x * size.y
+	multimesh.instance_count = total_size().x * total_size().y
 
-	var offset := Vector2(size) * cell_size * 0.5
+	var offset := _offset()
 	var i := 0
-	for y in size.y:
-		for x in size.x:
+	for y in total_size().y:
+		for x in total_size().x:
 			var pos := Vector3((x + 0.5) * cell_size - offset.x, 0.01, (y + 0.5) * cell_size - offset.y)
 			multimesh.set_instance_transform(i, Transform3D(Basis.IDENTITY, pos))
 			multimesh.set_instance_color(i, tile_color_a if (x + y) % 2 == 0 else tile_color_b)
@@ -457,13 +485,15 @@ func resolve_circle(pos: Vector2, radius: float, level_cell: Vector2i) -> Dictio
 func _cell_solid_for_motion(c: Vector2i, base_level: int) -> bool:
 	if not is_inside(c):
 		return true
+	if _fire.has(c):
+		return true
 	if _blocked.has(c):
 		return not _thin_cells.has(c)
 	return absi(get_level(c) - base_level) > max_step_levels
 
 
 func _cell_rect(c: Vector2i) -> Rect2:
-	var offset := Vector2(size) * cell_size * 0.5
+	var offset := _offset()
 	var local := Vector3(c.x * cell_size - offset.x, 0.0, c.y * cell_size - offset.y)
 	var world := to_global(local)
 	return Rect2(Vector2(world.x, world.z), Vector2.ONE * cell_size)

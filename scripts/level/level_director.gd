@@ -18,7 +18,7 @@ enum Phase { IDLE, RUNNING, ENDED }
 
 @export var rules: LevelRules
 ## Scena del livello 2 a cui si passa dopo la schermata finale.
-@export_file("*.tscn") var next_level_path := "res://scenes/levels/level2/level2_placeholder.tscn"
+@export_file("*.tscn") var next_level_path := "res://scenes/main/main_level2.tscn"
 ## Avvia da solo il livello all'ingresso nella scena.
 @export var auto_start := true
 
@@ -81,6 +81,10 @@ func start() -> void:
 	if _player and not _player.died.is_connected(_on_player_died):
 		_player.died.connect(_on_player_died)
 	_apply_defence_scaling(1)
+	for node in get_tree().get_nodes_in_group(&"troiani"):
+		var u := node as GridUnit
+		if u and not u.died.is_connected(_on_trojan_died):
+			u.died.connect(_on_trojan_died)
 	if hud:
 		hud.show_banner("Find the wounded and bring them to the ships!", 3.5)
 	wounded_changed.emit(_saved, _lost, wounded.size())
@@ -133,7 +137,8 @@ func _on_player_died() -> void:
 var _resolve_check := 1.0
 
 
-## Tutti i feriti sono stati portati sulle navi o sono morti: il livello finisce (non c'è un timer visibile).
+## Tutti i feriti sono stati portati sulle navi o sono morti: solo allora il livello finisce (riepilogo con salvati e persi).
+## I feriti morti NON contano: il livello continua finché Ulisse non li recupera tutti o non muore.
 func all_wounded_resolved() -> bool:
 	if wounded.is_empty():
 		return false
@@ -160,38 +165,94 @@ func lost_count() -> int:
 	return _lost
 
 
-## Fa partire subito l'ondata successiva (usato anche dai test).
+## Fa partire subito l'ondata successiva (usato anche dai test). I rinforzi escono in fila dalle portine
+## laterali delle torri (i battenti si aprono), ripartiti fra le porte, e vanno alla loro postazione.
 func _start_wave() -> void:
 	wave += 1
 	var count := rules.trojans_in_wave(wave)
 	count = mini(count, maxi(rules.max_alive_trojans - alive_trojans(), 0))
 	_apply_defence_scaling(wave)
-	var spawned := 0
-	for i in count:
-		var p := rules.spawn_points
-		if p.is_empty():
-			break
-		if _spawn_trojan(p[(i + wave) % p.size()]):
-			spawned += 1
-	wave_started.emit(wave, spawned)
-	if hud:
-		hud.show_banner("Trojans advance!", 2.5)
+	var doors := _side_doors()
+	if doors.is_empty():
+		count = 0
+	else:
+		var first := randi() % doors.size()
+		var used := {}
+		for i in count:
+			var d := doors[(first + i) % doors.size()]
+			if not used.has(d):
+				used[d] = true
+				d.set_open(true, DOOR_TIME)
+			get_tree().create_timer(DOOR_TIME + 0.2 + (i / doors.size()) * rules.gate_exit_interval).timeout.connect(
+				_spawn_trojan.bind(wave, i, d))
+	wave_started.emit(wave, count)
+	if hud and count > 0:
+		hud.show_banner("Reinforcements march out of the tower doors!", 2.5)
 
 
-func _spawn_trojan(world_xz: Vector2) -> bool:
-	var cell := _free_cell_near(_grid.world_to_cell(Vector3(world_xz.x, 0.0, world_xz.y)))
+const DOOR_TIME := 1.0
+
+
+## Le portine laterali delle torri (se non ce ne sono, tutte le porte).
+func _side_doors() -> Array[TroyGate]:
+	var side: Array[TroyGate] = []
+	var all: Array[TroyGate] = []
+	for n in get_tree().get_nodes_in_group(&"troy_gates"):
+		var g := n as TroyGate
+		if g == null:
+			continue
+		all.append(g)
+		if g.kind == TroyGate.Kind.TOWER_DOOR:
+			side.append(g)
+	return side if not side.is_empty() else all
+
+
+## Casella libera per la postazione di un rinforzo: nel piazzale davanti alla sua porta.
+func _pick_post(door_cell: Vector2i) -> Vector2i:
+	var r := rules.post_radius
+	for _try in 12:
+		var c := door_cell + Vector2i(randi_range(-r, r), randi_range(3, r + 3))
+		if _grid.is_inside(c) and _grid.is_walkable(c) and not _unreachable.has(c):
+			return c
+	return _free_cell_near(door_cell + Vector2i(0, 4))
+
+
+func _spawn_trojan(w: int, index: int, door: TroyGate) -> bool:
+	if phase != Phase.RUNNING or _grid == null or not is_instance_valid(door):
+		return false
+	var out := door.global_position + Vector3(0, 0, 0.5)
+	var door_cell := _grid.world_to_cell(out)
+	var cell := _free_cell_near(door_cell)
 	if cell == Vector2i(-1, -1):
 		return false
 	var t := UnitFactory.make(TrojanSoldier, UnitFactory.MODEL_TROIANO, GridUnit.Team.TROIANI,
-		rules.health_in_wave(wave), "TrojanWave%d_%d" % [wave, get_tree().get_node_count_in_group(&"troiani")]) as TrojanSoldier
-	t.attack_damage = rules.damage_in_wave(wave)
+		rules.health_in_wave(w), "TrojanWave%d_%d" % [w, index]) as TrojanSoldier
+	t.attack_damage = rules.damage_in_wave(w)
 	t.attack_interval = rules.trojan_attack_interval
-	t.step_duration = rules.step_in_wave(wave)
+	t.step_duration = rules.step_in_wave(w)
 	t.show_health_bar = true
 	t.position = _grid.cell_to_world(cell)
+	t.post_cell = _pick_post(door_cell)
+	t.state = TrojanSoldier.State.RETURN
 	_units_root.add_child(t)
+	# Parte da dentro la torre, oltre i battenti, e attraversa il varco (la porta è fuori dalla griglia).
+	var start := _grid.cell_to_world(cell)
+	start.x = door.global_position.x
+	start.z = door.global_position.z - 0.5
+	t.emerge_from(start, 1.5)
 	t.died.connect(_on_trojan_died)
+	# La porta si richiude dopo l'ultimo che esce.
+	_door_last_use[door] = Time.get_ticks_msec()
+	get_tree().create_timer(4.0).timeout.connect(_close_door.bind(door, _door_last_use[door]))
 	return true
+
+
+var _door_last_use := {}
+
+
+func _close_door(door: TroyGate, stamp: int) -> void:
+	if is_instance_valid(door) and _door_last_use.get(door, 0) == stamp:
+		door.set_open(false, DOOR_TIME)
 
 
 func _spawn_wounded() -> void:

@@ -85,7 +85,7 @@ func _initialize() -> void:
 			spot = w.cell + d
 			break
 	ulisse.place_at(spot)
-	await create_timer(0.3).timeout
+	await create_timer(2.6).timeout
 	_check(w.state == WoundedSoldier.State.FOLLOWING, "avvicinandosi, il ferito si rialza e segue Ulisse")
 	var camp := director.rules.camp_rect
 	var camp_cell := camp.position + Vector2i(2, 2)
@@ -95,11 +95,11 @@ func _initialize() -> void:
 	_check(w.state in [WoundedSoldier.State.SAVED, WoundedSoldier.State.CARRIED, WoundedSoldier.State.EVACUATED], "arrivato all'accampamento, il ferito è in salvo (poi lo portano alle barche)")
 	_check(director.saved_count() == 1, "il contatore dei salvati sale a 1")
 
-	# Un ferito muore.
+	# Enemies cannot kill a wounded man who is still lying.
 	var w2: WoundedSoldier = director.wounded[1]
 	w2.take_damage(1000)
 	await process_frame
-	_check(w2.state == WoundedSoldier.State.LOST and director.lost_count() == 1, "un ferito ucciso è perso")
+	_check(w2.state != WoundedSoldier.State.LOST and w2.health > 0 and director.lost_count() == 0, "a lying wounded man cannot be killed")
 
 	# Fine del livello.
 	var done := [false]
@@ -107,7 +107,7 @@ func _initialize() -> void:
 	await create_timer(rules.duration + 1.0).timeout
 	_check(done[0] and director.phase == LevelDirector.Phase.ENDED, "al segnale di ritirata il livello finisce")
 	var s := director.summary
-	_check(int(s["saved"]) == 1 and int(s["lost"]) == 1, "il riepilogo conta salvati e persi (%d salvati, %d persi)" % [int(s["saved"]), int(s["lost"])])
+	_check(int(s["saved"]) == 1 and int(s["lost"]) == 0, "il riepilogo conta salvati e persi (%d salvati, %d persi)" % [int(s["saved"]), int(s["lost"])])
 	_check(int(s["score"]) == rules.score_for(1, director.kills, director.wounded.size()), "punteggio = %d" % int(s["score"]))
 	_check(not bool(s["orderly"]), "1 salvato su %d: ritirata disperata" % director.wounded.size())
 	_check(director.hud.end_panel_visible(), "compare la schermata finale")

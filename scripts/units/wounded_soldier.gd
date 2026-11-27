@@ -12,12 +12,14 @@ extends GridUnit
 signal state_changed(new_state: int)
 ## Un compagno si è affiancato a Ulisse per aiutarlo a sorreggere il ferito.
 signal helper_joined(by: AllySoldier)
+## Il compagno ha preso il posto di chi sorreggeva il ferito (Ulisse si è staccato).
+signal handed_over(by: AllySoldier)
 
 enum State { LYING, FOLLOWING, SAVED, LOST, CARRIED, EVACUATED, STRETCHER }
 
 ## Distanza (m) entro cui Ulisse "sveglia" il ferito: vale anche in diagonale,
 ## sotto una chioma o accanto a un oggetto (non conta la casella, ma lo spazio).
-@export var wake_distance := 1.9
+@export var wake_distance := 1.5
 ## Velocità massima (m/s) quando viene trascinato.
 @export var drag_speed := 4.2
 ## Distanza (m) a cui sta dietro a chi lo sorregge.
@@ -28,6 +30,10 @@ enum State { LYING, FOLLOWING, SAVED, LOST, CARRIED, EVACUATED, STRETCHER }
 @export var helper_range := 6.0
 ## Il compagno si affianca (ferito al centro) quando è a questa distanza (m) dal ferito.
 @export var handover_distance := 1.5
+## Se Ulisse si allontana oltre questa distanza (m), il compagno affiancato continua da solo con il ferito.
+@export var detach_distance := 2.6
+## Se chi lo sorregge si allontana oltre questa distanza (m) per più di 0,6 s, il ferito si accascia a terra.
+@export var stray_distance := 4.5
 
 ## Ferito grave (solo informativo: si porta come gli altri, niente barella).
 var severe := false
@@ -42,6 +48,12 @@ var _helper_prev_leader: GridUnit
 var _helper_prev_follow := 2
 ## Il compagno è già affiancato (cammina dall'altra parte del ferito).
 var _helper_joined := false
+var _helping := false
+var _detach_time := 0.0
+var _stray_time := 0.0
+var _down_check := 0.0
+## Già rialzato almeno una volta: da allora è colpibile e parte con la vita a metà.
+var raised_once := false
 var _cur_stance: StringName = &"limp"
 
 
@@ -59,8 +71,16 @@ func _ready() -> void:
 		_model_node.play_lying(true)
 
 
+## A wounded man is untouchable while he lies on the ground, but once he has been helped up (walking
+## with Ulisse or a comrade, or standing in camp waiting for a bearer) enemies can target and kill him.
 func is_targetable() -> bool:
-	return state == State.LYING or state == State.FOLLOWING or state == State.CARRIED or state == State.STRETCHER
+	return state == State.FOLLOWING or state == State.CARRIED or state == State.SAVED
+
+
+func take_damage(amount: int, hit_dir := Vector3.ZERO, bleed := true) -> void:
+	if not is_targetable():
+		return
+	super.take_damage(amount, hit_dir, bleed)
 
 
 ## Cammina sorretto da qualcuno (Ulisse o un alleato).
@@ -76,10 +96,16 @@ func _physics_process(delta: float) -> void:
 		_update_stance()
 		return
 	if state == State.LYING:
-		_wake_check()
+		if not _helping:
+			_wake_check()
+			_down_pickup_check(delta)
 		return
 	_drag(delta)
 	_update_stance()
+	if state == State.FOLLOWING:
+		_detach_check(delta)
+	if state == State.FOLLOWING or state == State.CARRIED:
+		_stray_check(delta)
 	if state == State.FOLLOWING:
 		_helper_check -= delta
 		if _helper_check <= 0.0:
@@ -101,7 +127,43 @@ func _wake_check() -> void:
 		return
 	var d := Vector2(leader.global_position.x - global_position.x, leader.global_position.z - global_position.z)
 	if d.length() <= wake_distance and not _leader_busy():
-		start_support(leader, State.FOLLOWING)
+		begin_help_up(leader, State.FOLLOWING)
+
+
+## Ulisse si china, gli dà la mano e lo tira su: il ferito non si alza da solo, resta a terra finché
+## Ulisse non interviene. A fine animazione è in piedi e sorretto.
+## Fa partire l'aiuto (coroutine: il ferito è in piedi e sorretto solo a fine animazione).
+func begin_help_up(by: GridUnit, new_state: State) -> void:
+	if _helping or state != State.LYING or by == null or not is_instance_valid(by):
+		return
+	_helping = true
+	var ul := by
+	var dur := 1.9
+	if ul.has_method(&"start_help_up"):
+		ul.call(&"start_help_up", global_position, dur)
+	if _model:
+		var d := Vector2(ul.global_position.x - global_position.x, ul.global_position.z - global_position.z)
+		if d.length() > 0.01:
+			_model.rotation.y = atan2(-d.x, -d.y)
+	await get_tree().create_timer(0.55).timeout   # la mano arriva, poi il ferito si tira su
+	if not is_inside_tree() or state != State.LYING:
+		_helping = false
+		return
+	if _model_node:
+		_model_node.revive()
+	var up := 1.5
+	if _model_node:
+		up = maxf(_model_node.anim_length(&"getup") - 0.15, 0.5)
+	await get_tree().create_timer(up).timeout
+	_helping = false
+	if not is_inside_tree() or state != State.LYING or ul == null or not is_instance_valid(ul) or ul.health <= 0:
+		return
+	if _dist_xz(ul) > 3.0:
+		# Chi lo aiutava si è allontanato nel frattempo: il ferito si rimette giù, in attesa.
+		if _model_node:
+			_model_node.play_lying()
+		return
+	start_support(ul, new_state)
 
 
 ## Ulisse sorregge già un altro ferito: questo aspetta (si porta un ferito alla volta).
@@ -134,6 +196,10 @@ func start_support(by: GridUnit, new_state: State) -> void:
 	leader = by
 	if _model_node and _model_node.dead:
 		_model_node.revive()
+	if not raised_once:
+		raised_once = true
+		health = maxi(max_health / 2, 1)   # rialzato, parte con la vita a metà (e da ora è colpibile)
+		_on_health_changed()
 	_set_state(new_state)
 	if by.has_method(&"set_carrying"):
 		by.call(&"set_carrying", true)
@@ -287,6 +353,76 @@ func _refresh_helper() -> void:
 		_join_helper()
 
 
+## Chi lo sorregge si è allontanato troppo (ostacolo, salto, scontro, morte): il ferito non lo segue,
+## si accascia a terra e potrà essere rialzato da Ulisse o da un compagno vicino.
+func _stray_check(delta: float) -> void:
+	if state == State.FOLLOWING and _helper_joined and helper != null and is_instance_valid(helper):
+		_stray_time = 0.0
+		return   # ci pensa il cambio di sostegno con il compagno affiancato
+	var gone := leader == null or not is_instance_valid(leader) or leader.health <= 0 or _dist_xz(leader) > stray_distance
+	_stray_time = _stray_time + delta if gone else 0.0
+	if _stray_time >= 0.6:
+		_stray_time = 0.0
+		collapse()
+
+
+## Si accascia a terra (animazione di discesa) in attesa di essere rialzato.
+func collapse() -> void:
+	if state != State.FOLLOWING and state != State.CARRIED:
+		return
+	_drop_helper()
+	if leader and is_instance_valid(leader) and leader.has_method(&"set_carrying"):
+		leader.call(&"set_carrying", false)
+	leader = null
+	_set_dragging(false)
+	_set_state(State.LYING)
+	if _model_node:
+		_model_node.play_lying()
+
+
+## A terra dopo essere stato rialzato: se un compagno libero è vicino, va a prenderlo.
+func _down_pickup_check(delta: float) -> void:
+	if not raised_once:
+		return
+	_down_check -= delta
+	if _down_check > 0.0:
+		return
+	_down_check = 0.5
+	var f := get_tree().get_first_node_in_group(&"ferry_system")
+	if f == null or not f.has_method(&"request_pickup"):
+		return
+	f.call(&"request_pickup", self)
+
+
+## Ulisse si stacca (si allontana o cade) mentre un compagno è già affiancato: il ferito continua
+## con il compagno, in piedi, fino al campo e alla nave.
+func _detach_check(delta: float) -> void:
+	if not _helper_joined or helper == null or not is_instance_valid(helper) or leader == null or not is_instance_valid(leader):
+		_detach_time = 0.0
+		return
+	var far := _dist_xz(leader) > detach_distance or leader.health <= 0
+	_detach_time = _detach_time + delta if far else 0.0
+	if _detach_time < 0.4:
+		return
+	_detach_time = 0.0
+	var f := get_tree().get_first_node_in_group(&"ferry_system")
+	if f == null or not f.has_method(&"request_handover"):
+		return
+	var a := helper
+	a.busy = false          # lo riprende il soccorso come portatore
+	_helper_joined = false
+	helper = null
+	if f.call(&"request_handover", self, a):
+		if a.leader == self:
+			a.leader = null
+		a.follow_distance = _helper_prev_follow
+		handed_over.emit(a)
+	else:
+		helper = a
+		a.busy = true
+		_helper_joined = true
+
+
 func _dist_xz(u: Node3D) -> float:
 	return Vector2(u.global_position.x - global_position.x, u.global_position.z - global_position.z).length()
 
@@ -298,8 +434,7 @@ func _drop_helper() -> void:
 			helper.is_moving = false
 			helper.set_carrying(false)
 		if helper.leader == self:
-			helper.leader = _helper_prev_leader if _helper_prev_leader != null and is_instance_valid(_helper_prev_leader) \
-				else get_tree().get_first_node_in_group(&"player") as GridUnit
+			helper.leader = _helper_prev_leader if _helper_prev_leader != null and is_instance_valid(_helper_prev_leader) else null
 		helper.follow_distance = _helper_prev_follow
 	helper = null
 	_helper_joined = false

@@ -303,6 +303,9 @@ func thin_shape() -> Dictionary:
 func _compute_box() -> void:
 	if _box_ready:
 		return
+	# La griglia può chiedere l'altezza prima del _ready del nodo: il modello pesante ad alta qualità
+	# (lazy_model_path) va caricato adesso, altrimenti l'altezza resterebbe 0 e l'oggetto risulterebbe scavalcabile.
+	_load_lazy()
 	_box_ready = true
 	if _active_model() == null:
 		_height = 0.0

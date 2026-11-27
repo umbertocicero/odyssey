@@ -32,7 +32,9 @@ func _initialize() -> void:
 		diag = w.cell + Vector2i(-1, -1)
 	ulisse.place_at(diag)
 	await create_timer(0.3).timeout
-	_check(w.state == WoundedSoldier.State.FOLLOWING, "in diagonale il ferito si sveglia")
+	_check(w.state == WoundedSoldier.State.LYING and w._helping, "Ulisse si china ad aiutarlo: il ferito resta a terra, non si alza da solo")
+	await create_timer(2.4).timeout
+	_check(w.state == WoundedSoldier.State.FOLLOWING, "in diagonale Ulisse lo aiuta a rialzarsi e il ferito lo segue")
 	for a in get_nodes_in_group(&"achei"):
 		if a is AllySoldier:
 			for d in [Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, 2), Vector2i(0, -2), Vector2i(3, 0)]:

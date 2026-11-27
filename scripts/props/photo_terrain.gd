@@ -17,7 +17,8 @@ const MOBILE_PATH := "res://assets/models/custom/terreno/terreno_pianura_mobile.
 const SPLAT_SHADER := preload("res://assets/models/custom/terreno/godot/terreno_splat.gdshader")
 const TEX_DIR := "res://assets/models/custom/terreno/textures/"
 const CELLS_PER_METER := 4
-const MAX_DETAIL := 0.12
+## Oltre questo scarto vince il livello a gradini (pareti); sotto, le unità seguono la mesh anche sul piede delle pareti.
+const MAX_DETAIL := 0.5
 
 @export var enabled := true
 ## Qualità piena: shader a 6 strati PBR con splat map invece delle texture cotte.

@@ -7,6 +7,12 @@ extends Node3D
 @export var height := 1.9
 
 var _fill: MeshInstance3D
+var _ratio := 1.0
+## Nascosta comunque (duello in prima persona: c'è l'HUD del duello).
+var suppressed := false:
+	set(value):
+		suppressed = value
+		visible = _ratio < 1.0 and not suppressed
 var _fill_material: StandardMaterial3D
 
 
@@ -22,7 +28,8 @@ func set_ratio(ratio: float) -> void:
 	if not is_node_ready():
 		await ready
 	ratio = clampf(ratio, 0.0, 1.0)
-	visible = ratio < 1.0
+	_ratio = ratio
+	visible = ratio < 1.0 and not suppressed
 	_fill.scale = Vector3(maxf(ratio, 0.001), 1, 1)
 	_fill_material.albedo_color = Color(0.9, 0.2, 0.15).lerp(Color(0.3, 0.9, 0.3), ratio)
 

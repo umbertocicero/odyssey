@@ -18,6 +18,32 @@ const GOLD := Color(0.9, 0.72, 0.28)
 const DIR := "res://assets/ui/hud/"
 
 static var _cache := {}
+## Lato (in pixel dello schermo) dei blocchi del filtro pixel art attivo con K; 0 = filtro spento.
+## Lo imposta RenderPipeline: con un valore > 0 i testi diventano più grandi, in grassetto e con
+## contorno scuro, perché a blocchi grossi i caratteri piccoli e sottili non si leggerebbero.
+static var pixel_cell := 0.0
+static var _bold_font: FontVariation
+
+
+## Font dell'HUD: quello di default, o la sua versione in grassetto quando il filtro pixel art è attivo.
+static func font() -> Font:
+	if pixel_cell <= 0.0:
+		return ThemeDB.fallback_font
+	if _bold_font == null:
+		_bold_font = FontVariation.new()
+		_bold_font.base_font = ThemeDB.fallback_font
+		_bold_font.variation_embolden = 0.85
+	return _bold_font
+
+
+## Corpo minimo (px) dei testi con il filtro attivo: almeno 6 blocchi e mai sotto 17 px.
+static func min_font_px() -> int:
+	return maxi(int(7.0 * pixel_cell), 20)
+
+
+## Moltiplicatore della dimensione dei testi (1 con il filtro spento).
+static func text_scale() -> float:
+	return 1.0 if pixel_cell <= 0.0 else 1.0 + 0.06 * pixel_cell
 
 
 ## Texture dell'HUD (assets/ui/hud/), caricata una volta. Vuota se il file manca: l'HUD ripiega sul disegno procedurale.
@@ -28,14 +54,37 @@ static func tex(file_name: String) -> Texture2D:
 	return _cache[file_name]
 
 
+## Versione in scala di grigi (desaturata e scurita) di una texture dell'HUD, per i caduti. Cache per nome.
+static func tex_gray(file_name: String) -> Texture2D:
+	var key := file_name + "#gray"
+	if not _cache.has(key):
+		var src := tex(file_name)
+		var out: Texture2D = null
+		if src != null:
+			var img := src.get_image()
+			if img != null:
+				if img.is_compressed():
+					img.decompress()
+				img.convert(Image.FORMAT_RGBA8)
+				for y in img.get_height():
+					for x in img.get_width():
+						var col := img.get_pixel(x, y)
+						var l := col.r * 0.3 + col.g * 0.59 + col.b * 0.11
+						img.set_pixel(x, y, Color(l * 0.62, l * 0.62, l * 0.62, col.a))
+				out = ImageTexture.create_from_image(img)
+		_cache[key] = out
+	return _cache[key]
+
+
 ## Ritratto tondo: anello di bronzo con il ritratto dentro (o il busto disegnato se manca la texture).
-static func draw_portrait(c: CanvasItem, center: Vector2, radius: float, portrait: String, crest: Color, cloak: Color) -> void:
-	var texture := tex(portrait)
+## `gray`: ritratto di un caduto, in grigio e con l'anello spento.
+static func draw_portrait(c: CanvasItem, center: Vector2, radius: float, portrait: String, crest: Color, cloak: Color, gray := false) -> void:
+	var texture := tex_gray(portrait) if gray else tex(portrait)
 	draw_ring(c, center, radius, Color(0.22, 0.14, 0.09))
 	if texture:
 		var inner := radius - 3.0
 		c.draw_texture_rect(texture, Rect2(center - Vector2(inner, inner), Vector2(inner, inner) * 2.0), false)
-		c.draw_arc(center, radius - 1.5, 0.0, TAU, 48, BRONZE, 3.0, true)
+		c.draw_arc(center, radius - 1.5, 0.0, TAU, 48, Color(0.38, 0.37, 0.36) if gray else BRONZE, 3.0, true)
 	else:
 		draw_bust(c, center + Vector2(0, radius * 0.08), radius * 0.68, crest, cloak)
 
@@ -74,6 +123,8 @@ static func draw_meander(c: CanvasItem, from: Vector2, length: float, cell: floa
 
 ## Cornice rettangolare di bronzo: bordo, filetto interno, riempimento scuro, greca in alto.
 static func draw_frame(c: CanvasItem, rect: Rect2, fill := Color(0.12, 0.08, 0.05, 0.82), meander := true) -> void:
+	if pixel_cell > 0.0:
+		fill = Color(0.08, 0.05, 0.03, 0.97)   # filtro pixel art: fondo scuro opaco, il testo resta leggibile
 	c.draw_rect(rect, fill)
 	c.draw_rect(rect, BRONZE, false, 3.0)
 	c.draw_rect(rect.grow(-4.0), BRONZE_DARK, false, 1.0)

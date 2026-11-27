@@ -75,7 +75,13 @@ func _run() -> void:
 	fire_archer.fire_at(fire_cell)
 	await create_timer(fire_archer.profile.warning_time + 0.1).timeout
 	_check(BurningCell.is_burning(fire_cell), "la freccia infiammata accende la casella %s" % [fire_cell])
+	_check(grid.has_fire(fire_cell) and not grid.is_walkable(fire_cell), "la casella in fiamme non è attraversabile")
+	var fire_w := grid.cell_to_world(fire_cell)
+	var pushed: Dictionary = grid.resolve_circle(Vector2(fire_w.x, fire_w.z), 0.3, fire_cell)
+	_check(grid.world_to_cell(Vector3(pushed["pos"].x, 0, pushed["pos"].y)) != fire_cell, "il movimento libero non entra nel fuoco")
+	grid.set_fire(fire_cell, false) # place_at rifiuta il fuoco: simula chi era già sopra quando si accende
 	ulisse.place_at(fire_cell)
+	grid.set_fire(fire_cell, true)
 	before = ulisse.health
 	await create_timer(2.2).timeout
 	_check(ulisse.health <= before - fire_archer.profile.burn_damage_per_second,

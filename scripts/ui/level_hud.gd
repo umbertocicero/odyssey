@@ -5,8 +5,8 @@ extends Control
 ##   in alto a sinistra: ritratto di Ulisse, nome, livello, barra della vita;
 ##   in alto al centro: titolo del livello, timer di ritirata e ondata, OBJECTIVE;
 ##   in alto a destra: minimappa a pergamena e contatori (feriti al campo, sulle navi, persi);
-##   a destra: ritratti degli alleati con barra della vita;
-##   in basso a sinistra: slot arma e scudo (SWORD OF ITHACA);
+##   a destra: ritratti dei feriti (a colori con barra della vita; grigi se morti);
+##   in basso a sinistra: attacco con la spada (SWORD OF ITHACA, CLICK / F) con indicatore di ricarica;
 ##   in basso al centro: sottotitoli; in basso a destra: suggerimenti dei comandi.
 ## Si adatta alla finestra (scala `u`) e ai margini sicuri dei telefoni; su schermi stretti nasconde
 ## alleati e comandi. API invariata per LevelDirector: set_time, set_wounded, show_banner, show_end.
@@ -15,6 +15,8 @@ signal continue_pressed
 
 const FONT_BOLD_OUTLINE := 5
 ## Ritratti (ritagli dalle foto in ispirazione/characters/, copiati in assets/ui/hud/) per nome mostrato.
+## Nomi (unici, in ordine) dei feriti del livello nell'HUD.
+const WOUNDED_NAMES := ["ELPENOR", "EURYLOCHUS", "EURYBATES", "PHILOCTETES", "POLITES", "DEIPHOBUS"]
 const PORTRAITS := {
 	"ELPENOR": "portrait_elpenore", "EURYLOCHUS": "portrait_euriloco", "EURYBATES": "portrait_euribate",
 	"PHILOCTETES": "portrait_filotete", "POLITES": "portrait_polite", "DEIPHOBUS": "portrait_deifobo",
@@ -44,6 +46,7 @@ var _end_title: Label
 var _end_body: Label
 var _continue: Button
 var _u := 1.0
+var _styled_cell := 0.0
 var _margin := Vector4(12, 12, 12, 12)   # sinistra, alto, destra, basso
 
 
@@ -60,6 +63,9 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if HudWidgets.pixel_cell != _styled_cell:
+		_styled_cell = HudWidgets.pixel_cell
+		_style_end_panel_text()
 	_marker_clock -= delta
 	if _marker_clock <= 0.0:
 		_marker_clock = 0.15
@@ -96,10 +102,20 @@ func _narrow() -> bool:
 # --- Disegno ---------------------------------------------------------------------------------------
 
 func _text(at: Vector2, s: String, size: float, color := HudWidgets.CREAM, align := HORIZONTAL_ALIGNMENT_LEFT, width := -1.0) -> void:
-	var font := ThemeDB.fallback_font
-	var fs := int(size * _u)
-	# Ombra morbida al posto del contorno (meno chiamate di disegno 2D).
-	draw_string(font, at + Vector2(1.5, 1.5) * _u, s, align, width, fs, Color(HudWidgets.INK, 0.9 * color.a))
+	var font := HudWidgets.font()
+	var fs := int(size * _u * HudWidgets.text_scale())
+	if HudWidgets.pixel_cell > 0.0:
+		# Mai sotto 6 blocchi di corpo e mai semitrasparente (il banner che sfuma si accende o si spegne):
+		# a blocchi grossi un testo piccolo o sfumato non si leggerebbe.
+		fs = maxi(fs, HudWidgets.min_font_px())
+		if color.a < 0.3:
+			return
+		color.a = 1.0
+		# Filtro pixel art: contorno scuro spesso un blocco, così il testo resta leggibile.
+		draw_string_outline(font, at, s, align, width, fs, int(HudWidgets.pixel_cell) * (2 if fs >= 28 else 1), Color(HudWidgets.INK, color.a))
+	else:
+		# Ombra morbida al posto del contorno (meno chiamate di disegno 2D).
+		draw_string(font, at + Vector2(1.5, 1.5) * _u, s, align, width, fs, Color(HudWidgets.INK, 0.9 * color.a))
 	draw_string(font, at, s, align, width, fs, color)
 
 
@@ -139,7 +155,8 @@ func _draw() -> void:
 	_text(Vector2(bx, by + 33.0 * u), "ATTEMPT %d / %d" % [_attempt, _max_attempts], 21.0, HudWidgets.CREAM, HORIZONTAL_ALIGNMENT_CENTER, bw)
 	var obj := Rect2(bx + 14.0 * u, by + 54.0 * u, bw - 28.0 * u, 42.0 * u)
 	HudWidgets.draw_frame(self, obj, Color(0.4, 0.3, 0.18, 0.72), false)
-	HudWidgets.draw_parchment(self, obj.grow(-3.0), Color(0.5, 0.4, 0.27, 0.85))
+	if HudWidgets.pixel_cell <= 0.0:
+		HudWidgets.draw_parchment(self, obj.grow(-3.0), Color(0.5, 0.4, 0.27, 0.85))
 	_text(Vector2(obj.position.x + 8.0 * u, obj.position.y + 16.0 * u), "OBJECTIVE", 11.0, HudWidgets.GOLD)
 	_text(Vector2(obj.position.x + 8.0 * u, obj.position.y + 32.0 * u), "Hold the line and carry the wounded to the ships", 12.5, HudWidgets.CREAM, HORIZONTAL_ALIGNMENT_LEFT, obj.size.x - 12.0 * u)
 	# Minimappa e contatori.
@@ -153,58 +170,94 @@ func _draw() -> void:
 	_text(Vector2(cx + 10.0 * u, cy + 26.0 * u), "WOUNDED  %d / %d" % [_saved, _total], 13.0)
 	_text(Vector2(cx + 10.0 * u, cy + 41.0 * u), "ON THE SHIPS  %d" % _evacuated, 13.0, HudWidgets.PARCHMENT)
 	_text(Vector2(cx + 10.0 * u, cy + 56.0 * u), "LOST  %d" % _lost, 13.0, Color(0.85, 0.45, 0.35))
-	# Alleati (non sugli schermi stretti).
+	# Feriti da salvare: un ritratto per ciascuno (colori e barra se vivo, grigio se morto).
 	if not narrow:
 		var ay := cy + 62.0 * u + 10.0 * u
-		var shown := 0
-		for n in get_tree().get_nodes_in_group(&"units"):
-			var g := n as GridUnit
-			if g == null or g == _player or g.team != GridUnit.Team.ACHEI or g is WoundedSoldier or g.health <= 0:
-				continue
-			if shown >= 3:
-				break
-			var card := Rect2(cx, ay + shown * 42.0 * u, cw, 36.0 * u)
-			HudWidgets.draw_frame(self, card, Color(0.12, 0.08, 0.05, 0.78), false)
-			var model := g.get_node_or_null(^"Model") as CharacterModel
-			var card_name := model.variant_name if model != null and model.variant_name != "" else str(g.name).to_upper().replace("SOLDATOACHEO", "SOLDIER ")
-			HudWidgets.draw_portrait(self, card.position + Vector2(18.0 * u, 18.0 * u), 15.0 * u, PORTRAITS.get(card_name, "portrait_oplita_acheo"), HudWidgets.BRONZE_LIGHT, Color(0.3, 0.32, 0.5))
-			_text(card.position + Vector2(40.0 * u, 15.0 * u), card_name, 11.0)
-			HudWidgets.draw_bar(self, Rect2(card.position.x + 40.0 * u, card.position.y + 21.0 * u, cw - 50.0 * u, 9.0 * u), float(g.health) / maxf(float(g.max_health), 1.0), HudWidgets.OLIVE)
-			shown += 1
-	# In basso a sinistra: slot arma e scudo.
+		var list := _wounded_list()
+		for i in list.size():
+			var w := list[i]
+			var card := Rect2(cx, ay + i * 38.0 * u, cw, 33.0 * u)
+			var dead := w.state == WoundedSoldier.State.LOST or w.health <= 0
+			var card_name: String = WOUNDED_NAMES[i % WOUNDED_NAMES.size()]
+			HudWidgets.draw_frame(self, card, Color(0.12, 0.08, 0.05, 0.78) if not dead else Color(0.1, 0.1, 0.1, 0.7), false)
+			HudWidgets.draw_portrait(self, card.position + Vector2(17.0 * u, 16.5 * u), 14.0 * u, PORTRAITS.get(card_name, "portrait_oplita_acheo"),
+				HudWidgets.BRONZE_LIGHT, Color(0.3, 0.32, 0.5), dead)
+			_text(card.position + Vector2(38.0 * u, 14.0 * u), card_name, 11.0, HudWidgets.CREAM if not dead else Color(0.62, 0.6, 0.58))
+			var ratio := 0.0 if dead else float(w.health) / maxf(float(w.max_health), 1.0)
+			var tag := ""
+			if w.state == WoundedSoldier.State.EVACUATED:
+				tag = "ON SHIP"
+			elif dead:
+				tag = "LOST"
+			if tag != "":
+				_text(Vector2(card.end.x - 78.0 * u, card.position.y + 14.0 * u), tag, 9.5, HudWidgets.PARCHMENT if not dead else Color(0.62, 0.6, 0.58), HORIZONTAL_ALIGNMENT_RIGHT, 68.0 * u)
+			HudWidgets.draw_bar(self, Rect2(card.position.x + 38.0 * u, card.position.y + 19.0 * u, cw - 48.0 * u, 9.0 * u), ratio,
+				HudWidgets.OLIVE if not dead else Color(0.42, 0.42, 0.42))
+	# In basso a sinistra: l'unica abilità del gioco oggi, l'attacco con la spada (CLICK / F). Parata, schivata,
+	# pozioni e borsa non sono ancora implementati, quindi non hanno slot: nessuna icona senza funzione.
 	var sr := 27.0 * u
 	var sy := sz.y - mb - sr * 2.0 - 16.0 * u
-	# Spada e scudo attivi; pozione e borsa sono slot vuoti (nel gioco non c'è ancora un inventario).
-	var slots := [["icon_spada_itaca", 1.0], ["icon_hoplon", 1.0], ["icon_pozione", 0.4], ["icon_borsa", 0.4]]
-	for i in slots.size():
-		var c := Vector2(ml + sr + i * (sr * 2.0 + 8.0 * u), sy + sr)
-		if not HudWidgets.draw_icon(self, c, sr, slots[i][0], slots[i][1]):
-			HudWidgets.draw_ring(self, c, sr, Color(0.2, 0.13, 0.08))
-	_text(Vector2(ml, sz.y - mb), "SWORD OF ITHACA", 12.0, HudWidgets.GOLD)
+	var sc := Vector2(ml + sr, sy + sr)
+	if not HudWidgets.draw_icon(self, sc, sr, "icon_spada_itaca"):
+		HudWidgets.draw_ring(self, sc, sr, Color(0.2, 0.13, 0.08))
+	# Ricarica: spicchio scuro che si consuma finché Ulisse può colpire di nuovo.
+	var cd := float(_player.get("_attack_cd")) if _player and is_instance_valid(_player) else 0.0
+	var cd_max := maxf(float(_player.get("attack_cooldown")) if _player and is_instance_valid(_player) else 0.5, 0.01)
+	if cd > 0.0:
+		var frac := clampf(cd / cd_max, 0.0, 1.0)
+		var pts := PackedVector2Array([sc])
+		for k in 25:
+			var a := -PI * 0.5 + TAU * frac * k / 24.0
+			pts.append(sc + Vector2(cos(a), sin(a)) * (sr - 2.0))
+		draw_colored_polygon(pts, Color(0.04, 0.02, 0.01, 0.7))
+	var tx2 := ml + sr * 2.0 + 10.0 * u
+	_text(Vector2(tx2, sy + sr - 2.0 * u), "SWORD OF ITHACA", 12.0, HudWidgets.GOLD)
+	_text(Vector2(tx2, sy + sr + 16.0 * u), "CLICK / F - Attack", 11.0, HudWidgets.CREAM)
 	# Comandi in basso a destra.
-	if not narrow:
-		var prompts := [["WASD", "Move"], ["CLICK", "Attack"], ["WALK UP", "Lift wounded"]]
+	var prompts := [["WASD", "Move"], ["CLICK / F", "Attack"], ["WALK UP", "Lift wounded"]]
+	if narrow:
+		prompts = [["CLICK / F", "Attack"]]  # a finestra stretta resta almeno il comando d'attacco
+	if true:
 		for i in prompts.size():
 			var py := sz.y - mb - (prompts.size() - i) * 24.0 * u
-			var kw := 62.0 * u
-			var kr := Rect2(sz.x - mr - 200.0 * u, py, kw, 20.0 * u)
+			var wide := 1.0 if HudWidgets.pixel_cell <= 0.0 else 1.45   # testi più grandi con il filtro pixel art
+			var kw := 70.0 * u * wide
+			var kr := Rect2(sz.x - mr - 200.0 * u - 40.0 * u * (wide - 1.0) * 2.0, py, kw, 20.0 * u * minf(wide, 1.3))
 			HudWidgets.draw_frame(self, kr, Color(0.14, 0.09, 0.06, 0.85), false)
-			_text(kr.position + Vector2(0, 15.0 * u), prompts[i][0], 11.0, HudWidgets.CREAM, HORIZONTAL_ALIGNMENT_CENTER, kw)
-			_text(Vector2(kr.end.x + 8.0 * u, py + 15.0 * u), prompts[i][1], 12.5)
+			_text(kr.position + Vector2(0, 15.0 * u * minf(wide, 1.3)), prompts[i][0], 11.0, HudWidgets.CREAM, HORIZONTAL_ALIGNMENT_CENTER, kw)
+			_text(Vector2(kr.end.x + 8.0 * u, py + 15.0 * u * minf(wide, 1.3)), prompts[i][1], 12.5)
 	# Annuncio e sottotitolo.
 	if _banner_alpha > 0.01:
 		var col := Color(HudWidgets.CREAM, _banner_alpha)
 		var by2 := mt + 150.0 * u if not narrow else cy + 62.0 * u + 34.0 * u
+		if HudWidgets.pixel_cell > 0.0 and _banner_alpha >= 0.3:
+			# Fascia scura dietro l'annuncio: su sabbia e cielo chiari il testo crema altrimenti si perde.
+			var bh := 48.0 * u * HudWidgets.text_scale()
+			var bw2 := minf(HudWidgets.font().get_string_size(_banner_text, HORIZONTAL_ALIGNMENT_LEFT, -1, int(30.0 * u * HudWidgets.text_scale())).x + 48.0 * u, sz.x)
+			draw_rect(Rect2((sz.x - bw2) * 0.5, by2 - bh * 0.72, bw2, bh), Color(HudWidgets.INK, 0.9))
 		_text(Vector2(0, by2), _banner_text, 30.0, col, HORIZONTAL_ALIGNMENT_CENTER, sz.x)
 	if _subtitle_alpha > 0.01:
 		var line := "%s: %s" % [_subtitle_speaker.to_upper(), _subtitle_text] if _subtitle_speaker != "" else _subtitle_text
 		var sw := clampf(sz.x - 2.0 * (ml + 12.0 * u), 240.0 * u, 760.0 * u)
 		# Sopra gli slot e i comandi in basso (che occupano circa 82 px): i sottotitoli non li coprono.
 		var rect := Rect2((sz.x - sw) * 0.5, sz.y - mb - 132.0 * u, sw, 44.0 * u)
-		var frame_alpha := _subtitle_alpha * 0.8
+		var frame_alpha := _subtitle_alpha * 0.8 if HudWidgets.pixel_cell <= 0.0 else (0.95 if _subtitle_alpha >= 0.3 else 0.0)
 		draw_rect(rect, Color(0.08, 0.05, 0.03, frame_alpha))
 		draw_rect(rect, Color(HudWidgets.BRONZE, _subtitle_alpha), false, 2.0)
 		_text(rect.position + Vector2(0, 27.0 * u), line, 15.0, Color(HudWidgets.CREAM, _subtitle_alpha), HORIZONTAL_ALIGNMENT_CENTER, sw)
+
+
+## I feriti del livello, nell'ordine in cui compaiono (Wounded1, Wounded2, ...).
+func _wounded_list() -> Array[WoundedSoldier]:
+	var list: Array[WoundedSoldier] = []
+	for n in get_tree().get_nodes_in_group(&"units"):
+		if n is WoundedSoldier:
+			list.append(n)
+	for n in get_tree().get_nodes_in_group(&"achei"):
+		if n is WoundedSoldier and not list.has(n):
+			list.append(n)
+	list.sort_custom(func(a: WoundedSoldier, b: WoundedSoldier) -> bool: return str(a.name).naturalnocasecmp_to(str(b.name)) < 0)
+	return list
 
 
 func _update_markers() -> void:
@@ -263,6 +316,25 @@ func _build_end_panel() -> void:
 	_continue.text = "Continue to Level 2"
 	_continue.pressed.connect(func(): continue_pressed.emit())
 	box.add_child(_continue)
+
+
+## Con il filtro pixel art (K) i testi della schermata finale diventano più grandi, in grassetto e con
+## un contorno scuro spesso un blocco; con il filtro spento tornano com'erano.
+func _style_end_panel_text() -> void:
+	if _end_panel == null:
+		return
+	var on := HudWidgets.pixel_cell > 0.0
+	var outline := int(HudWidgets.pixel_cell) * 2 if on else 0
+	var font: Font = HudWidgets.font() if on else null
+	for c: Control in [_end_title, _end_body, _continue]:
+		c.add_theme_constant_override(&"outline_size", outline)
+		c.add_theme_color_override(&"font_outline_color", HudWidgets.INK)
+		if on:
+			c.add_theme_font_override(&"font", font)
+		else:
+			c.remove_theme_font_override(&"font")
+	_end_body.add_theme_font_size_override(&"font_size", HudWidgets.min_font_px() if on else 16)
+	_continue.add_theme_font_size_override(&"font_size", HudWidgets.min_font_px() if on else 16)
 
 
 # --- API per LevelDirector ---------------------------------------------------------------------------

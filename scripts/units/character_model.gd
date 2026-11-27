@@ -41,6 +41,8 @@ extends Node3D
 @export var anim_jump := &"jump"
 ## Usa le animazioni procedurali (HumanoidAnims + AnimationTree). Se falso usa quelle del glb.
 @export var humanize := true
+## Usa i clip Mixamo retargettati (azioni "mx_*" nel glb) per camminata, corsa e morte; il resto resta procedurale (vedi MixamoClips).
+@export var mixamo_clips := true
 @export var anim_death := &"death"
 ## Non più usato (la camminata segue sempre la velocità reale); tenuto per compatibilità.
 @export var sync_walk_to_step := true
@@ -76,7 +78,7 @@ const STANCE_CLIPS := {
 	&"drag": [&"drag_idle", &"drag_walk", &"drag_walk"], &"drag_l": [&"drag_l_idle", &"drag_l_walk", &"drag_l_walk"],
 	&"drag_r": [&"drag_r_idle", &"drag_r_walk", &"drag_r_walk"], &"dragged": [&"dragged_idle", &"dragged_walk", &"dragged_walk"],
 }
-const ACTIONS := [&"attack", &"attack2", &"attack_thrust", &"block", &"hit", &"dodge", &"jump", &"shoot", &"climb_0", &"climb_1", &"climb_2"]
+const ACTIONS := [&"attack", &"attack2", &"attack_thrust", &"block", &"hit", &"dodge", &"helpup", &"jump", &"shoot", &"climb_0", &"climb_1", &"climb_2"]
 const DEATH_CLIPS := [&"death", &"death_front", &"death_side_r", &"death_side_l"]
 const DEAD_CLIPS := [&"death", &"death_front", &"death_side_r", &"death_side_l", &"lie", &"lie_dead", &"getup", &"liedown"]
 
@@ -96,6 +98,8 @@ var stance := &"normal"
 var clip_sets := PackedStringArray()
 
 var _lib: AnimationLibrary
+var _mx: AnimationLibrary
+var _mx_strides := {}
 var _busy_until := 0.0      # fino a quando un'azione ha la precedenza (per current_animation)
 var _action := &""
 var _last_health := -1
@@ -205,6 +209,14 @@ func _build_tree() -> void:
 	tree.name = "HumanTree"
 	skeleton.add_child(tree)
 	tree.add_animation_library(&"", _lib)
+	_mx = null
+	_mx_strides = {}
+	if mixamo_clips and player and model_scene:
+		var d := MixamoClips.for_model(model_scene.resource_path, player, skeleton)
+		if (d["lib"] as AnimationLibrary).get_animation_list().size() > 0:
+			_mx = d["lib"]
+			_mx_strides = d["strides"]
+			tree.add_animation_library(&"mx", _mx)
 	tree.root_node = NodePath("..")
 	var bt := AnimationNodeBlendTree.new()
 	var stance_tr := AnimationNodeTransition.new()
@@ -307,8 +319,13 @@ func _add_input(tr: AnimationNodeTransition, input_name: String) -> void:
 
 func _anim_node(anim: StringName) -> AnimationNodeAnimation:
 	var n := AnimationNodeAnimation.new()
-	n.animation = anim
+	n.animation = StringName("mx/" + String(anim)) if _mx != null and _mx.has_animation(anim) else anim
 	return n
+
+
+## Passo per ciclo dell'andatura (m): quello della clip Mixamo se c'e', altrimenti della procedurale.
+func _stride(anim: StringName) -> float:
+	return float(_mx_strides[anim]) if _mx_strides.has(anim) and _mx != null and _mx.has_animation(anim) else HumanoidAnims.stride(anim)
 
 
 func _tp(param: String, value: Variant) -> void:
@@ -370,7 +387,7 @@ func _apply_locomotion(delta: float) -> void:
 		var clips: Array = STANCE_CLIPS[s]
 		var r: Vector2 = GAIT_SPEEDS.get(s, refs)
 		var b := clampf((speed - r.x) / (r.y - r.x), 0.0, 1.0)
-		var st := lerpf(HumanoidAnims.stride(clips[1]), HumanoidAnims.stride(clips[2]), b)
+		var st := lerpf(_stride(clips[1]), _stride(clips[2]), b)
 		_tp("gait_%s/blend_position" % s, b)
 		if s == &"row":
 			# Seduto sul banco: la velocità della barca non c'entra, il ritmo è fisso e non si cammina mai.
@@ -465,6 +482,11 @@ func play_attack() -> void:
 	_fire(a)
 
 
+## Si china a dare la mano a un ferito a terra e lo tira su (lunghezza: anim_length(&"helpup")).
+func play_help_up() -> void:
+	_fire(&"helpup", true)
+
+
 ## Avvia la morte e resta sull'ultimo fotogramma finché non si chiama revive().
 ## `variant`: clip di caduta (DEATH_CLIPS; vuoto = all'indietro), `speed`: velocita' della caduta.
 func play_death(variant := &"", speed_scale := 1.0) -> void:
@@ -482,7 +504,9 @@ func play_death(variant := &"", speed_scale := 1.0) -> void:
 		_dead_clip = &"lie_dead"
 	else:
 		_dead_clip = variant if DEATH_CLIPS.has(variant) and _lib.has_animation(variant) else anim_death
-	_tp("ts_dead/scale", speed_scale)
+	# la morte Mixamo dura 2-3,5 s (la procedurale ~1,2): leggermente accelerata
+	var mx_death := _mx != null and _mx.has_animation(&"death") and _dead_clip == anim_death
+	_tp("ts_dead/scale", speed_scale * (1.35 if mx_death else 1.0))
 	_tp("dead_sel/transition_request", String(_dead_clip))
 	_tp("life/transition_request", "dead")
 
@@ -547,6 +571,8 @@ func revive() -> void:
 
 ## Lunghezza di un'animazione in secondi (0 se manca).
 func anim_length(anim: StringName) -> float:
+	if _mx != null and _mx.has_animation(anim):
+		return _mx.get_animation(anim).length
 	if _lib and _lib.has_animation(anim):
 		return _lib.get_animation(anim).length
 	if player and player.has_animation(anim):

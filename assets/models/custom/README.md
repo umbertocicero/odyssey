@@ -98,3 +98,7 @@ Cartella `campo/macchine/<nome>/<nome>[_lod].gltf`, fronte verso -Z, origine al 
 | `barella` | 0,83 × 0,23 × 2,5 | 12.000 / 3.000 | 1024 / 512 | `scripts/units/stretcher.gd` |
 
 Catapulta e balista sono caricate da `WallShooter` (`model_path` / `model_lod_path`): alta qualità il modello pieno, bassa e media il `_lod`. Rigenerare: `blender -b art_source/models/<nome>.blend --factory-startup -P _source/scripts/build_macchine.py -- <nome>`, poi `tune_imports.py campo`. Vecchi `catapulta_contrappeso`, `balista_telaio` e `carro_da_guerra` non più usati nel livello 1.
+
+## Alberi castagno (texture EU43_FORESTPACK)
+
+`eu43/alberi/castagno_a|b|c` (+ `_lod`): alberi a foglia larga con rami rastremati e foglie singole alpha-cutout (~6-9k triangoli, `_lod` ~3k per qualità bassa e media). Il pacchetto originale (`EU43_FORESTPACK.zip`, solo `.max`) non è importabile: ne usiamo le **texture** (foglia di castagno con alpha e normal, cortecce) e la geometria è generata da `_source/scripts/build_eu43_trees.py` (`blender -b --factory-startup -P build_eu43_trees.py`). Texture sorgente ridotte in `_source/textures/eu43/`. Origine alla base, altezza 4,4-6 m. Licenza del pacchetto originale da verificare prima del rilascio (fonte: `Scaricati/MODELLI`).

@@ -29,4 +29,41 @@ Rigenerare (un Blender alla volta): `blender -b --factory-startup art_source/cha
 - Scheletro (17 ossa, stessi nomi di `personaggi/`): root, hips, spine, neck, head, upperarm/forearm/hand .L/.R, thigh/shin/foot .L/.R. Niente osso mantello.
 - Animazioni: `idle_loop`, `walk_loop`, `attack`, `hit`, `death` (gli stessi nomi dei vecchi personaggi; le `_loop` in loop). Pose semplici e rigide (armatura, nessuna arma in mano: scudo, lancia, spada e arco non sono nei modelli).
 - Limiti: la posa a riposo e' una A-pose (braccia scostate); skinning automatico, per pezzi non collegati (parti dell'armatura) fusione morbida tra le ossa piu' vicine, quindi nelle pose estreme (attacco, morte) si vedono piccole deformazioni.
+- **Braccia (26/11/2026)**: i giunti dello scheletro sono uguali per tutti, quindi nelle braccia scolpite le ossa passavano
+  3-7 cm fuori dalla mesh e lo skinning automatico lasciava l'avambraccio quasi senza pesi: piegato sembrava di gomma, sottile
+  e molle. `_source/scripts/fix_char_arms.py` corregge solo le braccia (scheletro e animazioni invariati): ricentra braccio e
+  avambraccio sulle ossa (la mano resta ferma: `HandFist` ne misura la posa), li irrobustisce (+16% braccio, +14% avambraccio)
+  e rifa' i pesi per segmenti rigidi con raccordi corti a spalla, gomito e polso. Si applica all'export a partire da
+  `_source/blend/pn_<nome>.blend` (che non viene modificato, quindi si puo' rilanciare), tenendo le texture gia' ridotte:
+  `blender -b --factory-startup _source/blend/pn_ulisse.blend -P _source/scripts/fix_char_arms.py -- ulisse` (anche per i `_lod`).
+  Dopo una rigenerazione con `build_char_hires.py` va rilanciato.
+- **Giunti (26/11/2026)**: gomito e polso di `build_char_hires.J` erano ~6 e ~8 cm troppo in basso lungo il braccio (gomito a
+  meta' avambraccio, polso sulle dita: l'avambraccio piegato sembrava corto e tozzo). Ora sono misurati sulle mesh; tutti i
+  personaggi e i `_lod` sono stati rigenerati. `HandFist.CENTER` e' stato spostato della stessa quantita'.
 - Texture: 1K (~0,8 MB JPEG) per le versioni normali, 512 per le `_lod`; import Godot con `tune_imports.py personaggi_nuovi` (VRAM compressed + mipmap, normal map).
+
+- **Versioni animate (27/11/2026)**: gli stessi 15 personaggi con rig Mixamo e animazioni baked sono in `../personaggi_animati/` (scudo di Agamennone rigido). Non ancora usati nel gioco.
+
+- **Nuovi modelli Meshy (27/11/2026)**: tutti i 15 personaggi (e i `_lod`) sono stati rigenerati da `personaggi_animati/` (mesh Meshy ~30k tri con
+  skinning Mixamo) con `_source/scripts/build_char_mixamo.py`: decimazione a ~25k / ~6,5k tri, A-pose del gioco ottenuta con lo scheletro
+  Mixamo, **giunti dei 17 ossa misurati sul personaggio** (non piu' i `J` fissi), pesi Mixamo collassati sulle 17 ossa (dita -> mano,
+  piede+punta -> piede, spalla 50% busto / 50% braccio, ossa extra Meshy -> fusione morbida), mani orientate come vuole `HandFist`
+  (dita avanti-giu', palmo verso il corpo), stesse 5 animazioni baked e stessi nomi ossa: `HumanoidAnims`, duello, `UnitGear` ecc. non cambiano.
+  Fronte verso -Y in Blender (+Z in Godot), ossa `.R` a +X, osso del piede verso +Y come nei vecchi rig. Agamennone: scudo fuso nella mesh e
+  legato al 100% a `forearm.R`. Texture 1K/512 JPEG senza ICC (`shrink_char_tex.py`: Godot non carica i JPEG con ICC e il modello resta bianco).
+  Rigenerare: `blender -b --factory-startup -P _source/scripts/build_char_mixamo.py -- ~/Scaricati/MODELLI_ANIMATI [nome ...]`, poi
+  `python3 _source/scripts/shrink_char_tex.py`, cancellare i `.gltf.import`/`.jpg.import` e `tune_imports.py personaggi_nuovi`.
+  I vecchi modelli (con le correzioni a braccia e giunti del 26/11) sono nel backup fuori dal repo `~/dev/Odyssey_backup_personaggi_nuovi`.
+  `fix_char_arms.py` e `build_char_hires.py` non servono piu' per questi modelli.
+- **Clip Mixamo retargettati (27/11/2026)**: `build_char_mixamo.py` trasferisce anche le animazioni Mixamo sulle 17 ossa (rotazioni globali relative alla A-pose,
+  moto in avanti tolto dai cicli, quota dell'anca dal terreno) e le esporta come azioni `mx_walk_v<m/s>`, `mx_run_v<m/s>` (il numero e' la velocita' in
+  metri/secondo, `p` = virgola), `mx_death_<n>` e `mx_attack_<n>` (4 al massimo; non usati in gioco). `scripts/units/mixamo_clips.gd` li carica per modello e
+  `CharacterModel` (`mixamo_clips = true`) li usa al posto di walk, run e death dello stance normale; idle, attacchi, parate, stance dei feriti,
+  remo e duello restano procedurali perche' dipendono da arma e scudo. Euriloco e Ulisse non hanno clip di morte Mixamo (procedurale).
+  Test: `tests/screenshot_mx_gait.gd -- --model=<nome> [--mx=0]` (strisce di camminata, corsa, idle, morte).
+  Braccia (27/11): a braccio alzato petto, cinghie e mantello seguivano il braccio: l'influenza dell'osso del braccio si attenua verso il centro
+  (|x| < spalla) e va al busto (`collapse_weights`).
+- **Ossa e mani (27/11/2026)**: i giunti sono per lato (le mesh non sono simmetriche al centimetro: con giunti medi le ossa uscivano dal braccio);
+  polso = osso Hand di Mixamo, `hand_end` alle nocche, caviglie a 0,072 m (HumanoidAnims pianta le caviglie a quella quota). `HandFist.CENTER` e'
+  il baricentro medio delle mani nuove rispetto al polso (HANDC in `build_char_mixamo.py`). A braccio alzato la parte alta della spalla segue il braccio al 40%.
+  Demo: `scenes/demo/run_demo_characters.sh`.

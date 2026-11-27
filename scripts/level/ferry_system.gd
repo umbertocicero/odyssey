@@ -10,7 +10,7 @@ signal wounded_evacuated(count: int)
 const BOAT_MODEL := "res://assets/models/custom/campo/navi/barca_a_remi/barca_a_remi.gltf"
 const BOAT_LENGTH := 3.6
 
-enum Phase { WAIT_BEARER, GO_TO_WOUNDED, CARRY, WAIT_BOAT, STRETCH_CAMP, STRETCH_SHORE }
+enum Phase { WAIT_BEARER, GO_TO_WOUNDED, CARRY, WAIT_BOAT, STRETCH_CAMP, STRETCH_SHORE, RAISING }
 
 class Job:
 	var wounded: WoundedSoldier
@@ -79,7 +79,9 @@ func setup(g: DioramaGrid, units_root_node: Node, level_root: Node, rules: Level
 	var scene := load(BOAT_MODEL) as PackedScene
 	for i in rules.ferry_boats:
 		var home := Vector3(shore_point.x - 1.0, 0.12, shore_point.y + i * 9.5)
-		boats.append(_make_boat(scene, home, units_root.get_parent()))
+		var boat := _make_boat(scene, home, units_root.get_parent())
+		_station_skipper(boat)
+		boats.append(boat)
 
 
 ## Passerella d'imbarco: due assi dalla riva verso la barca, con pali di ormeggio.
@@ -153,8 +155,7 @@ func busy_jobs() -> int:
 
 ## Un ferito è arrivato in salvo all'accampamento: va organizzato il trasporto.
 func request_evacuation(w: WoundedSoldier) -> void:
-	if w.severe:
-		return   # i feriti gravi li porta la squadra della barella
+	# Anche i feriti gravi che Ulisse ha portato a piedi fino al campo vengono presi in consegna.
 	if _has_job(w):
 		return   # già in consegna a un soldato (cambio di sostegno lungo il percorso)
 	var j := Job.new()
@@ -182,6 +183,25 @@ func request_handover(w: WoundedSoldier, a: AllySoldier) -> bool:
 	a.can_swap_with_allies = true
 	a.step_duration = 0.42
 	w.start_support(a, WoundedSoldier.State.CARRIED)
+	jobs.append(j)
+	return true
+
+
+## Un ferito già rialzato che si è accasciato: un compagno libero vicino va a rialzarlo e portarlo al campo/alla riva.
+func request_pickup(w: WoundedSoldier) -> bool:
+	if _has_job(w) or w.state != WoundedSoldier.State.LYING:
+		return false
+	var near := false
+	for node in get_tree().get_nodes_in_group(&"achei"):
+		var a := node as AllySoldier
+		if a and not a.busy and a.health > 0 and a.leader == null and _dist(a, w) <= w.helper_range:
+			near = true
+			break
+	if not near:
+		return false
+	var j := Job.new()
+	j.wounded = w
+	j.to_camp = not w.camp_rect.has_point(w.cell)
 	jobs.append(j)
 	return true
 
@@ -294,8 +314,8 @@ func shore_cell() -> Vector2i:
 			closed[c] = true
 		var best := want
 		var best_d := INF
-		for y in grid.size.y:
-			for x in grid.size.x:
+		for y in grid.total_size().y:
+			for x in grid.total_size().x:
 				var c := Vector2i(x, y)
 				if grid.is_blocked(c) or closed.has(c):
 					continue
@@ -387,13 +407,30 @@ func _run(j: Job, delta: float) -> void:
 				j.phase = Phase.WAIT_BEARER
 				return
 			if _dist(j.bearer, j.wounded) <= 1.9:
+				if j.wounded.state == WoundedSoldier.State.LYING:
+					# A terra: il soldato lo aiuta a rialzarsi, poi lo sorregge.
+					j.wounded.begin_help_up(j.bearer, WoundedSoldier.State.CARRIED)
+					j.phase = Phase.RAISING
+					return
 				j.wounded.start_support(j.bearer, WoundedSoldier.State.CARRIED)
 				j.phase = Phase.CARRY
 				return
 			if j.bearer2:
 				_escort(j, j.wounded.cell)
 			_walk_towards(j, j.wounded.cell, delta)
+		Phase.RAISING:
+			if not _alive(j.bearer):
+				j.bearer = null
+				j.phase = Phase.WAIT_BEARER
+				return
+			if j.wounded.state == WoundedSoldier.State.CARRIED:
+				j.phase = Phase.CARRY
+			elif j.wounded.state == WoundedSoldier.State.LYING and not j.wounded._helping:
+				j.phase = Phase.GO_TO_WOUNDED   # l'aiuto è saltato: riprova
 		Phase.CARRY:
+			if j.wounded.state == WoundedSoldier.State.LYING:
+				j.phase = Phase.GO_TO_WOUNDED   # il ferito si è accasciato: il soldato torna a rialzarlo
+				return
 			if not _alive(j.bearer) and _alive(j.bearer2):
 				j.bearer = j.bearer2
 				j.bearer2 = null
@@ -515,49 +552,74 @@ func _load(boat: Boat, j: Job) -> void:
 	boat.busy = true
 	var w := j.wounded
 	boat.patient = w
-	w.lie_down()
+	w.release_support()
+	w.is_moving = false
 	w.mark_evacuated()
 	w.reparent(boat.node, true)
-	w.visible = true   # mark_evacuated lo nasconde: sulla barca si vede disteso fino allo sbarco
-	w.position = Vector3(0, 0.38, 0)
+	w.visible = true   # mark_evacuated lo nasconde: sulla barca si vede fino allo sbarco
 	if j.stretcher:
 		boat.stretcher = j.stretcher
 		j.stretcher.reparent(boat.node, true)
 		j.stretcher.position = Vector3(0, 0.0, 0)
 		j.stretcher.rotation = Vector3.ZERO
-		w.position = Vector3(0, 0.55, 0)
 		for u in j.crew:
 			if is_instance_valid(u):
 				u.queue_free()
 	_release_bearers(j)
-	_board_crew(boat)
 	var ship := ship_targets[evacuated % ship_targets.size()]
 	var out := Vector3(ship.x + 1.3, boat.home.y, ship.z)
+	var sk: AllySoldier = boat.rowing.rowers[0] as AllySoldier if boat.rowing and not boat.rowing.rowers.is_empty() else null
+	var skm: CharacterModel = sk.get_node_or_null(^"Model") as CharacterModel if sk else null
+	var from := w.position
+	var spot := Vector3(0.12, BoatRowing.FLOOR_Y, 0.2)
 	var tw := create_tween()
-	tw.tween_interval(0.8)
+	# 1) Il soldato di bordo si volta verso il ferito e lo aiuta a salire (si china, lo sostiene).
+	tw.tween_callback(func() -> void:
+		if sk:
+			sk.rotation.y = atan2(-(spot.x - sk.position.x), -(spot.z - sk.position.z))
+		if skm:
+			skm.play_help_up()
+		w.is_moving = true)
+	tw.tween_method(_move_patient.bind(w, from, spot), 0.0, 1.0, 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# 2) Il ferito si adagia sul fondo della barca.
+	tw.tween_callback(func() -> void:
+		if is_instance_valid(w):
+			w.is_moving = false
+			w.lie_down())
+	var lie_to := Vector3(0, 0.38 if not j.stretcher else 0.55, 0)
+	tw.tween_method(_move_patient.bind(w, spot, lie_to), 0.0, 1.0, 0.7)
+	# 3) Il soldato si siede al banco e rema; la barca parte.
+	tw.tween_callback(func() -> void:
+		if boat.rowing:
+			boat.rowing.set_rowing(true))
+	tw.tween_interval(0.5)
 	tw.tween_method(func(t: float) -> void: _sail(boat, boat.home, out, t), 0.0, 1.0, sail_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tw.tween_callback(func() -> void: _unload(boat))
 	tw.tween_interval(0.6)
 	tw.tween_method(func(t: float) -> void: _sail(boat, out, boat.home, t), 0.0, 1.0, sail_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# 4) Di ritorno il soldato (sempre a bordo) smette di vogare e aspetta in piedi il prossimo ferito.
 	tw.tween_callback(func() -> void:
-		_clear_crew(boat)
+		if boat.rowing:
+			boat.rowing.set_rowing(false)
 		boat.busy = false)
 
 
-## Due soldati salgono sulla barca e remano seduti sui banchi (rivolti alla prua, stesso ritmo) mentre il ferito giace al centro.
-func _board_crew(boat: Boat) -> void:
-	_clear_crew(boat)
-	var seats: Array[float] = [-0.95, 0.85]
-	boat.rowing = BoatRowing.board(boat.node, units_root, seats)
+## Sposta il ferito sulla barca (posizioni nello spazio della barca), voltandolo verso il centro.
+func _move_patient(t: float, w: WoundedSoldier, a: Vector3, b: Vector3) -> void:
+	if not is_instance_valid(w):
+		return
+	w.position = a.lerp(b, t)
+	var wm := w.get_node_or_null(^"Model") as Node3D
+	if wm and w.is_moving:
+		wm.rotation.y = lerp_angle(wm.rotation.y, PI * 0.5, 0.08)
+
+
+## Ogni barca ha il suo soldato fisso: non scende mai, aiuta a far salire il ferito, poi si siede e rema.
+func _station_skipper(boat: Boat) -> void:
+	boat.rowing = BoatRowing.board(boat.node, units_root, [0.85] as Array[float])
+	boat.rowing.set_rowing(false)
 	for u in boat.rowing.rowers:
 		boat.crew.append(u as AllySoldier)
-
-
-func _clear_crew(boat: Boat) -> void:
-	if boat.rowing and is_instance_valid(boat.rowing):
-		boat.rowing.queue_free()
-	boat.rowing = null
-	boat.crew.clear()
 
 
 func _sail(boat: Boat, a: Vector3, b: Vector3, t: float) -> void:

@@ -1,3 +1,4 @@
+class_name TroyGate
 extends Node3D
 ## Porta di Troia costruita in codice (nessun modello esterno, solo le texture PBR già in _tex/).
 ##
@@ -34,6 +35,8 @@ const TEX := "res://assets/models/custom/campo/_tex/"
 const STONE_UV := 1.2
 
 var _rng := RandomNumberGenerator.new()
+var _leaf_pivots: Array[Node3D] = []
+var is_open := false
 
 
 ## Accumula parallelepipedi in una sola mesh (normali, UV e tangenti per la normal map).
@@ -86,6 +89,9 @@ class Mesher:
 
 
 func _ready() -> void:
+	add_to_group(&"troy_gates")
+	if kind == Kind.GATE:
+		add_to_group(&"troy_main_gate")
 	_rng.seed = seed_value
 	_build()
 
@@ -108,8 +114,6 @@ func _build() -> void:
 		leaf_front = 0.04 + leaf_thick
 	_leaves(wood, iron, leaf_front, leaf_thick)
 	_add(stone.build(_material("limestone", Color.WHITE, 0.0)))
-	_add(wood.build(_material("planks", Color(0.74, 0.68, 0.62), 0.0)))
-	_add(iron.build(_material("iron", Color(1, 1, 1), 0.35)))
 
 
 func _add(mesh: Mesh) -> void:
@@ -209,7 +213,9 @@ func _porch_stone(m: Mesher) -> void:
 	m.box(Vector3(0, 0.03, d * 0.5 + 0.06), Vector3((hw + 0.06) * 2.0, 0.06, d + 0.12), _rand_off())
 
 
-func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
+## Battenti: ognuno è un nodo con perno sulla cerniera (lato esterno), così la porta si può aprire.
+## Coordinate locali del battente: origine sul perno, il battente si estende verso la battuta centrale.
+func _leaves(_wood_unused: Mesher, _iron_unused: Mesher, front: float, thick: float) -> void:
 	var hw := opening_width * 0.5
 	var lh := opening_height - 0.02
 	var leaf_w := hw - 0.01
@@ -218,9 +224,23 @@ func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
 	var zc := front - thick * 0.5
 	var big := kind == Kind.GATE
 	var strap_ys: Array = [0.45, 1.5, 2.45] if big else [0.4, 1.45]
-	var studs: Array[Transform3D] = []
+	var edge_in := 0.01          # lato verso la battuta centrale
+	var wood_mat := _material("planks", Color(0.74, 0.68, 0.62), 0.0)
+	var iron_mat := _material("iron", Color(1, 1, 1), 0.35)
+	var ring_mat := _material("iron", Color(0.85, 0.85, 0.85), 0.5)
+	var bronze_mat := _material("bronze", Color(1, 1, 1), 0.55)
 	for side: float in [-1.0, 1.0]:
-		var edge_in := 0.01          # lato verso la battuta centrale
+		var px := side * (edge_in + leaf_w)   # cerniera
+		var pivot := Node3D.new()
+		pivot.name = "LeafR" if side > 0.0 else "LeafL"
+		pivot.position = Vector3(px, 0, 0)
+		add_child(pivot)
+		_leaf_pivots.append(pivot)
+		var wood := Mesher.new()
+		wood.swap_uv = true
+		var iron := Mesher.new()
+		iron.uv_scale = 2.0
+		var studs: Array[Transform3D] = []
 		for i in plank_n:
 			var xa := side * (edge_in + i * plank_w)
 			var xb := side * (edge_in + (i + 1) * plank_w)
@@ -229,23 +249,22 @@ func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
 			var top := lh + _rng.randf_range(-0.012, 0.0)
 			var dz := _rng.randf_range(-0.008, 0.008)
 			var off := Vector2(_rng.randf(), -x0 + float(_rng.randi_range(0, 3)) * 0.25 + 0.015)
-			wood.box(Vector3((x0 + x1) * 0.5, 0.02 + (top - 0.02) * 0.5 + 0.0, zc + dz), Vector3(x1 - x0 - 0.008, top - 0.02, thick), off)
-		# Fasce di ferro con cappio di cerniera sul lato esterno.
+			wood.box(Vector3((x0 + x1) * 0.5 - px, 0.02 + (top - 0.02) * 0.5, zc + dz), Vector3(x1 - x0 - 0.008, top - 0.02, thick), off)
 		for sy in strap_ys:
 			var sy_f: float = sy
-			var cx := side * (edge_in + leaf_w * 0.5)
+			var cx := side * (edge_in + leaf_w * 0.5) - px
 			iron.box(Vector3(cx, sy_f, front + 0.015), Vector3(leaf_w - 0.03, 0.15, 0.03), _rand_off())
-			var hx := side * (edge_in + leaf_w - 0.14)
+			var hx := side * (edge_in + leaf_w - 0.14) - px
 			iron.box(Vector3(hx, sy_f, front + 0.03), Vector3(0.26, 0.2, 0.026), _rand_off())
 			for i in plank_n:
-				var sx := side * (edge_in + (i + 0.5) * plank_w)
+				var sx := side * (edge_in + (i + 0.5) * plank_w) - px
 				for row in [-0.045, 0.045]:
-					var tr := Transform3D(Basis.from_scale(Vector3(1, 1, 0.55)), Vector3(sx, sy_f + row, front + 0.032))
-					studs.append(tr)
-	# Listello di battuta al centro.
-	iron.box(Vector3(0, lh * 0.5, front + 0.02), Vector3(0.07, lh, 0.04), _rand_off())
-	# Anelli di presa.
-	for side: float in [-1.0, 1.0]:
+					studs.append(Transform3D(Basis.from_scale(Vector3(1, 1, 0.55)), Vector3(sx, sy_f + row, front + 0.032)))
+		# Listello di battuta sul bordo interno di ogni battente.
+		iron.box(Vector3(side * edge_in - px - side * 0.035, lh * 0.5, front + 0.02), Vector3(0.035, lh, 0.04), _rand_off())
+		_add_to(pivot, wood.build(wood_mat))
+		_add_to(pivot, iron.build(iron_mat))
+		# Anello di presa e borchia centrale.
 		var ring := MeshInstance3D.new()
 		var torus := TorusMesh.new()
 		torus.inner_radius = 0.045
@@ -253,9 +272,9 @@ func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
 		torus.rings = 16
 		torus.ring_segments = 8
 		ring.mesh = torus
-		ring.material_override = _material("iron", Color(0.85, 0.85, 0.85), 0.5)
-		ring.transform = Transform3D(Basis.from_euler(Vector3(PI * 0.5, 0, 0)), Vector3(side * 0.2, lh * 0.5 - 0.1, front + 0.075))
-		add_child(ring)
+		ring.material_override = ring_mat
+		ring.transform = Transform3D(Basis.from_euler(Vector3(PI * 0.5, 0, 0)), Vector3(side * 0.2 - px, lh * 0.5 - 0.1, front + 0.075))
+		pivot.add_child(ring)
 		var boss := MeshInstance3D.new()
 		var sph := SphereMesh.new()
 		sph.radius = 0.05
@@ -263,22 +282,41 @@ func _leaves(wood: Mesher, iron: Mesher, front: float, thick: float) -> void:
 		sph.radial_segments = 10
 		sph.rings = 5
 		boss.mesh = sph
-		boss.material_override = ring.material_override
-		boss.transform = Transform3D(Basis.from_scale(Vector3(1, 1, 0.6)), Vector3(side * 0.2, lh * 0.5 + 0.0, front + 0.045))
-		add_child(boss)
-	# Borchie di bronzo in un solo MultiMesh.
-	var sphere := SphereMesh.new()
-	sphere.radius = 0.034
-	sphere.height = 0.068
-	sphere.radial_segments = 10
-	sphere.rings = 5
-	sphere.material = _material("bronze", Color(1, 1, 1), 0.55)
-	var mm := MultiMesh.new()
-	mm.transform_format = MultiMesh.TRANSFORM_3D
-	mm.mesh = sphere
-	mm.instance_count = studs.size()
-	for i in studs.size():
-		mm.set_instance_transform(i, studs[i])
-	var mmi := MultiMeshInstance3D.new()
-	mmi.multimesh = mm
-	add_child(mmi)
+		boss.material_override = ring_mat
+		boss.transform = Transform3D(Basis.from_scale(Vector3(1, 1, 0.6)), Vector3(side * 0.2 - px, lh * 0.5, front + 0.045))
+		pivot.add_child(boss)
+		# Borchie di bronzo.
+		var sphere := SphereMesh.new()
+		sphere.radius = 0.034
+		sphere.height = 0.068
+		sphere.radial_segments = 10
+		sphere.rings = 5
+		sphere.material = bronze_mat
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = sphere
+		mm.instance_count = studs.size()
+		for i in studs.size():
+			mm.set_instance_transform(i, studs[i])
+		var mmi := MultiMeshInstance3D.new()
+		mmi.multimesh = mm
+		pivot.add_child(mmi)
+
+
+func _add_to(parent: Node3D, mesh: Mesh) -> void:
+	if mesh == null:
+		return
+	var mi := MeshInstance3D.new()
+	mi.mesh = mesh
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	parent.add_child(mi)
+
+
+## Apre o chiude i battenti (verso il lato del campo, +Z). Restituisce il tween.
+func set_open(opened: bool, duration := 1.2) -> Tween:
+	var tw := create_tween().set_parallel(true).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	for pv in _leaf_pivots:
+		var side := 1.0 if pv.position.x > 0.0 else -1.0
+		tw.tween_property(pv, "rotation:y", side * deg_to_rad(100.0) if opened else 0.0, duration)
+	is_open = opened
+	return tw

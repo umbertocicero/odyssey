@@ -1,7 +1,8 @@
 {
- "_comment": "Props Poly Haven del livello 1 (pianura di Troia). Coordinate mondo in metri (X, Z); height = altezza finale; sink = quanto affonda nel terreno. Alberi: id pesanti hanno un 'fallback' per qualità bassa.",
+ "_comment": "Props Poly Haven del livello 1 (pianura di Troia). Coordinate mondo in metri (X, Z); height = altezza finale; sink = quanto affonda nel terreno. Alberi: id pesanti hanno un 'fallback' per qualità bassa. ATTENZIONE: gli oggetti solidi (\"items_in_scene\") ora sono nodi veri in level1.tscn (Scenario/Vegetazione, Rocce, CampoProps, Molo) e si spostano nell'editor: questa copia è solo il registro originale e PolyhavenProps non la legge. Gli sparsi (\"scatters\") sono nell'Inspector del nodo PropsPolyhaven (scatter_defs).",
  "level": "level1",
- "items": [
+ "items": [],
+ "items_in_scene": [
   {
    "name": "AbeteOvest1",
    "id": "fir_tree_01_c",

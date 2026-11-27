@@ -29,6 +29,11 @@ extends Resource
 ## Punti di partenza dei troiani (x, z in metri), sotto le mura.
 @export var spawn_points := PackedVector2Array([Vector2(-18, -16), Vector2(-8, -17), Vector2(2, -17), Vector2(12, -16), Vector2(20, -14)])
 
+## Quanti secondi passano tra l'uscita di un rinforzo e il successivo dalla porta.
+@export_range(0.1, 5.0) var gate_exit_interval := 0.9
+## Raggio (caselle) attorno alla porta in cui i rinforzi prendono postazione.
+@export_range(2, 20) var post_radius := 8
+
 @export_group("Difese sulle mura")
 ## A ogni ondata le postazioni tirano più spesso (+ questa frazione) ...
 @export_range(0.0, 1.0) var defence_reload_gain_per_wave := 0.12

@@ -39,7 +39,7 @@ func _initialize() -> void:
 	if not grid.is_walkable(diag):
 		diag = w.cell + Vector2i(-1, -1)
 	ulisse.place_at(diag)
-	await create_timer(0.5).timeout
+	await create_timer(2.6).timeout
 	_check(w.state == WoundedSoldier.State.FOLLOWING, "il ferito si alza e segue Ulisse")
 	_check(wm.stance == &"limp_l", "da solo con Ulisse: braccio attorno al suo collo (%s)" % wm.stance)
 	var um := ulisse.get_node("Model") as CharacterModel
