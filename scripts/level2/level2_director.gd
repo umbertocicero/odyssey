@@ -63,6 +63,8 @@ var _fwd := Vector3(0, 0, -1)
 var _last_pp := Vector3.ZERO
 var _helpers_at_site := 0
 var _wood_material: StandardMaterial3D
+var _work_sfx_t := 0.0
+var _work_sfx_i := 0
 
 
 func _ready() -> void:
@@ -111,6 +113,7 @@ func _process(delta: float) -> void:
 		_update_task(delta)
 		_update_prompt()
 		_update_stage(delta)
+		_update_work_sfx(delta)
 		_update_allies(delta)
 		_update_raid(delta)
 		_update_patrols(delta)
@@ -120,6 +123,22 @@ func _process(delta: float) -> void:
 		_update_prompt()
 		if Input.is_action_just_pressed(&"interact"):
 			_interact()
+
+
+func _snd(sound: String, pos: Vector3, volume_db := 0.0) -> void:
+	GameAudio.sfx(self, sound, pos, volume_db)
+
+
+## Colpi di martello e sega dal cantiere finche' i carpentieri lavorano.
+func _update_work_sfx(delta: float) -> void:
+	if not stage_active or raid_active:
+		return
+	_work_sfx_t -= delta
+	if _work_sfx_t > 0.0:
+		return
+	_work_sfx_t = 3.6
+	_work_sfx_i += 1
+	_snd("saw" if _work_sfx_i % 3 == 0 else "hammer", world.world_of(Level2World.SITE), -4.0)
 
 
 func _p2(n: Node3D) -> Vector2:
@@ -340,6 +359,11 @@ func _begin_task(a: Dictionary) -> void:
 		player.call(&"start_help_up", focus, float(a["duration"]))
 	var labels := {"fell": "Felling the fir...", "trim": "Stripping the branches...", "square": "Squaring the log..."}
 	hud.set_work(labels[a["kind"]], 0.0)
+	match a["kind"]:
+		"fell", "trim":
+			_snd("axe_chop", focus, -2.0 if a["kind"] == "fell" else -6.0)
+		"square":
+			_snd("saw", focus, -3.0)
 
 
 func _update_task(delta: float) -> void:
@@ -382,6 +406,7 @@ func _fell_tree(i: int) -> void:
 	tw.tween_callback(func() -> void:
 		node.position.y = 0.25)
 	_unblock(spot)
+	_snd("tree_fall", Vector3(spot.x, 0.5, spot.y), 0.0)
 	hud.show_banner("Timber!", 1.2)
 	_refresh_objectives()
 
@@ -516,6 +541,7 @@ func _float_log() -> void:
 	carry = ""
 	carry_index = -1
 	_set_carrying(false)
+	_snd("log_splash", nt.position, -2.0)
 	hud.show_banner("The current carries the log to the beach.", 2.2)
 	_refresh_objectives()
 
@@ -564,6 +590,7 @@ func _deliver_beam() -> void:
 	pile_beams += 1
 	beams_delivered += 1
 	_update_pile()
+	_snd("wood_drop", world.world_of(Level2World.PILE), -2.0)
 	hud.show_banner("Beam delivered.", 1.4)
 	_refresh_objectives()
 
@@ -790,6 +817,7 @@ func _start_raid() -> void:
 	hud.show_banner("Night falls... Trojan raiders with torches are coming for the carpenters!", 4.5)
 	hud.show_subtitle("Epeus", "Torches in the dark! Protect the men, Odysseus - but keep the flames away from the wood!", 4.5)
 	create_tween().tween_method(world.set_night, 0.0, 1.0, 6.0)
+	_snd("raiders", world.world_of(Vector2(17, 2)), 2.0)
 	for c in world.carpenters:
 		world.person_play(c, "Idle_12", 1.0)
 	var origins := [Vector2(17, 2), Vector2(17.5, 5), Vector2(16.5, 8), Vector2(17, -1), Vector2(15.5, 11), Vector2(16.5, -4)]
@@ -819,6 +847,8 @@ func _start_raid() -> void:
 		light.position = Vector3(0.35, 1.5, 0.3)
 		t.add_child(light)
 		_flame_later(t)
+		if i % 2 == 0:
+			GameAudio.ambient_loop(t, "torches_loop", t.global_position + Vector3(0, 1.5, 0), -4.0, 14.0)
 	for a in world.allies:
 		var ally := a as AllySoldier
 		if ally:
@@ -956,20 +986,54 @@ func _enter_horse() -> void:
 	await _fleet_sails()
 
 
+## Le navi salpano verso nord restando sull'acqua del diorama: scivolano in mare (corsie a x -18,5 e -23), girano la prua
+## a nord e navigano parallele alla costa fino a fermarsi prima del bordo, ondeggiando sulle onde.
 func _fleet_sails() -> void:
-	# La flotta lascia la baia mentre lo schermo e' nero; il cavallo resta solo sulla spiaggia.
 	world.camera.follow_target = NodePath()
 	world.camera._follow = null
-	world.camera.target = world.horse.global_position + Vector3(-3, 0, 0)
-	world.camera.distance = 42.0
-	for s in world.ships:
-		var tw := create_tween()
-		tw.tween_property(s, "position:x", s.position.x - 38.0, 16.0).set_ease(Tween.EASE_IN)
-		create_tween().tween_property(s, "rotation:y", s.rotation.y + 0.12, 16.0)
+	world.camera.follow_bounds = Rect2()
+	world.camera.target = Vector3(-14.0, 0.0, -4.0)
+	world.camera.distance = 46.0
+	_snd("fleet_sails", Vector3(-17.0, 0.5, -10.0), 6.0)
+	# nave -> [corsia x, z finale]; l'ordine delle navi in world.ships e' nord->sud per corsia: nessuna si incrocia
+	var plan := [[-17.4, -22.0], [-17.4, -10.0], [-23.2, -10.0], [-23.2, -22.0]]
+	for i in mini(world.ships.size(), plan.size()):
+		_sail_ship(world.ships[i], plan[i][0], plan[i][1], float(i) * 0.6)
 	await hud.fade_to(0.0, 1.5).finished
-	hud.show_banner("The fleet sails for Tenedos. Only the horse is left on the shore.", 6.0)
-	await get_tree().create_timer(9.0).timeout
+	hud.show_banner("The fleet sails north along the coast. Only the horse is left on the shore.", 6.0)
+	await get_tree().create_timer(14.0).timeout
 	await _trojans_find_horse()
+
+
+func _sail_ship(ship: Node3D, lane_x: float, end_z: float, delay: float) -> void:
+	await get_tree().create_timer(delay).timeout
+	if not is_instance_valid(ship):
+		return
+	var base_y := ship.position.y
+	var yaw0 := ship.rotation.y
+	var start := ship.position
+	# 1) si stacca dalla riva verso la corsia e gira la prua a nord (la prua col rostro del modello guarda -Z: yaw 0 = a nord)
+	var slide := create_tween().set_parallel(true)
+	slide.tween_property(ship, "position:x", lane_x, 4.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	slide.tween_property(ship, "rotation:y", 0.0, 4.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await slide.finished
+	if not is_instance_valid(ship):
+		return
+	# 2) naviga a nord a velocita' costante, con un'andatura che si fa piano all'arrivo
+	var dist := absf(ship.position.z - end_z)
+	var dur := maxf(dist / 2.4, 2.0)
+	var go := create_tween()
+	go.tween_property(ship, "position:z", end_z, dur).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# ondeggia sul mare (beccheggio e rollio lievi), senza uscire dall'acqua
+	var bob := create_tween().set_loops()
+	var t0 := Time.get_ticks_msec()
+	bob.tween_method(func(_v: float) -> void:
+		if not is_instance_valid(ship):
+			return
+		var t := (Time.get_ticks_msec() - t0) / 1000.0
+		ship.position.y = base_y + sin(t * 1.3) * 0.05
+		ship.rotation.x = sin(t * 1.1) * 0.015
+		ship.rotation.z = sin(t * 0.9 + 1.0) * 0.02, 0.0, 1.0, 1.0)
 
 
 func _trojans_find_horse() -> void:
@@ -1000,6 +1064,7 @@ func _trojans_find_horse() -> void:
 	await get_tree().create_timer(5.5).timeout
 	hud.show_subtitle("Trojan", "The Greeks are gone! Their camp is ashes... and they left a gift for Athena!", 4.5)
 	await get_tree().create_timer(5.0).timeout
+	_snd("trojan_cry", world.horse.global_position + Vector3(0, 1, 4), 2.0)
 	hud.show_subtitle("Trojan", "Burn it? Throw it from the cliffs? No - drag it to the city! Troy will keep it!", 4.5)
 	await get_tree().create_timer(4.5).timeout
 	await _drag_horse(crowd)
@@ -1044,9 +1109,14 @@ func _drag_horse(crowd: Array[GridUnit]) -> void:
 	zoom.tween_property(world.camera, "distance", 62.0, dur * 0.8).set_delay(dur * 0.1)
 	zoom.tween_property(world.camera, "pitch_degrees", -26.0, dur * 0.8).set_delay(dur * 0.1)
 	var elapsed := 0.0
+	var drag_sfx := 0.0
 	while elapsed < dur:
 		var dt := get_process_delta_time()
 		elapsed += dt
+		drag_sfx -= dt
+		if drag_sfx <= 0.0:
+			drag_sfx = 4.5
+			_snd("rope_drag", horse.global_position, 4.0)
 		var d := minf(elapsed * speed, total)
 		var pos := _track_point(path, lengths, d)
 		var ahead := _track_point(path, lengths, minf(d + 0.8, total))

@@ -81,6 +81,22 @@ func _ready() -> void:
 	_build_ships()
 	_build_horse()
 	_build_people()
+	_build_ambience()
+
+
+## Suoni ambientali in loop: ruscello (a monte e a valle), foce, onde sul mare, bosco.
+func _build_ambience() -> void:
+	var up := stream_point(stream_len * 0.25)
+	var mid := stream_point(stream_len * 0.6)
+	GameAudio.ambient_loop(self, "stream_loop", Vector3(up.x, 0.5, up.y), -4.0, 24.0)
+	GameAudio.ambient_loop(self, "stream_loop", Vector3(mid.x, 0.5, mid.y), -4.0, 24.0)
+	GameAudio.ambient_loop(self, "river_mouth_loop", Vector3(MOUTH.x, 0.5, MOUTH.y), -2.0, 32.0)
+	GameAudio.ambient_loop(self, "sea_waves_loop", Vector3(SEA_X - 2.0, 0.5, -8.0), -3.0, 36.0)
+	GameAudio.ambient_loop(self, "sea_waves_loop", Vector3(SEA_X - 2.0, 0.5, 14.0), -3.0, 36.0)
+	for z in [-14.0, 0.0, 14.0]:
+		GameAudio.ambient_loop(self, "sea_fall_loop", Vector3(-25.0, 0.0, z), -3.0, 34.0)
+	GameAudio.ambient_loop(self, "forest_birds_loop", Vector3(8.0, 3.0, -8.0), -6.0, 40.0)
+	GameAudio.ambient_loop(self, "forest_birds_loop", Vector3(0.0, 3.0, 4.0), -8.0, 40.0)
 
 
 # ---------------------------------------------------------------- coordinate
@@ -402,6 +418,16 @@ func _build_sea() -> void:
 	sea.shore_x = SEA_X
 	sea.add_to_group(&"grass_exclude")
 	add_child(sea)
+	# La cascata sul bordo ovest e' la stessa del livello 1 (SeaFall): SeaWater l'ha creata per il mare lungo 41 m del
+	# livello 1 (z -19..22), qui il blocco e' lungo 52 m, quindi la rifaccio su tutto il lato.
+	if sea.fall:
+		sea.fall.free()
+	var fall := SeaFall.new()
+	fall.name = "Cascata"
+	fall.edge_x = -26.0
+	fall.z_range = Vector2(-MAP * 0.5, MAP * 0.5)
+	sea.add_child(fall)
+	sea.fall = fall
 
 
 func _build_stream() -> void:
@@ -637,8 +663,6 @@ func _build_ships() -> void:
 	# Navi al largo, gia' in mare.
 	var far_ship := spawn_model(path, Vector3(-21.5, -0.7, -10.0), 80.0, 0.0, holder, 11.0)
 	ships.append(far_ship)
-	var far2 := spawn_model(path, Vector3(-23.0, -0.7, 10.0), 100.0, 0.0, holder, 11.0)
-	ships.append(far2)
 
 
 # ---------------------------------------------------------------- cavallo e persone

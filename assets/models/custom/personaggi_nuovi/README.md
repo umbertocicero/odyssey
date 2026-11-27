@@ -67,3 +67,8 @@ Rigenerare (un Blender alla volta): `blender -b --factory-startup art_source/cha
   polso = osso Hand di Mixamo, `hand_end` alle nocche, caviglie a 0,072 m (HumanoidAnims pianta le caviglie a quella quota). `HandFist.CENTER` e'
   il baricentro medio delle mani nuove rispetto al polso (HANDC in `build_char_mixamo.py`). A braccio alzato la parte alta della spalla segue il braccio al 40%.
   Demo: `scenes/demo/run_demo_characters.sh`.
+- **Clavicola e twist (27/11/2026)**: oltre alle 17 ossa, ogni personaggio ha `clavicle.R/L` (figlia del busto) e `forearm_twist.R/L` (figlia dell'avambraccio),
+  pilotate a runtime da `scripts/units/arm_helpers.gd` (SkeletonModifier3D, attaccato da `CharacterModel` e `IdleFigure`): la clavicola segue il 35% dell'elevazione
+  del braccio, il twist il 50% della torsione della mano. Le animazioni (procedurali e Mixamo) non le conoscono. Gomito: pesi braccio/avambraccio con transizione
+  di +-3 cm (Mixamo sfumava su ~11 cm). Caviglia a `HumanoidAnims.ANKLE_H` = 0,105 m. Agamennone: nuova mesh senza scudo (`agamennone (1).glb`), scudo del gioco
+  su `forearm.R` (`IdleFigure.shield_path` nel livello 1).

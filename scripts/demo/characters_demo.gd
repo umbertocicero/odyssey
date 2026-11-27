@@ -49,6 +49,9 @@ var _shot_done := {}
 var _cycles := 0
 var _start_phase := 0
 var _focus_y := 1.0
+var _burst := 0
+var _burst_n := 0
+var _burst_t := 0.0
 var _quit_at := -1.0
 
 
@@ -62,6 +65,7 @@ func _ready() -> void:
 		elif a == "--once": _arg_once = true
 		elif a.begins_with("--shots="): _arg_shots = a.substr(8)
 		elif a.begins_with("--zoom="): _zoom = float(a.substr(7))
+		elif a.begins_with("--burst="): _burst = int(a.substr(8))
 		elif a.begins_with("--ty="): _focus_y = float(a.substr(5))
 		elif a.begins_with("--yaw="): _orbit.x = deg_to_rad(float(a.substr(6)))
 		elif a.begins_with("--phase="): _start_phase = int(a.substr(8))
@@ -345,6 +349,13 @@ func _update_hud() -> void:
 
 func _maybe_shot() -> void:
 	if _arg_shots == "":
+		return
+	if _burst > 0:
+		# serie di fotogrammi a distanza di 0,2 s dall'inizio dell'azione (prova delle pose)
+		if _burst_n < _burst and _phase_t >= 0.6 + _burst_n * 0.2:
+			_burst_n += 1
+			await RenderingServer.frame_post_draw
+			get_viewport().get_texture().get_image().save_png("%s/b%02d.png" % [_arg_shots, _burst_n])
 		return
 	var key := "%d_%d" % [_cycles, _phase]
 	if _shot_done.has(key) or _phase_t < float(PHASES[_phase][1]) * 0.55:

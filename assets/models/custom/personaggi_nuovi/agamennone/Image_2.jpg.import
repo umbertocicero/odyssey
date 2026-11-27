@@ -2,7 +2,7 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cda8vib3503x1"
+uid="uid://dgpaldio470a7"
 path.s3tc="res://.godot/imported/Image_2.jpg-c55c83d67d9a39799f760ec35d6d13f3.s3tc.ctex"
 path.etc2="res://.godot/imported/Image_2.jpg-c55c83d67d9a39799f760ec35d6d13f3.etc2.ctex"
 metadata={
@@ -27,8 +27,8 @@ compress/normal_map=1
 compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
-roughness/mode=1
-roughness/src_normal="res://assets/models/custom/personaggi_nuovi/agamennone/Image_2.jpg"
+roughness/mode=0
+roughness/src_normal=""
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2

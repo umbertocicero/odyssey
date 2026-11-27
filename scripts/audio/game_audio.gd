@@ -10,6 +10,7 @@ const BUS_SFX := &"SFX"
 const BUS_AMBIENCE := &"Ambience"
 const MAX_VOICES := 6
 const MAX_DISTANCE := 40.0
+const SFX_DIR := "res://assets/audio/sfx/level2/"
 
 const CLASHES: Array[String] = [
 	"res://assets/audio/sfx/combat/sword_clash_heavy.mp3",
@@ -104,6 +105,35 @@ static func hit(anchor: Node, pos: Vector3) -> void:
 ## Spada sguainata (la prima volta che un'unità attacca).
 static func draw(anchor: Node, pos: Vector3) -> void:
 	play_3d(anchor, DRAWS[randi() % DRAWS.size()], pos, -6.0)
+
+
+## Effetto del livello 2 (o altro) in `pos`: stessa catena di play_3d con un volume proprio.
+static func sfx(anchor: Node, name: String, pos: Vector3, volume_db := 0.0) -> void:
+	play_3d(anchor, SFX_DIR + name + ".mp3", pos, volume_db, 0.05)
+
+
+## Suono ambientale in loop (ruscello, onde, bosco), posizionale, sul bus Ambience.
+## Ritorna il player: `queue_free()` lo ferma. Non conta nel tetto delle voci.
+static func ambient_loop(parent: Node3D, name: String, pos: Vector3, volume_db := -6.0, max_distance := 30.0) -> AudioStreamPlayer3D:
+	setup_buses()
+	var stream := _load(SFX_DIR + name + ".mp3")
+	if stream == null:
+		return null
+	stream = stream.duplicate()
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
+	var p := AudioStreamPlayer3D.new()
+	p.name = "Amb_" + name
+	p.stream = stream
+	p.bus = BUS_AMBIENCE
+	p.volume_db = volume_db
+	p.max_distance = max_distance
+	p.unit_size = 10.0
+	p.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+	parent.add_child(p)
+	p.global_position = pos
+	p.play()
+	return p
 
 
 static func _load(path: String) -> AudioStream:
