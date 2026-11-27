@@ -1090,7 +1090,7 @@ func _march_to(unit: GridUnit, to: Vector3, seconds: float) -> void:
 ## I troiani trascinano il cavallo lungo il sentiero fino alle mura lontane (la sezione del livello 1, vista da fuori).
 func _drag_horse(crowd: Array[GridUnit]) -> void:
 	hud.show_banner("The Trojans drag the horse toward the walls of Troy...", 4.0)
-	world.env.fog_enabled = false
+	world.open_boundary_fog(3.0)
 	world.camera.follow_bounds = Rect2()
 	world.camera._follow = world.horse
 	var path: Array = Level2World.TRACK

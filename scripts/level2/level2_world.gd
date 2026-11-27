@@ -20,8 +20,8 @@ const MAP := 52.0
 ## Riva: a ovest di questa x c'e' l'acqua.
 const SEA_X := -15.0
 
-## Il ruscello: entra dal bordo nord-est del blocco (il vertice opposto alla foce) e attraversa il diorama fino alla spiaggia.
-const STREAM := [Vector2(22.0, -26.5), Vector2(18.0, -22.5), Vector2(13.5, -19.0), Vector2(10.5, -13.5), Vector2(5.5, -8.5), Vector2(0.5, -3.5),
+## Il ruscello: entra dal bordo nord del blocco (verso la pianura troiana, dove stanno il folto bosco e la nebbia di confine) con un primo tratto dritto e perpendicolare al bordo, cosi' l'acqua arriva fino al bordo senza punte, e attraversa il diorama fino alla foce.
+const STREAM := [Vector2(16.0, -26.0), Vector2(16.0, -23.5), Vector2(14.9, -21.0), Vector2(13.5, -19.0), Vector2(10.5, -13.5), Vector2(5.5, -8.5), Vector2(0.5, -3.5),
 	Vector2(-4.0, 1.0), Vector2(-8.0, 4.0), Vector2(-11.2, 5.6), Vector2(-14.8, 6.7)]
 ## Dove i tronchi si fermano (sbarramento di travi).
 const LANDING := Vector2(-11.2, 5.6)
@@ -64,23 +64,37 @@ var stream_len := 0.0
 var _stream_cum: PackedFloat32Array = []
 var _rng := RandomNumberGenerator.new()
 var _day := {}
+## Vero quando i nodi del mondo sono salvati in level2.tscn (visibili nell'editor): _ready li ritrova invece di costruirli.
+## Si ricrea con `godot --headless -s res://tests/tools/bake_level2.gd` (parte dal mondo costruito da codice).
+@export var baked := false
+## Caselle bloccate (ostacoli statici) all'atto del salvataggio: si riapplicano alla griglia all'avvio.
+@export var blocked_cells := PackedVector2Array()
+const BAKE_DIR := "res://assets/models/custom/livello2/"
+var _node_counter := 0
+var fog_mats: Array[ShaderMaterial] = []
 
 
 func _ready() -> void:
 	add_to_group(&"level2_world")
 	_rng.seed = 2
 	_build_stream_lengths()
-	_build_environment()
-	_build_ground()
-	_build_far_world()
-	_build_sea()
-	_build_stream()
-	_build_grid_and_camera()
-	_build_forest()
-	_build_camp_and_yard()
-	_build_ships()
-	_build_horse()
-	_build_people()
+	if baked:
+		_resolve_baked()
+	else:
+		_build_environment()
+		_build_ground()
+		_build_far_world()
+		_build_sea()
+		_build_stream()
+		_build_grid_and_camera()
+		_build_forest()
+		_build_camp_and_yard()
+		_build_ships()
+		_build_horse()
+		_build_people()
+		_build_boundary_rocks()
+		_build_boundary_fog()
+	_runtime_setup()
 	_build_ambience()
 
 
@@ -97,6 +111,127 @@ func _build_ambience() -> void:
 		GameAudio.ambient_loop(self, "sea_fall_loop", Vector3(-25.0, 0.0, z), -3.0, 34.0)
 	GameAudio.ambient_loop(self, "forest_birds_loop", Vector3(8.0, 3.0, -8.0), -6.0, 40.0)
 	GameAudio.ambient_loop(self, "forest_birds_loop", Vector3(0.0, 3.0, 4.0), -8.0, 40.0)
+
+
+# ---------------------------------------------------------------- scena salvata (baked) e setup comune
+
+func _capture_day() -> void:
+	var sky_mat := env.sky.sky_material as ProceduralSkyMaterial
+	_day = {
+		"sun_color": sun.light_color, "sun_energy": sun.light_energy, "ambient": env.ambient_light_color,
+		"ambient_e": env.ambient_light_energy, "fog": env.fog_light_color,
+		"top": sky_mat.sky_top_color, "hor": sky_mat.sky_horizon_color, "gh": sky_mat.ground_horizon_color,
+		"exposure": env.tonemap_exposure,
+	}
+
+
+## Ritrova i nodi salvati nella scena (stessi nomi che usa la costruzione da codice).
+func _resolve_baked() -> void:
+	env = (get_node("WorldEnvironment") as WorldEnvironment).environment
+	sun = get_node("Sole") as DirectionalLight3D
+	fill = get_node("Riempimento") as DirectionalLight3D
+	_capture_day()
+	ground_mesh = get_node("Terreno") as MeshInstance3D
+	sea = get_node("Mare") as SeaWater
+	camera = get_node("Camera") as FixedCamera
+	grid = get_node("Griglia") as DioramaGrid
+	units_root = get_node("Unita") as Node3D
+	player = units_root.get_node("Ulisse") as GridUnit
+	for c in units_root.get_children():
+		if c is AllySoldier:
+			allies.append(c as GridUnit)
+	for i in 4:
+		var ship := get_node_or_null("Navi/Nave%d" % (i + 1)) as Node3D
+		if ship:
+			ships.append(ship)
+	for c in get_node("Foresta").get_children():
+		if c is Node3D and (c.name.begins_with("Abete") or c.name.begins_with("Albero") or c.name.begins_with("FirSapling") or c.name.begins_with("FirTree")):
+			all_trees.append(c as Node3D)
+		if c.name.begins_with("Abete"):
+			tree_nodes.append(c as Node3D)
+	tree_nodes.sort_custom(func(a: Node3D, b: Node3D) -> bool: return a.name.naturalnocasecmp_to(b.name) < 0)
+	horse = get_node("CavalloDiTroia") as Node3D
+	epeus = get_node("Carpentieri/Epeo") as Node3D
+	for i in 3:
+		carpenters.append(get_node("Carpentieri/Carpentiere%d" % (i + 1)) as Node3D)
+	for n in ["LuceCampo", "LuceCantiere"]:
+		fires.append(get_node(n) as OmniLight3D)
+	troy = get_node("TroiaLontana") as Node3D
+
+
+## Cose che non si salvano nella scena (materiali con texture generate, effetti): valgono per entrambe le modalita'.
+func _runtime_setup() -> void:
+	# La cascata del bordo ovest e' quella del livello 1 (SeaFall), qui su tutto il lato (il blocco e' lungo 52 m).
+	if sea.fall:
+		sea.fall.free()
+	var fall := SeaFall.new()
+	fall.name = "Cascata"
+	fall.edge_x = -26.0
+	fall.z_range = Vector2(-MAP * 0.5, MAP * 0.5)
+	sea.add_child(fall)
+	sea.fall = fall
+	fog_mats.clear()
+	var bank := get_node_or_null("NebbiaConfine")
+	if bank:
+		for c in bank.get_children():
+			var fm := (c as MeshInstance3D).material_override as ShaderMaterial
+			if fm:
+				fog_mats.append(fm)
+	_apply_fog_tint()
+	if not baked:
+		return
+	var mask := load(BAKE_DIR + "level2_mask.png") as Texture2D
+	ground_mesh.material_override = _splat_material(load(BAKE_DIR + "level2_splat.png") as Texture2D, mask)
+	var far := get_node("PianuraLontana") as MeshInstance3D
+	far.material_override = _splat_material(load(BAKE_DIR + "level2_far_splat.png") as Texture2D, mask)
+	for c in blocked_cells:
+		grid.set_blocked(Vector2i(int(c.x), int(c.y)), true)
+	# foglie e metallo spurio dei modelli Poly Haven (FoliageTint) e fiamma del focolare
+	for n in find_children("*", "Node3D", true, true):
+		if (n as Node3D).scene_file_path.contains("/polyhaven/"):
+			for mi in n.find_children("*", "MeshInstance3D", true, false):
+				(mi as MeshInstance3D).mesh = FoliageTint.apply((mi as MeshInstance3D).mesh)
+	for n in find_children("FocolareCalderone*", "Node3D", true, true):
+		TorchFlame.attach(n as Node3D, Vector3(0, 0.55, 0), 0.9, 0.7)
+	_setup_horse_runtime()
+	_play(epeus, "Walking")
+	var tasks := ["Sega", "Heavy_Hammer_Swing", "Sega"]
+	for i in carpenters.size():
+		_play(carpenters[i], tasks[i])
+
+
+func _setup_horse_runtime() -> void:
+	var inst := horse.get_child(0) as Node3D
+	var bb := _aabb_of(inst)
+	horse_height = bb.size.y
+	horse_material = ShaderMaterial.new()
+	horse_material.shader = load("res://assets/shaders/horse_reveal.gdshader")
+	for mi in inst.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		var src := m.get_active_material(0) as BaseMaterial3D
+		if src:
+			horse_material.set_shader_parameter(&"albedo_tex", src.albedo_texture)
+			horse_material.set_shader_parameter(&"orm_tex", src.orm_texture if src.orm_texture else src.roughness_texture)
+			horse_material.set_shader_parameter(&"normal_tex", src.normal_texture)
+		m.material_override = horse_material
+	horse_material.set_shader_parameter(&"reveal_y", bb.position.y - 0.1)
+	horse.set_meta(&"base_y", bb.position.y)
+	horse.set_meta(&"top_y", bb.position.y + bb.size.y)
+	horse.set_meta(&"scale", inst.scale.x)
+
+
+## Per il bake: scrive texture e mesh generate in assets/ e fa puntare la scena a quei file.
+func export_bake_assets() -> void:
+	var dir := ProjectSettings.globalize_path(BAKE_DIR)
+	var imgs := _splat_images()
+	imgs[0].save_png(dir + "level2_splat.png")
+	imgs[1].save_png(dir + "level2_mask.png")
+	_far_splat_image().save_png(dir + "level2_far_splat.png")
+	ResourceSaver.save(ground_mesh.mesh, BAKE_DIR + "level2_terreno.res")
+	ground_mesh.mesh = ResourceLoader.load(BAKE_DIR + "level2_terreno.res", "", ResourceLoader.CACHE_MODE_REPLACE)
+	var stream := get_node("Ruscello") as MeshInstance3D
+	ResourceSaver.save(stream.mesh, BAKE_DIR + "level2_ruscello.res")
+	stream.mesh = ResourceLoader.load(BAKE_DIR + "level2_ruscello.res", "", ResourceLoader.CACHE_MODE_REPLACE)
 
 
 # ---------------------------------------------------------------- coordinate
@@ -238,6 +373,7 @@ func set_night(t: float) -> void:
 	sky_mat.ground_horizon_color = (_day["gh"] as Color).lerp(Color(0.08, 0.1, 0.18), t)
 	for f in fires:
 		f.light_energy = lerpf(1.4, 2.6, t)
+	_apply_fog_tint()
 
 
 # ---------------------------------------------------------------- terreno
@@ -345,17 +481,7 @@ func _build_ground() -> void:
 ## Lontano a nord-est: la pianura che sale verso Troia (si vede solo da lontano, nella nebbia).
 func _build_far_world() -> void:
 	var imgs := _splat_images()
-	var far_splat := Image.create(256, 256, false, Image.FORMAT_RGBA8)
-	for j in 256:
-		for i in 256:
-			var x := -57.0 + (float(i) + 0.5) / 256.0 * 150.0
-			var z := -146.0 + (float(j) + 0.5) / 256.0 * 120.0
-			var q := Vector2(x, z)
-			var path := 0.0
-			for k in range(1, TRACK.size()):
-				path = maxf(path, 1.0 - smoothstep(0.9, 2.2, _dist_segment(q, TRACK[k - 1], TRACK[k])))
-			var plaza := (1.0 - smoothstep(4.0, 9.0, q.distance_to(Vector2(TROY_POS.x, TROY_POS.z + 5.0)))) * 0.8
-			far_splat.set_pixel(i, j, Color(plaza, 0.0, path, 0.0))
+	var far_splat := _far_splat_image()
 	var mat := _splat_material(ImageTexture.create_from_image(far_splat), ImageTexture.create_from_image(imgs[1]))
 	var far := MeshInstance3D.new()
 	far.name = "PianuraLontana"
@@ -405,6 +531,116 @@ func _build_far_world() -> void:
 	troy.rotation.y = 0.0
 
 
+func _far_splat_image() -> Image:
+	var far_splat := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	for j in 256:
+		for i in 256:
+			var x := -57.0 + (float(i) + 0.5) / 256.0 * 150.0
+			var z := -146.0 + (float(j) + 0.5) / 256.0 * 120.0
+			var q := Vector2(x, z)
+			var path := 0.0
+			for k in range(1, TRACK.size()):
+				path = maxf(path, 1.0 - smoothstep(0.9, 2.2, _dist_segment(q, TRACK[k - 1], TRACK[k])))
+			var plaza := (1.0 - smoothstep(4.0, 9.0, q.distance_to(Vector2(TROY_POS.x, TROY_POS.z + 5.0)))) * 0.8
+			far_splat.set_pixel(i, j, Color(plaza, 0.0, path, 0.0))
+	return far_splat
+
+
+# ---------------------------------------------------------------- nebbia di confine
+
+const FOG_SHADER := preload("res://assets/shaders/fog_bank.gdshader")
+
+
+## Grandi massi (gli stessi modelli Poly Haven dei massi del livello 1) lungo il confine nord, mezzi sepolti nella nebbia:
+## disposti a caso e di taglia diversa, con il fiume e il sentiero del finale liberi. I piu' interni bloccano la griglia.
+func _build_boundary_rocks() -> void:
+	var holder := Node3D.new()
+	holder.name = "MassiConfine"
+	add_child(holder)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 11
+	var models := ["rocce/namaqualand_boulder_03/namaqualand_boulder_03.gltf", "rocce/namaqualand_boulder_02/namaqualand_boulder_02.gltf",
+		"rocce/boulder_01/boulder_01.gltf"]
+	var placed: Array[Vector3] = []
+	var guard := 0
+	while placed.size() < 26 and guard < 600:
+		guard += 1
+		var depth := pow(rng.randf(), 0.8)   # piu' fitti verso il bordo esterno
+		var z := lerpf(-19.0, -26.2, depth)
+		var x := rng.randf_range(-14.0, 25.5)
+		var size := lerpf(2.0, 5.6, pow(rng.randf(), 1.5)) * lerpf(0.75, 1.0, depth)
+		# liberi: ruscello e corridoio del sentiero (x ~ 11..19.5 al bordo nord)
+		if absf(x - (15.6 - 0.2 * (z + 26.0))) < 4.6:
+			continue
+		var close := false
+		for r in placed:
+			if Vector2(x, z).distance_to(Vector2(r.x, r.y)) < (size + r.z) * 0.42:
+				close = true
+		if close:
+			continue
+		placed.append(Vector3(x, z, size))
+		var rock := spawn_model(POLY + models[rng.randi() % models.size()], Vector3(x, 0.0, z), rng.randf() * 360.0, 0.0, holder, size)
+		rock.position.y = -size * rng.randf_range(0.18, 0.34)   # mezzo sepolto
+		if z > -20.5:
+			block_rect(Vector2(x, z), Vector2(size * 0.7, size * 0.7))
+
+
+## Nebbia di confine: una densita' che cresce piano dal diorama verso la pianura troiana (non un muro). Molti strati
+## verticali sottili e irregolari piu' qualche velo orizzontale a quote diverse; tutto con lo stesso shader a basso costo.
+func _build_boundary_fog() -> void:
+	var holder := Node3D.new()
+	holder.name = "NebbiaConfine"
+	add_child(holder)
+	var sheets := 8
+	for i in sheets:
+		var mat := ShaderMaterial.new()
+		mat.shader = FOG_SHADER
+		mat.set_shader_parameter(&"noise_tex", SEA_NORMAL)
+		mat.set_shader_parameter(&"layer_seed", float(i) * 0.37)
+		mat.set_shader_parameter(&"density", 0.34)
+		var quad := QuadMesh.new()
+		quad.size = Vector2(160.0, 17.0)
+		var mi := MeshInstance3D.new()
+		mi.name = "Strato%d" % (i + 1)
+		mi.mesh = quad
+		mi.material_override = mat
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.position = Vector3(8.0, 7.0, -19.0 - 3.6 * i)
+		holder.add_child(mi)
+	var heights := [0.3, 1.1, 2.1, 3.3, 4.8]
+	for i in heights.size():
+		var hm := ShaderMaterial.new()
+		hm.shader = FOG_SHADER
+		hm.set_shader_parameter(&"noise_tex", SEA_NORMAL)
+		hm.set_shader_parameter(&"horizontal", true)
+		hm.set_shader_parameter(&"layer_seed", 0.5 + float(i) * 0.41)
+		hm.set_shader_parameter(&"flat_alpha", 0.55 - 0.05 * i)
+		var plane := PlaneMesh.new()
+		plane.size = Vector2(160.0, 44.0)
+		var pm := MeshInstance3D.new()
+		pm.name = "Velo%d" % (i + 1)
+		pm.mesh = plane
+		pm.material_override = hm
+		pm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		pm.position = Vector3(8.0, heights[i], -34.0)
+		holder.add_child(pm)
+
+
+func _apply_fog_tint() -> void:
+	if env == null:
+		return
+	var c := env.fog_light_color
+	for m in fog_mats:
+		m.set_shader_parameter(&"tint", Vector3(c.r, c.g, c.b))
+
+
+## Nel finale il muro di nebbia si dirada e si apre un corridoio lungo il sentiero: il trascinamento resta leggibile.
+func open_boundary_fog(seconds: float) -> void:
+	for m in fog_mats:
+		var tw := create_tween()
+		tw.tween_method(func(v: float) -> void: m.set_shader_parameter(&"open", v), 0.0, 1.0, seconds)
+
+
 # ---------------------------------------------------------------- mare e ruscello
 
 func _build_sea() -> void:
@@ -418,16 +654,6 @@ func _build_sea() -> void:
 	sea.shore_x = SEA_X
 	sea.add_to_group(&"grass_exclude")
 	add_child(sea)
-	# La cascata sul bordo ovest e' la stessa del livello 1 (SeaFall): SeaWater l'ha creata per il mare lungo 41 m del
-	# livello 1 (z -19..22), qui il blocco e' lungo 52 m, quindi la rifaccio su tutto il lato.
-	if sea.fall:
-		sea.fall.free()
-	var fall := SeaFall.new()
-	fall.name = "Cascata"
-	fall.edge_x = -26.0
-	fall.z_range = Vector2(-MAP * 0.5, MAP * 0.5)
-	sea.add_child(fall)
-	sea.fall = fall
 
 
 func _build_stream() -> void:
@@ -624,6 +850,7 @@ func _build_camp_and_yard() -> void:
 	light.light_energy = 1.4
 	light.omni_range = 7.0
 	light.position = world_of(CAMP + Vector2(0.2, 2.0)) + Vector3(0, 1.1, 0)
+	light.name = "LuceCampo"
 	add_child(light)
 	fires.append(light)
 	TorchFlame.attach(fire, Vector3(0, 0.55, 0), 0.9, 0.7)
@@ -647,6 +874,7 @@ func _build_camp_and_yard() -> void:
 	tl.light_energy = 1.4
 	tl.omni_range = 7.0
 	tl.position = world_of(SITE + Vector2(3, 3)) + Vector3(0, 1.5, 0)
+	tl.name = "LuceCantiere"
 	add_child(tl)
 	fires.append(tl)
 
@@ -658,10 +886,12 @@ func _build_ships() -> void:
 	var path := CAMPO.replace("campo/", "navi/nave_achea/nave_achea.gltf")
 	for spec in [[Vector2(-13.0, -5.0), 95.0], [Vector2(-13.5, 2.0), 85.0], [Vector2(-14.0, 16.5), 100.0]]:
 		var ship := spawn_model(path, Vector3(spec[0].x, -0.55, spec[0].y), spec[1], 0.0, holder, 11.0)
+		ship.name = "Nave%d" % (ships.size() + 1)
 		ships.append(ship)
 		block_rect(Vector2(spec[0].x + 0.5, spec[0].y), Vector2(4.0, 10.0))
 	# Navi al largo, gia' in mare.
 	var far_ship := spawn_model(path, Vector3(-21.5, -0.7, -10.0), 80.0, 0.0, holder, 11.0)
+	far_ship.name = "Nave%d" % (ships.size() + 1)
 	ships.append(far_ship)
 
 
@@ -780,6 +1010,8 @@ static func _aabb_of(node: Node3D) -> AABB:
 ## Istanzia un modello, lo porta all'altezza `height` (o alla lunghezza maggiore `longest`) e lo appoggia a terra.
 func spawn_model(path: String, pos: Vector3, yaw_deg: float, height: float, parent: Node, longest := 0.0) -> Node3D:
 	var root := Node3D.new()
+	_node_counter += 1
+	root.name = "%s%d" % [path.get_file().get_basename().to_pascal_case(), _node_counter]
 	root.position = pos
 	root.rotation.y = deg_to_rad(yaw_deg)
 	var ps := load(path) as PackedScene

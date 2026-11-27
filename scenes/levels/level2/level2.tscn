@@ -1,6 +1,1522 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cbru4v5cnqai1"]
 
-[ext_resource type="Script" path="res://scripts/level2/level2_world.gd" id="1_world"]
+[ext_resource type="Script" uid="uid://bv0hcpdrguyph" path="res://scripts/level2/level2_world.gd" id="1_wpdsy"]
+[ext_resource type="ArrayMesh" path="res://assets/models/custom/livello2/level2_terreno.res" id="2_ueioi"]
+[ext_resource type="Script" uid="uid://bsvflfnrp3po1" path="res://scripts/props/block_sides.gd" id="3_kwu2k"]
+[ext_resource type="PackedScene" uid="uid://dkshp2jht5hm2" path="res://assets/models/custom/campo/terreno/colle_acropoli_modulare/colle_acropoli_modulare.gltf" id="4_spemk"]
+[ext_resource type="PackedScene" uid="uid://d2xl25t7ymwbh" path="res://assets/models/custom/campo/mura/mura_tratto/mura_tratto.gltf" id="5_27640"]
+[ext_resource type="PackedScene" uid="uid://doxhfxjojppmv" path="res://assets/models/custom/campo/mura/porta_due_battenti/porta_due_battenti.gltf" id="6_j47g1"]
+[ext_resource type="PackedScene" uid="uid://cf3ke2m8f451n" path="res://assets/models/custom/campo/mura/torre_quadrata/torre_quadrata.gltf" id="7_a743j"]
+[ext_resource type="Script" uid="uid://dwbgskpm6msl2" path="res://scripts/rendering/sea_water.gd" id="8_gumnp"]
+[ext_resource type="Shader" uid="uid://dbyj0gx52wqfg" path="res://assets/shaders/stream_water.gdshader" id="9_gnacy"]
+[ext_resource type="Texture2D" uid="uid://cmbvua3dmj1b3" path="res://assets/environment/water/sea_normal.png" id="10_mxl86"]
+[ext_resource type="ArrayMesh" path="res://assets/models/custom/livello2/level2_ruscello.res" id="11_iant5"]
+[ext_resource type="Shader" uid="uid://de20i6xkwwyod" path="res://assets/shaders/river_mouth.gdshader" id="12_gtmf0"]
+[ext_resource type="PackedScene" uid="uid://cdw21wg50xyq1" path="res://assets/models/custom/polyhaven/rocce/boulder_01/boulder_01.gltf" id="13_tgphr"]
+[ext_resource type="Script" uid="uid://dmpitw1pggkmr" path="res://scripts/grid/diorama_grid.gd" id="14_dn45r"]
+[ext_resource type="PackedScene" path="res://scenes/characters/ulisse/ulisse.tscn" id="15_k28dy"]
+[ext_resource type="PackedScene" path="res://scenes/characters/achei/soldato_acheo.tscn" id="17_0g081"]
+[ext_resource type="Script" uid="uid://datg26c6gf42f" path="res://scripts/camera/fixed_camera.gd" id="19_mpb2g"]
+[ext_resource type="PackedScene" uid="uid://b53sfyv4g8gfo" path="res://assets/models/custom/polyhaven/alberi/fir_sapling_medium/fir_sapling_medium_c.gltf" id="20_cqpbn"]
+[ext_resource type="PackedScene" uid="uid://budkrtl230xbi" path="res://assets/models/custom/polyhaven/alberi/fir_sapling_medium/fir_sapling_medium_a.gltf" id="21_ciarx"]
+[ext_resource type="PackedScene" uid="uid://qtxpvl8mm7b" path="res://assets/models/custom/polyhaven/alberi/fir_sapling_medium/fir_sapling_medium_b.gltf" id="22_np4wo"]
+[ext_resource type="PackedScene" uid="uid://chtie2va4ar18" path="res://assets/models/custom/polyhaven/vegetazione/fern_02/fern_02_c.gltf" id="23_ctmtp"]
+[ext_resource type="PackedScene" uid="uid://dvmca4jjmkf4o" path="res://assets/models/custom/polyhaven/vegetazione/fern_02/fern_02_b.gltf" id="24_bckml"]
+[ext_resource type="PackedScene" uid="uid://bbnahx5b4nwvw" path="res://assets/models/custom/polyhaven/vegetazione/fern_02/fern_02_a.gltf" id="25_1w1xm"]
+[ext_resource type="PackedScene" uid="uid://h36alp2svdn6" path="res://assets/models/custom/polyhaven/vegetazione/fern_02/fern_02_d.gltf" id="26_e8sal"]
+[ext_resource type="PackedScene" uid="uid://d166bmy0sgui0" path="res://assets/models/custom/campo/tende/tenda_pelli/tenda_pelli.gltf" id="27_dyucv"]
+[ext_resource type="PackedScene" uid="uid://cky5vv1xybmwg" path="res://assets/models/custom/campo/tende/tenda_tela_rami/tenda_tela_rami.gltf" id="28_pv3v7"]
+[ext_resource type="PackedScene" uid="uid://dhpix67mgo2xa" path="res://assets/models/custom/campo/fuochi/focolare_calderone/focolare_calderone.gltf" id="29_10jmw"]
+[ext_resource type="Shader" uid="uid://pblv2tbx1bqk" path="res://assets/shaders/torch_flame.gdshader" id="30_7p83g"]
+[ext_resource type="PackedScene" uid="uid://bv1msdsalk256" path="res://assets/models/custom/livello2/panca.glb" id="31_yssp7"]
+[ext_resource type="PackedScene" uid="uid://b56ua0n3fnh73" path="res://assets/models/custom/livello2/travi_impilate.glb" id="32_2ddv0"]
+[ext_resource type="PackedScene" uid="uid://bscm3fqxbn5pu" path="res://assets/models/custom/livello2/relitto.glb" id="33_3suw4"]
+[ext_resource type="PackedScene" uid="uid://uwbiltw8suqi" path="res://assets/models/custom/livello2/trave.glb" id="34_tmjeo"]
+[ext_resource type="PackedScene" uid="uid://l8042wptdhww" path="res://assets/models/custom/navi/nave_achea/nave_achea.gltf" id="35_2si74"]
+[ext_resource type="PackedScene" uid="uid://ds7lxgjdgqlel" path="res://assets/models/custom/livello2/cavallo_troia.glb" id="36_2gs67"]
+[ext_resource type="PackedScene" uid="uid://byjwmpdoakddq" path="res://assets/models/custom/livello2/epeo.glb" id="37_0xlr7"]
+[ext_resource type="PackedScene" uid="uid://fk2vga56cbht" path="res://assets/models/custom/livello2/carpentiere.glb" id="38_kx7xf"]
+[ext_resource type="PackedScene" uid="uid://dg030g7ch11v3" path="res://assets/models/custom/polyhaven/rocce/namaqualand_boulder_03/namaqualand_boulder_03.gltf" id="39_v14ye"]
+[ext_resource type="PackedScene" uid="uid://cku0f0uv2l0xy" path="res://assets/models/custom/polyhaven/rocce/namaqualand_boulder_02/namaqualand_boulder_02.gltf" id="40_6sw3v"]
+[ext_resource type="Shader" uid="uid://ocsywcqbbpud" path="res://assets/shaders/fog_bank.gdshader" id="41_vap36"]
 
-[node name="Level2" type="Node3D"]
-script = ExtResource("1_world")
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_cjsvu"]
+sky_top_color = Color(0.34, 0.45, 0.66, 1)
+sky_horizon_color = Color(0.98, 0.72, 0.5, 1)
+ground_bottom_color = Color(0.5, 0.4, 0.36, 1)
+ground_horizon_color = Color(0.9, 0.68, 0.5, 1)
+sun_angle_max = 18.0
+
+[sub_resource type="Sky" id="Sky_8jlcv"]
+sky_material = SubResource("ProceduralSkyMaterial_cjsvu")
+
+[sub_resource type="Environment" id="Environment_k6qut"]
+background_mode = 2
+sky = SubResource("Sky_8jlcv")
+ambient_light_source = 2
+ambient_light_color = Color(0.66, 0.5, 0.46, 1)
+ambient_light_energy = 0.7
+tonemap_mode = 2
+tonemap_exposure = 0.9
+glow_enabled = true
+glow_intensity = 0.35
+glow_strength = 0.9
+glow_hdr_threshold = 1.4
+fog_enabled = true
+fog_light_color = Color(0.8, 0.68, 0.6, 1)
+fog_density = 0.0045
+fog_sky_affect = 0.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_g2n1j"]
+size = Vector2(150, 120)
+orientation = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_yybs5"]
+size = Vector3(11.4, 0.4, 52)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hmxag"]
+render_priority = 0
+shader = ExtResource("9_gnacy")
+shader_parameter/normal_tex = ExtResource("10_mxl86")
+shader_parameter/deep_color = Color(0.1, 0.24, 0.24, 1)
+shader_parameter/foam_color = Color(0.86, 0.9, 0.88, 1)
+shader_parameter/flow_speed = 0.35
+shader_parameter/foam_amount = 0.25
+shader_parameter/uv_scale = 0.45
+shader_parameter/mouth = Vector2(-15.4, 6.9)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qihew"]
+render_priority = 0
+shader = ExtResource("12_gtmf0")
+shader_parameter/normal_tex = ExtResource("10_mxl86")
+shader_parameter/out_dir = Vector2(-1, 0.1)
+shader_parameter/radius = 7.0
+shader_parameter/wave_speed = 1.7
+shader_parameter/wave_amp = 0.05
+shader_parameter/river_color = Color(0.16, 0.38, 0.36, 1)
+shader_parameter/foam_color = Color(0.95, 0.95, 0.9, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vo0cn"]
+size = Vector2(16, 16)
+subdivide_width = 64
+subdivide_depth = 64
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2smjc"]
+render_priority = 0
+shader = ExtResource("30_7p83g")
+shader_parameter/size = Vector2(0.7, 0.9)
+shader_parameter/phase = 0.0
+shader_parameter/wind = Vector2(0, 0)
+shader_parameter/intensity = 1.0
+shader_parameter/core_color = Color(1, 0.92, 0.62, 1)
+shader_parameter/mid_color = Color(1, 0.52, 0.12, 1)
+shader_parameter/edge_color = Color(0.75, 0.14, 0.03, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_ib11r"]
+custom_aabb = AABB(-1, -0.2, -1, 2, 2.5, 2)
+
+[sub_resource type="Gradient" id="Gradient_ybq11"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.85, 0.4, 1, 1, 0.42, 0.08, 0.85, 0.5, 0.08, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_0rctg"]
+gradient = SubResource("Gradient_ybq11")
+
+[sub_resource type="Curve" id="Curve_g78pc"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.15), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_wnag1"]
+curve = SubResource("Curve_g78pc")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v2pt5"]
+emission_shape = 1
+emission_sphere_radius = 0.05
+direction = Vector3(0, 1, 0)
+spread = 28.0
+initial_velocity_min = 0.35
+initial_velocity_max = 0.95
+gravity = Vector3(0, 0.35, 0)
+damping_min = 0.1
+damping_max = 0.4
+scale_min = 0.5
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_wnag1")
+color_ramp = SubResource("GradientTexture1D_0rctg")
+
+[sub_resource type="Gradient" id="Gradient_5dxj3"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.35, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ab60b"]
+gradient = SubResource("Gradient_5dxj3")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6m1s2"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("GradientTexture2D_ab60b")
+disable_receive_shadows = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_gsrmy"]
+material = SubResource("StandardMaterial3D_6m1s2")
+size = Vector2(0.035, 0.035)
+
+[sub_resource type="Gradient" id="Gradient_2xmws"]
+offsets = PackedFloat32Array(0, 0.25, 1)
+colors = PackedColorArray(0.35, 0.3, 0.28, 0, 0.4, 0.36, 0.33, 0.16, 0.45, 0.42, 0.4, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_067f3"]
+gradient = SubResource("Gradient_2xmws")
+
+[sub_resource type="Curve" id="Curve_tdxx4"]
+_data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xhr7l"]
+curve = SubResource("Curve_tdxx4")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vuaow"]
+emission_shape = 1
+emission_sphere_radius = 0.05
+direction = Vector3(0, 1, 0)
+spread = 12.0
+initial_velocity_min = 0.25
+initial_velocity_max = 0.45
+gravity = Vector3(0, 0.12, 0)
+scale_min = 0.8
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_xhr7l")
+color_ramp = SubResource("GradientTexture1D_067f3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_obvqj"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("GradientTexture2D_ab60b")
+disable_receive_shadows = true
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_7s7j1"]
+material = SubResource("StandardMaterial3D_obvqj")
+size = Vector2(0.5, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qqus1"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 0.0
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_emk8u"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ycawu"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 0.37
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_m0mps"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j4248"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 0.74
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_fdpah"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_61dx4"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 1.11
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_6aayi"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kuhpq"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 1.48
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_cisxd"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tfstp"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 1.85
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_b5ruk"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f442p"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 2.22
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_41bvj"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_soxbr"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.34
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 2.59
+shader_parameter/horizontal = false
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="QuadMesh" id="QuadMesh_knqrw"]
+size = Vector2(160, 17)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c0di7"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.3
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 0.5
+shader_parameter/horizontal = true
+shader_parameter/flat_alpha = 0.55
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_al0uf"]
+size = Vector2(160, 44)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ovy5u"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.3
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 0.91
+shader_parameter/horizontal = true
+shader_parameter/flat_alpha = 0.5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_yi3ly"]
+size = Vector2(160, 44)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_23ufx"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.3
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 1.3199999999999998
+shader_parameter/horizontal = true
+shader_parameter/flat_alpha = 0.45000000000000007
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_dbtps"]
+size = Vector2(160, 44)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tat3h"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.3
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 1.73
+shader_parameter/horizontal = true
+shader_parameter/flat_alpha = 0.4
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_fdt1y"]
+size = Vector2(160, 44)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7pyjx"]
+render_priority = 0
+shader = ExtResource("41_vap36")
+shader_parameter/noise_tex = ExtResource("10_mxl86")
+shader_parameter/tint = Color(0.82, 0.7, 0.62, 1)
+shader_parameter/density = 0.3
+shader_parameter/bottom_y = -1.5
+shader_parameter/top_y = 15.0
+shader_parameter/drift = 0.01
+shader_parameter/ramp_z0 = -13.0
+shader_parameter/ramp_z1 = -31.0
+shader_parameter/soft_depth = 1.8
+shader_parameter/open = 0.0
+shader_parameter/corr_x0 = 15.2
+shader_parameter/corr_slope = -0.206
+shader_parameter/corr_z0 = -26.5
+shader_parameter/layer_seed = 2.1399999999999997
+shader_parameter/horizontal = true
+shader_parameter/flat_alpha = 0.35000000000000003
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_7cvbn"]
+size = Vector2(160, 44)
+
+[node name="Level3" type="Node3D" unique_id=1273192489]
+script = ExtResource("1_wpdsy")
+baked = true
+blocked_cells = PackedVector2Array(0, 0, 1, 0, 2, 0, 3, 0, 4, 0, 0, 1, 1, 1, 2, 1, 3, 1, 4, 1, 0, 2, 1, 2, 2, 2, 3, 2, 4, 2, 0, 3, 1, 3, 2, 3, 3, 3, 4, 3, 0, 4, 1, 4, 2, 4, 3, 4, 4, 4, 0, 5, 1, 5, 2, 5, 3, 5, 4, 5, 0, 6, 1, 6, 2, 6, 3, 6, 4, 6, 0, 7, 1, 7, 2, 7, 3, 7, 4, 7, 0, 8, 1, 8, 2, 8, 3, 8, 4, 8, 0, 9, 1, 9, 2, 9, 3, 9, 4, 9, 0, 10, 1, 10, 2, 10, 3, 10, 4, 10, 0, 11, 1, 11, 2, 11, 3, 11, 4, 11, 0, 12, 1, 12, 2, 12, 3, 12, 4, 12, 0, 13, 1, 13, 2, 13, 3, 13, 4, 13, 0, 14, 1, 14, 2, 14, 3, 14, 4, 14, 0, 15, 1, 15, 2, 15, 3, 15, 4, 15, 0, 16, 1, 16, 2, 16, 3, 16, 4, 16, 0, 17, 1, 17, 2, 17, 3, 17, 4, 17, 0, 18, 1, 18, 2, 18, 3, 18, 4, 18, 0, 19, 1, 19, 2, 19, 3, 19, 4, 19, 0, 20, 1, 20, 2, 20, 3, 20, 4, 20, 0, 21, 1, 21, 2, 21, 3, 21, 4, 21, 0, 22, 1, 22, 2, 22, 3, 22, 4, 22, 0, 23, 1, 23, 2, 23, 3, 23, 4, 23, 0, 24, 1, 24, 2, 24, 3, 24, 4, 24, 0, 25, 1, 25, 2, 25, 3, 25, 4, 25, 0, 26, 1, 26, 2, 26, 3, 26, 4, 26, 0, 27, 1, 27, 2, 27, 3, 27, 4, 27, 0, 28, 1, 28, 2, 28, 3, 28, 4, 28, 0, 29, 1, 29, 2, 29, 3, 29, 4, 29, 0, 30, 1, 30, 2, 30, 3, 30, 4, 30, 0, 31, 1, 31, 2, 31, 3, 31, 4, 31, 0, 32, 1, 32, 2, 32, 3, 32, 4, 32, 0, 33, 1, 33, 2, 33, 3, 33, 4, 33, 0, 34, 1, 34, 2, 34, 3, 34, 4, 34, 0, 35, 1, 35, 2, 35, 3, 35, 4, 35, 0, 36, 1, 36, 2, 36, 3, 36, 4, 36, 0, 37, 1, 37, 2, 37, 3, 37, 4, 37, 0, 38, 1, 38, 2, 38, 3, 38, 4, 38, 0, 39, 1, 39, 2, 39, 3, 39, 4, 39, 16, 1, 35, 11, 35, 12, 34, 34, 34, 35, 35, 34, 35, 35, 33, 14, 29, 35, 29, 36, 30, 35, 30, 36, 16, 2, 16, 3, 35, 38, 36, 38, 33, 15, 38, 8, 38, 9, 39, 8, 39, 9, 33, 31, 34, 31, 33, 26, 34, 26, 28, 34, 37, 32, 37, 33, 38, 32, 38, 33, 11, 1, 11, 2, 12, 1, 12, 2, 34, 19, 34, 20, 35, 19, 35, 20, 35, 14, 35, 15, 36, 14, 36, 15, 36, 5, 37, 5, 33, 23, 33, 24, 34, 23, 34, 24, 36, 27, 37, 27, 9, 2, 9, 3, 10, 2, 10, 3, 15, 1, 37, 8, 36, 18, 36, 19, 32, 33, 33, 33, 36, 37, 37, 37, 37, 38, 36, 20, 36, 21, 37, 20, 37, 21, 35, 10, 36, 10, 36, 11, 26, 1, 27, 1, 38, 20, 38, 21, 37, 3, 37, 4, 23, 8, 27, 13, 21, 11, 18, 19, 23, 21, 24, 21, 14, 16, 28, 7, 28, 8, 17, 24, 31, 10, 31, 11, 21, 4, 22, 4, 5, 8, 5, 9, 5, 10, 6, 8, 6, 9, 6, 10, 7, 8, 7, 9, 7, 10, 10, 7, 10, 8, 10, 9, 10, 10, 11, 7, 11, 8, 11, 9, 11, 10, 12, 7, 12, 8, 12, 9, 12, 10, 13, 7, 13, 8, 13, 9, 13, 10, 8, 12, 8, 13, 9, 12, 9, 13, 10, 27, 10, 28, 11, 27, 11, 28, 12, 27, 12, 28, 5, 11, 5, 12, 5, 13, 5, 14, 5, 15, 5, 16, 5, 17, 5, 18, 5, 19, 6, 11, 6, 12, 6, 13, 6, 14, 6, 15, 6, 16, 6, 17, 6, 18, 6, 19, 7, 11, 7, 12, 7, 13, 7, 14, 7, 15, 7, 16, 7, 17, 7, 18, 7, 19, 8, 10, 8, 11, 8, 14, 8, 15, 8, 16, 8, 17, 8, 18, 8, 19, 9, 10, 9, 11, 9, 14, 9, 15, 9, 16, 9, 17, 9, 18, 9, 19, 5, 20, 5, 21, 5, 22, 5, 23, 5, 24, 5, 25, 5, 26, 6, 20, 6, 21, 6, 22, 6, 23, 6, 24, 6, 25, 6, 26, 7, 20, 7, 21, 7, 22, 7, 23, 7, 24, 7, 25, 7, 26, 8, 20, 8, 21, 8, 22, 8, 23, 8, 24, 8, 25, 8, 26, 4, 40, 4, 41, 5, 31, 5, 32, 5, 33, 5, 34, 5, 35, 5, 36, 5, 37, 5, 38, 5, 39, 5, 40, 5, 41, 6, 31, 6, 32, 6, 33, 6, 34, 6, 35, 6, 36, 6, 37, 6, 38, 6, 39, 6, 40, 6, 41, 7, 31, 7, 32, 7, 33, 7, 34, 7, 35, 7, 36, 7, 37, 7, 38, 7, 39, 7, 40, 7, 41, 8, 31, 8, 32, 8, 33, 8, 34, 8, 35, 8, 36, 8, 37, 8, 38, 8, 39, 8, 40, 8, 41, 12, 29, 12, 30, 12, 31, 12, 32, 12, 33, 12, 34, 12, 35, 12, 36, 13, 29, 13, 30, 13, 31, 13, 32, 13, 33, 13, 34, 13, 35, 13, 36, 14, 29, 14, 30, 14, 31, 14, 32, 14, 33, 14, 34, 14, 35, 14, 36, 15, 29, 15, 30, 15, 31, 15, 32, 15, 33, 15, 34, 15, 35, 15, 36, 12, -1, 12, 0, 13, -1, 13, 0, 14, -1, 14, 0, 19, -1, 19, 0, 20, -1, 20, 0, 21, -1, 21, 0, 16, -1, 16, 0, 17, -1, 17, 0, 18, -1, 18, 0, 43, -1, 43, 0, 44, -1, 44, 0, 6, 0, 6, 1, 7, 0, 7, 1, 8, 0, 8, 1, 23, -1, 23, 0, 23, 1, 24, -1, 24, 0, 24, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1762272293]
+environment = SubResource("Environment_k6qut")
+
+[node name="Sole" type="DirectionalLight3D" parent="." unique_id=1603884973]
+transform = Transform3D(0.6726728, -0.47395986, 0.5682194, 0, 0.7679263, 0.6405382, -0.73994005, -0.43087265, 0.5165631, 0, 12, 0)
+light_color = Color(1, 0.76, 0.54, 1)
+light_energy = 0.95
+shadow_enabled = true
+shadow_bias = 0.12
+shadow_normal_bias = 3.0
+shadow_blur = 1.5
+directional_shadow_mode = 0
+directional_shadow_max_distance = 40.0
+
+[node name="Riempimento" type="DirectionalLight3D" parent="." unique_id=164890666]
+transform = Transform3D(-0.5547002, 0.6180315, -0.55708605, 0, 0.6695341, 0.7427814, 0.8320503, 0.41202098, -0.3713907, 0, 12, 0)
+light_color = Color(0.72, 0.6, 0.8, 1)
+light_energy = 0.25
+sky_mode = 1
+
+[node name="Terreno" type="MeshInstance3D" parent="." unique_id=806511927]
+mesh = ExtResource("2_ueioi")
+
+[node name="LatiBlocco" type="Node3D" parent="." unique_id=1486127696]
+script = ExtResource("3_kwu2k")
+
+[node name="PianuraLontana" type="MeshInstance3D" parent="." unique_id=1307104207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, -0.05, -86)
+mesh = SubResource("QuadMesh_g2n1j")
+
+[node name="TroiaLontana" type="Node3D" parent="." unique_id=1310275649]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, 0, -112)
+
+[node name="colle_acropoli_modulare2" parent="TroiaLontana" unique_id=1200921309 instance=ExtResource("4_spemk")]
+transform = Transform3D(1.5333333, 0, 0, 0, 1.5333333, 0, 0, 0, 1.5333333, 0, -1, -18)
+
+[node name="mura_tratto2" parent="TroiaLontana" unique_id=1586306718 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -32.5, 0, 0)
+
+[node name="Node3D1" parent="TroiaLontana" unique_id=268976840 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -26.2, 0, 0)
+
+[node name="Node3D2" parent="TroiaLontana" unique_id=1019986776 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -19.9, 0, 0)
+
+[node name="Node3D3" parent="TroiaLontana" unique_id=1405701398 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -13.6, 0, 0)
+
+[node name="Node3D4" parent="TroiaLontana" unique_id=1727358096 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -7.3, 0, 0)
+
+[node name="porta_due_battenti2" parent="TroiaLontana" unique_id=694377791 instance=ExtResource("6_j47g1")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Node3D5" parent="TroiaLontana" unique_id=2002022157 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 7.3, 0, 0)
+
+[node name="Node3D6" parent="TroiaLontana" unique_id=1556227494 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 13.6, 0, 0)
+
+[node name="Node3D7" parent="TroiaLontana" unique_id=1612672591 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 19.9, 0, 0)
+
+[node name="Node3D8" parent="TroiaLontana" unique_id=1052244082 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 26.2, 0, 0)
+
+[node name="Node3D9" parent="TroiaLontana" unique_id=637490285 instance=ExtResource("5_27640")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 32.5, 0, 0)
+
+[node name="torre_quadrata2" parent="TroiaLontana" unique_id=615733067 instance=ExtResource("7_a743j")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -8, 0, 0)
+
+[node name="Node3D10" parent="TroiaLontana" unique_id=520963325 instance=ExtResource("7_a743j")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 8, 0, 0)
+
+[node name="Node3D11" parent="TroiaLontana" unique_id=1711850686 instance=ExtResource("7_a743j")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -36, 0, 0)
+
+[node name="Node3D12" parent="TroiaLontana" unique_id=303261914 instance=ExtResource("7_a743j")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 36, 0, 0)
+
+[node name="Mare" type="MeshInstance3D" parent="." unique_id=1472083012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.3, -0.3, 0)
+mesh = SubResource("BoxMesh_yybs5")
+script = ExtResource("8_gumnp")
+shore_x = -15.0
+natural_shore = false
+
+[node name="Ruscello" type="MeshInstance3D" parent="." unique_id=1363311166]
+material_override = SubResource("ShaderMaterial_hmxag")
+cast_shadow = 0
+mesh = ExtResource("11_iant5")
+
+[node name="FoceRuscello" type="MeshInstance3D" parent="." unique_id=707768042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.4, -0.07, 6.9)
+material_override = SubResource("ShaderMaterial_qihew")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_vo0cn")
+
+[node name="ScoglioFoce" type="Node3D" parent="." unique_id=2047321290]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, -14.2, -0.35, 8.2)
+
+[node name="boulder_01" parent="ScoglioFoce" unique_id=592985951 instance=ExtResource("13_tgphr")]
+transform = Transform3D(1.0025979, 0, 0, 0, 1.0025979, 0, 0, 0, 1.0025979, 0, 0, 0)
+
+[node name="Griglia" type="Node3D" parent="." unique_id=1547402048]
+script = ExtResource("14_dn45r")
+size = Vector2i(40, 40)
+show_tiles = false
+extra_cells = Vector2i(0, 0)
+
+[node name="Unita" type="Node3D" parent="." unique_id=307522085]
+
+[node name="Ulisse" parent="Unita" unique_id=559579355 instance=ExtResource("15_k28dy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 0, -3.5)
+can_swap_with_allies = true
+
+[node name="SoldatoAcheo1" parent="Unita" unique_id=597743317 instance=ExtResource("17_0g081")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0, -4.5)
+step_duration = 0.57
+
+[node name="SoldatoAcheo2" parent="Unita" unique_id=235220222 instance=ExtResource("17_0g081")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 0, -5.5)
+step_duration = 0.57
+
+[node name="SoldatoAcheo3" parent="Unita" unique_id=1937598537 instance=ExtResource("17_0g081")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.5, 0, -6.5)
+step_duration = 0.57
+
+[node name="SoldatoAcheo4" parent="Unita" unique_id=938080014 instance=ExtResource("17_0g081")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 0, -8.5)
+step_duration = 0.57
+
+[node name="Camera" type="Camera3D" parent="." unique_id=51977259]
+transform = Transform3D(0.8660254, -0.30783075, 0.3940054, 0, 0.7880108, 0.6156615, -0.5, -0.5331785, 0.68243736, 3.690136, 19.085506, 17.655558)
+current = true
+fov = 28.0
+script = ExtResource("19_mpb2g")
+target = Vector3(-8.524031, 0, -3.5)
+distance = 31.0
+pitch_degrees = -38.0
+follow_target = NodePath("../Unita/Ulisse")
+follow_bounds = Rect2(-16, -17, 32, 34)
+
+[node name="Foresta" type="Node3D" parent="." unique_id=695112137]
+
+[node name="FirSaplingMediumC2" type="Node3D" parent="Foresta" unique_id=471914510]
+transform = Transform3D(0.8830996, 0, -0.4691856, 0, 1, 0, 0.4691856, 0, 0.8830996, -3.5266457, 0, -18.586302)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC2" unique_id=549332747 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0)
+
+[node name="FirSaplingMediumC3" type="Node3D" parent="Foresta" unique_id=1555057617]
+transform = Transform3D(-0.93514216, 0, -0.3542727, 0, 1, 0, 0.3542727, 0, -0.93514216, 15.446596, 0, -8.271094)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC3" unique_id=133999235 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.8627517, 0, 0, 0, 0.8627517, 0, 0, 0, 0.8627517, 0, 0, 0)
+
+[node name="FirSaplingMediumC4" type="Node3D" parent="Foresta" unique_id=920392370]
+transform = Transform3D(0.3061991, 0, -0.9519675, 0, 1, 0, 0.9519675, 0, 0.3061991, 15.130089, 0, 14.803925)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC4" unique_id=2075878738 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.9813631, 0, 0, 0, 0.9813631, 0, 0, 0, 0.9813631, 0, 0, 0)
+
+[node name="FirSaplingMediumA5" type="Node3D" parent="Foresta" unique_id=2058672509]
+transform = Transform3D(-0.17489952, 0, 0.9845863, 0, 1, 0, -0.9845863, 0, -0.17489952, 13.625296, 0, -5.4966183)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA5" unique_id=14905734 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.5495283, 0, 0, 0, 0.5495283, 0, 0, 0, 0.5495283, 0, 0, 0)
+
+[node name="FirSaplingMediumC6" type="Node3D" parent="Foresta" unique_id=446378174]
+transform = Transform3D(0.23667775, 0, -0.9715882, 0, 1, 0, 0.9715882, 0, 0.23667775, 9.832907, 0, 15.927547)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC6" unique_id=635094907 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.89722466, 0, 0, 0, 0.89722466, 0, 0, 0, 0.89722466, 0, 0, 0)
+
+[node name="FirSaplingMediumA7" type="Node3D" parent="Foresta" unique_id=1915708485]
+transform = Transform3D(-0.9957142, 0, 0.092483886, 0, 1, 0, -0.092483886, 0, -0.9957142, -3.4652863, 0, -17.031086)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA7" unique_id=1659705414 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.5728396, 0, 0, 0, 0.5728396, 0, 0, 0, 0.5728396, 0, 0, 0)
+
+[node name="FirSaplingMediumA8" type="Node3D" parent="Foresta" unique_id=1156601140]
+transform = Transform3D(-0.524393, 0, 0.8514763, 0, 1, 0, -0.8514763, 0, -0.524393, 16.333632, 0, 18.59491)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA8" unique_id=470047120 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.53925467, 0, 0, 0, 0.53925467, 0, 0, 0, 0.53925467, 0, 0, 0)
+
+[node name="FirSaplingMediumC9" type="Node3D" parent="Foresta" unique_id=1473812282]
+transform = Transform3D(-0.848668, 0, -0.52892596, 0, 1, 0, 0.52892596, 0, -0.848668, 13.3608055, 0, -4.780941)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC9" unique_id=1079583007 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(1.0119606, 0, 0, 0, 1.0119606, 0, 0, 0, 1.0119606, 0, 0, 0)
+
+[node name="FirSaplingMediumB10" type="Node3D" parent="Foresta" unique_id=1891932117]
+transform = Transform3D(-0.9055409, 0, 0.42425898, 0, 1, 0, -0.42425898, 0, -0.9055409, 19.126266, 0, -11.218904)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB10" unique_id=486171020 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7622031, 0, 0, 0, 0.7622031, 0, 0, 0, 0.7622031, 0, 0, 0)
+
+[node name="FirSaplingMediumC11" type="Node3D" parent="Foresta" unique_id=112758155]
+transform = Transform3D(-0.65295005, 0, 0.75740093, 0, 1, 0, -0.75740093, 0, -0.65295005, 14.074614, 0, 11.563637)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC11" unique_id=1473333101 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.78521335, 0, 0, 0, 0.78521335, 0, 0, 0, 0.78521335, 0, 0, 0)
+
+[node name="FirSaplingMediumA12" type="Node3D" parent="Foresta" unique_id=433516986]
+transform = Transform3D(0.69056726, 0, 0.72326815, 0, 1, 0, -0.72326815, 0, 0.69056726, 13.8287945, 0, 6.501219)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA12" unique_id=123135174 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.6423808, 0, 0, 0, 0.6423808, 0, 0, 0, 0.6423808, 0, 0, 0)
+
+[node name="FirSaplingMediumB13" type="Node3D" parent="Foresta" unique_id=1873634690]
+transform = Transform3D(0.9931616, 0, 0.11674773, 0, 1, 0, -0.11674773, 0, 0.9931616, 8.546957, 0, 14.571453)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB13" unique_id=1873477742 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.6591169, 0, 0, 0, 0.6591169, 0, 0, 0, 0.6591169, 0, 0, 0)
+
+[node name="FirSaplingMediumC14" type="Node3D" parent="Foresta" unique_id=408027813]
+transform = Transform3D(0.1006811, 0, 0.99491876, 0, 1, 0, -0.99491876, 0, 0.1006811, 17.71626, 0, 13.32291)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC14" unique_id=1824092426 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.9388756, 0, 0, 0, 0.9388756, 0, 0, 0, 0.9388756, 0, 0, 0)
+
+[node name="FirSaplingMediumB15" type="Node3D" parent="Foresta" unique_id=755957023]
+transform = Transform3D(0.9625871, 0, 0.2709725, 0, 1, 0, -0.2709725, 0, 0.9625871, -7.810096, 0, -18.316942)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB15" unique_id=1275489797 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7510135, 0, 0, 0, 0.7510135, 0, 0, 0, 0.7510135, 0, 0, 0)
+
+[node name="FirSaplingMediumB16" type="Node3D" parent="Foresta" unique_id=1895020183]
+transform = Transform3D(-0.355598, 0, 0.934639, 0, 1, 0, -0.934639, 0, -0.355598, 15.185905, 0, -0.08386803)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB16" unique_id=250297050 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.598496, 0, 0, 0, 0.598496, 0, 0, 0, 0.598496, 0, 0, 0)
+
+[node name="FirSaplingMediumA17" type="Node3D" parent="Foresta" unique_id=1441409791]
+transform = Transform3D(-0.35259256, 0, 0.93577695, 0, 1, 0, -0.93577695, 0, -0.35259256, 15.771044, 0, -5.116164)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA17" unique_id=847949869 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.6065057, 0, 0, 0, 0.6065057, 0, 0, 0, 0.6065057, 0, 0, 0)
+
+[node name="FirSaplingMediumA18" type="Node3D" parent="Foresta" unique_id=1054104614]
+transform = Transform3D(0.9797722, 0, -0.20011608, 0, 1, 0, 0.20011608, 0, 0.9797722, 16.817871, 0, -14.49304)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA18" unique_id=800380787 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.69759625, 0, 0, 0, 0.69759625, 0, 0, 0, 0.69759625, 0, 0, 0)
+
+[node name="FirSaplingMediumA19" type="Node3D" parent="Foresta" unique_id=2069074152]
+transform = Transform3D(-0.7521717, 0, -0.6589672, 0, 1, 0, 0.6589672, 0, -0.7521717, 14.180153, 0, 4.0975437)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA19" unique_id=923104617 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.6082877, 0, 0, 0, 0.6082877, 0, 0, 0, 0.6082877, 0, 0, 0)
+
+[node name="FirSaplingMediumA20" type="Node3D" parent="Foresta" unique_id=2037957998]
+transform = Transform3D(0.6729397, 0, -0.73969734, 0, 1, 0, 0.73969734, 0, 0.6729397, 16.918327, 0, 7.655205)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA20" unique_id=157179508 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.54885596, 0, 0, 0, 0.54885596, 0, 0, 0, 0.54885596, 0, 0, 0)
+
+[node name="FirSaplingMediumA21" type="Node3D" parent="Foresta" unique_id=2138380198]
+transform = Transform3D(-0.056196623, 0, -0.9984197, 0, 1, 0, 0.9984197, 0, -0.056196623, -9.719683, 0, -17.181858)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA21" unique_id=348516558 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.6177073, 0, 0, 0, 0.6177073, 0, 0, 0, 0.6177073, 0, 0, 0)
+
+[node name="FirSaplingMediumB22" type="Node3D" parent="Foresta" unique_id=489650770]
+transform = Transform3D(0.7307129, 0, 0.6826849, 0, 1, 0, -0.6826849, 0, 0.7307129, -3.9171, 0, -18.458838)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB22" unique_id=392405692 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7426522, 0, 0, 0, 0.7426522, 0, 0, 0, 0.7426522, 0, 0, 0)
+
+[node name="FirSaplingMediumC23" type="Node3D" parent="Foresta" unique_id=1608346605]
+transform = Transform3D(0.6572047, 0, -0.7537122, 0, 1, 0, 0.7537122, 0, 0.6572047, 17.664234, 0, -11.545189)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC23" unique_id=870881986 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.8008269, 0, 0, 0, 0.8008269, 0, 0, 0, 0.8008269, 0, 0, 0)
+
+[node name="FirSaplingMediumA24" type="Node3D" parent="Foresta" unique_id=1567617804]
+transform = Transform3D(-0.9194911, 0, 0.3931108, 0, 1, 0, -0.3931108, 0, -0.9194911, 16.579275, 0, -1.3005428)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA24" unique_id=581186924 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.5825167, 0, 0, 0, 0.5825167, 0, 0, 0, 0.5825167, 0, 0, 0)
+
+[node name="FirSaplingMediumA25" type="Node3D" parent="Foresta" unique_id=1212687698]
+transform = Transform3D(-0.10640981, 0, 0.99432236, 0, 1, 0, -0.99432236, 0, -0.10640981, 12.922842, 0, 13.644321)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA25" unique_id=494505224 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.55076176, 0, 0, 0, 0.55076176, 0, 0, 0, 0.55076176, 0, 0, 0)
+
+[node name="FirSaplingMediumB26" type="Node3D" parent="Foresta" unique_id=570068878]
+transform = Transform3D(0.5924602, 0, 0.8055997, 0, 1, 0, -0.8055997, 0, 0.5924602, 17.007195, 0, 18.19796)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB26" unique_id=1186969865 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7873577, 0, 0, 0, 0.7873577, 0, 0, 0, 0.7873577, 0, 0, 0)
+
+[node name="FirSaplingMediumA27" type="Node3D" parent="Foresta" unique_id=369614133]
+transform = Transform3D(-0.83603215, 0, -0.5486805, 0, 1, 0, 0.5486805, 0, -0.83603215, 16.983591, 0, 1.0612621)
+
+[node name="fir_sapling_medium_a" parent="Foresta/FirSaplingMediumA27" unique_id=1479851776 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.5873243, 0, 0, 0, 0.5873243, 0, 0, 0, 0.5873243, 0, 0, 0)
+
+[node name="FirSaplingMediumB28" type="Node3D" parent="Foresta" unique_id=1381946346]
+transform = Transform3D(-0.5684922, 0, 0.8226887, 0, 1, 0, -0.8226887, 0, -0.5684922, 15.701223, 0, -8.989997)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB28" unique_id=1775822687 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.58817965, 0, 0, 0, 0.58817965, 0, 0, 0, 0.58817965, 0, 0, 0)
+
+[node name="FirSaplingMediumC29" type="Node3D" parent="Foresta" unique_id=735685308]
+transform = Transform3D(-0.33997378, 0, -0.94043493, 0, 1, 0, 0.94043493, 0, -0.33997378, 7.025034, 0, -18.460785)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC29" unique_id=927851697 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.9298372, 0, 0, 0, 0.9298372, 0, 0, 0, 0.9298372, 0, 0, 0)
+
+[node name="FirSaplingMediumB30" type="Node3D" parent="Foresta" unique_id=452113027]
+transform = Transform3D(-0.49907252, 0, -0.8665602, 0, 1, 0, 0.8665602, 0, -0.49907252, 17.691513, 0, 0.6729946)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB30" unique_id=602172368 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.62286234, 0, 0, 0, 0.62286234, 0, 0, 0, 0.62286234, 0, 0, 0)
+
+[node name="FirSaplingMediumB31" type="Node3D" parent="Foresta" unique_id=1190081243]
+transform = Transform3D(-0.9992229, 0, -0.03941644, 0, 1, 0, 0.03941644, 0, -0.9992229, 17.633957, 0, -15.89803)
+
+[node name="fir_sapling_medium_b" parent="Foresta/FirSaplingMediumB31" unique_id=1894162382 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7404025, 0, 0, 0, 0.7404025, 0, 0, 0, 0.7404025, 0, 0, 0)
+
+[node name="Abete1" type="Node3D" parent="Foresta" unique_id=672473166]
+transform = Transform3D(0.033629764, 0, -0.99943435, 0, 1, 0, 0.99943435, 0, 0.033629764, 3.5, 0, -11.5)
+
+[node name="fir_sapling_medium_a" parent="Foresta/Abete1" unique_id=1128815619 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0)
+
+[node name="Abete2" type="Node3D" parent="Foresta" unique_id=1832721445]
+transform = Transform3D(-0.43582562, 0, -0.90003115, 0, 1, 0, 0.90003115, 0, -0.43582562, 7.5, 0, -6.5)
+
+[node name="fir_sapling_medium_b" parent="Foresta/Abete2" unique_id=1613275024 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0)
+
+[node name="Abete3" type="Node3D" parent="Foresta" unique_id=864476956]
+transform = Transform3D(-0.9988791, 0, 0.04733477, 0, 1, 0, -0.04733477, 0, -0.9988791, 1.5, 0, -8.5)
+
+[node name="fir_sapling_medium_a" parent="Foresta/Abete3" unique_id=1931168764 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0)
+
+[node name="Abete4" type="Node3D" parent="Foresta" unique_id=1226571661]
+transform = Transform3D(-0.92028886, 0, 0.39123958, 0, 1, 0, -0.39123958, 0, -0.92028886, -1.5, 0, -0.5)
+
+[node name="fir_sapling_medium_b" parent="Foresta/Abete4" unique_id=187787112 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0)
+
+[node name="Abete5" type="Node3D" parent="Foresta" unique_id=1942317304]
+transform = Transform3D(-0.9651827, 0, -0.2615765, 0, 1, 0, 0.2615765, 0, -0.9651827, 4, 0, 1.5)
+
+[node name="fir_sapling_medium_a" parent="Foresta/Abete5" unique_id=526913550 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0)
+
+[node name="Abete6" type="Node3D" parent="Foresta" unique_id=27279041]
+transform = Transform3D(-0.42520508, 0, -0.905097, 0, 1, 0, 0.905097, 0, -0.42520508, -5.5, 0, -3.5)
+
+[node name="fir_sapling_medium_b" parent="Foresta/Abete6" unique_id=1591559389 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0)
+
+[node name="Abete7" type="Node3D" parent="Foresta" unique_id=1745930476]
+transform = Transform3D(0.7086324, 0, -0.70557785, 0, 1, 0, 0.70557785, 0, 0.7086324, 8.5, 0, -12)
+
+[node name="fir_sapling_medium_a" parent="Foresta/Abete7" unique_id=67337006 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0)
+
+[node name="Abete8" type="Node3D" parent="Foresta" unique_id=243277476]
+transform = Transform3D(0.895003, 0, -0.44606003, 0, 1, 0, 0.44606003, 0, 0.895003, -2.5, 0, 4.5)
+
+[node name="fir_sapling_medium_b" parent="Foresta/Abete8" unique_id=43929171 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0)
+
+[node name="Abete9" type="Node3D" parent="Foresta" unique_id=2040382557]
+transform = Transform3D(0.82495373, 0, 0.5652002, 0, 1, 0, -0.5652002, 0, 0.82495373, 11.5, 0, -9)
+
+[node name="fir_sapling_medium_a" parent="Foresta/Abete9" unique_id=1231562015 instance=ExtResource("21_ciarx")]
+transform = Transform3D(0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0, 0.63237965, 0, 0, 0)
+
+[node name="Abete10" type="Node3D" parent="Foresta" unique_id=1602907383]
+transform = Transform3D(0.053227726, 0, 0.9985824, 0, 1, 0, -0.9985824, 0, 0.053227726, 2, 0, -15.5)
+
+[node name="fir_sapling_medium_b" parent="Foresta/Abete10" unique_id=1135764079 instance=ExtResource("22_np4wo")]
+transform = Transform3D(0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0, 0.7063978, 0, 0, 0)
+
+[node name="Boulder0142" type="Node3D" parent="Foresta" unique_id=1763574098]
+transform = Transform3D(-0.76362544, 0, 0.64565945, 0, 1, 0, -0.64565945, 0, -0.76362544, 16.806578, 0, -7.784093)
+
+[node name="boulder_01" parent="Foresta/Boulder0142" unique_id=1566174530 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.6438617, 0, 0, 0, 0.6438617, 0, 0, 0, 0.6438617, 0, 0, 0)
+
+[node name="Boulder0143" type="Node3D" parent="Foresta" unique_id=1147325598]
+transform = Transform3D(0.75709146, 0, -0.6533089, 0, 1, 0, 0.6533089, 0, 0.75709146, 13.248392, 0, 16.46957)
+
+[node name="boulder_01" parent="Foresta/Boulder0143" unique_id=1242161088 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.6461366, 0, 0, 0, 0.6461366, 0, 0, 0, 0.6461366, 0, 0, 0)
+
+[node name="Boulder0144" type="Node3D" parent="Foresta" unique_id=693155958]
+transform = Transform3D(0.99891406, 0, -0.046590447, 0, 1, 0, 0.046590447, 0, 0.99891406, 14.227751, 0, -8.412787)
+
+[node name="boulder_01" parent="Foresta/Boulder0144" unique_id=1553287878 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.5075813, 0, 0, 0, 0.5075813, 0, 0, 0, 0.5075813, 0, 0, 0)
+
+[node name="Boulder0145" type="Node3D" parent="Foresta" unique_id=67397878]
+transform = Transform3D(0.5109282, 0, 0.8596234, 0, 1, 0, -0.8596234, 0, 0.5109282, 17.08559, 0, 2.8207035)
+
+[node name="boulder_01" parent="Foresta/Boulder0145" unique_id=918125355 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.8490568, 0, 0, 0, 0.8490568, 0, 0, 0, 0.8490568, 0, 0, 0)
+
+[node name="Boulder0146" type="Node3D" parent="Foresta" unique_id=362082411]
+transform = Transform3D(-0.30190727, 0, 0.9533373, 0, 1, 0, -0.9533373, 0, -0.30190727, 15.49156, 0, 10.541609)
+
+[node name="boulder_01" parent="Foresta/Boulder0146" unique_id=902575590 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.9888704, 0, 0, 0, 0.9888704, 0, 0, 0, 0.9888704, 0, 0, 0)
+
+[node name="Boulder0147" type="Node3D" parent="Foresta" unique_id=510775087]
+transform = Transform3D(0.3747133, 0, 0.9271407, 0, 1, 0, -0.9271407, 0, 0.3747133, -6.0058584, 0, -15.842552)
+
+[node name="boulder_01" parent="Foresta/Boulder0147" unique_id=1604377123 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.6650612, 0, 0, 0, 0.6650612, 0, 0, 0, 0.6650612, 0, 0, 0)
+
+[node name="Boulder0148" type="Node3D" parent="Foresta" unique_id=1715526985]
+transform = Transform3D(0.7673399, 0, -0.6412406, 0, 1, 0, 0.6412406, 0, 0.7673399, 16.955482, 0, 13.585724)
+
+[node name="boulder_01" parent="Foresta/Boulder0148" unique_id=352751426 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.9340156, 0, 0, 0, 0.9340156, 0, 0, 0, 0.9340156, 0, 0, 0)
+
+[node name="Boulder0149" type="Node3D" parent="Foresta" unique_id=961726358]
+transform = Transform3D(0.2525542, 0, -0.96758276, 0, 1, 0, 0.96758276, 0, 0.2525542, -1.1174278, 0, 3.3977718)
+
+[node name="boulder_01" parent="Foresta/Boulder0149" unique_id=46531233 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.585492, 0, 0, 0, 0.585492, 0, 0, 0, 0.585492, 0, 0, 0)
+
+[node name="Boulder0150" type="Node3D" parent="Foresta" unique_id=1211170654]
+transform = Transform3D(-0.49685356, 0, 0.8678344, 0, 1, 0, -0.8678344, 0, -0.49685356, 9.9932995, 0, 3.3258991)
+
+[node name="boulder_01" parent="Foresta/Boulder0150" unique_id=806527882 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.8564744, 0, 0, 0, 0.8564744, 0, 0, 0, 0.8564744, 0, 0, 0)
+
+[node name="Boulder0151" type="Node3D" parent="Foresta" unique_id=207502745]
+transform = Transform3D(-0.99404603, 0, -0.10896091, 0, 1, 0, 0.10896091, 0, -0.99404603, 18.81808, 0, -11.389997)
+
+[node name="boulder_01" parent="Foresta/Boulder0151" unique_id=1997214019 instance=ExtResource("13_tgphr")]
+transform = Transform3D(1.0680472, 0, 0, 0, 1.0680472, 0, 0, 0, 1.0680472, 0, 0, 0)
+
+[node name="Boulder0152" type="Node3D" parent="Foresta" unique_id=180665406]
+transform = Transform3D(-0.6639341, 0, -0.74779105, 0, 1, 0, 0.74779105, 0, -0.6639341, 14.930113, 0, 15.370571)
+
+[node name="boulder_01" parent="Foresta/Boulder0152" unique_id=612379016 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.5674036, 0, 0, 0, 0.5674036, 0, 0, 0, 0.5674036, 0, 0, 0)
+
+[node name="Fern02C53" type="Node3D" parent="Foresta" unique_id=1177370408]
+transform = Transform3D(0.97696716, 0, -0.2133898, 0, 1, 0, 0.2133898, 0, 0.97696716, 17.619114, 0, -16.777935)
+
+[node name="fern_02_c" parent="Foresta/Fern02C53" unique_id=59417779 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(2.3452458, 0, 0, 0, 2.3452458, 0, 0, 0, 2.3452458, 0, 0, 0)
+
+[node name="Fern02B54" type="Node3D" parent="Foresta" unique_id=1105682950]
+transform = Transform3D(0.42782018, 0, 0.90386385, 0, 1, 0, -0.90386385, 0, 0.42782018, 7.582218, 0, -18.349241)
+
+[node name="fern_02_b" parent="Foresta/Fern02B54" unique_id=1823660773 instance=ExtResource("24_bckml")]
+transform = Transform3D(1.9632859, 0, 0, 0, 1.9632859, 0, 0, 0, 1.9632859, 0, 0, 0)
+
+[node name="Fern02B55" type="Node3D" parent="Foresta" unique_id=93676245]
+transform = Transform3D(0.7158383, 0, -0.6982661, 0, 1, 0, 0.6982661, 0, 0.7158383, 17.436674, 0, -14.84866)
+
+[node name="fern_02_b" parent="Foresta/Fern02B55" unique_id=224613049 instance=ExtResource("24_bckml")]
+transform = Transform3D(2.0221636, 0, 0, 0, 2.0221636, 0, 0, 0, 2.0221636, 0, 0, 0)
+
+[node name="Fern02A56" type="Node3D" parent="Foresta" unique_id=718528738]
+transform = Transform3D(-0.99922353, 0, 0.03939935, 0, 1, 0, -0.03939935, 0, -0.99922353, -5.639287, 0, -15.012194)
+
+[node name="fern_02_a" parent="Foresta/Fern02A56" unique_id=1290143819 instance=ExtResource("25_1w1xm")]
+transform = Transform3D(2.2801318, 0, 0, 0, 2.2801318, 0, 0, 0, 2.2801318, 0, 0, 0)
+
+[node name="Fern02C57" type="Node3D" parent="Foresta" unique_id=1616917105]
+transform = Transform3D(-0.55925804, 0, 0.8289936, 0, 1, 0, -0.8289936, 0, -0.55925804, -6.1255164, 0, -15.235746)
+
+[node name="fern_02_c" parent="Foresta/Fern02C57" unique_id=377165186 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(2.4100363, 0, 0, 0, 2.4100363, 0, 0, 0, 2.4100363, 0, 0, 0)
+
+[node name="Fern02D58" type="Node3D" parent="Foresta" unique_id=1353027877]
+transform = Transform3D(-0.18709002, 0, -0.9823428, 0, 1, 0, 0.9823428, 0, -0.18709002, 17.71236, 0, 8.717434)
+
+[node name="fern_02_d" parent="Foresta/Fern02D58" unique_id=75032568 instance=ExtResource("26_e8sal")]
+transform = Transform3D(2.5226104, 0, 0, 0, 2.5226104, 0, 0, 0, 2.5226104, 0, 0, 0)
+
+[node name="Fern02C59" type="Node3D" parent="Foresta" unique_id=393520208]
+transform = Transform3D(0.92581135, 0, 0.37798598, 0, 1, 0, -0.37798598, 0, 0.92581135, 16.412971, 0, 14.063633)
+
+[node name="fern_02_c" parent="Foresta/Fern02C59" unique_id=584012008 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(1.7448996, 0, 0, 0, 1.7448996, 0, 0, 0, 1.7448996, 0, 0, 0)
+
+[node name="Fern02A60" type="Node3D" parent="Foresta" unique_id=1818847813]
+transform = Transform3D(0.095183074, 0, -0.9954598, 0, 1, 0, 0.9954598, 0, 0.095183074, 16.399555, 0, -5.58445)
+
+[node name="fern_02_a" parent="Foresta/Fern02A60" unique_id=1237006618 instance=ExtResource("25_1w1xm")]
+transform = Transform3D(3.0139384, 0, 0, 0, 3.0139384, 0, 0, 0, 3.0139384, 0, 0, 0)
+
+[node name="Fern02C61" type="Node3D" parent="Foresta" unique_id=558641805]
+transform = Transform3D(0.2714635, 0, -0.9624487, 0, 1, 0, 0.9624487, 0, 0.2714635, 3.376627, 0, 14.520824)
+
+[node name="fern_02_c" parent="Foresta/Fern02C61" unique_id=442196935 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(1.5709312, 0, 0, 0, 1.5709312, 0, 0, 0, 1.5709312, 0, 0, 0)
+
+[node name="Fern02C62" type="Node3D" parent="Foresta" unique_id=2109696268]
+transform = Transform3D(0.77483594, 0, 0.6321624, 0, 1, 0, -0.6321624, 0, 0.77483594, 15.445894, 0, 17.306538)
+
+[node name="fern_02_c" parent="Foresta/Fern02C62" unique_id=1772086099 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(2.1151154, 0, 0, 0, 2.1151154, 0, 0, 0, 2.1151154, 0, 0, 0)
+
+[node name="Fern02A63" type="Node3D" parent="Foresta" unique_id=1296413056]
+transform = Transform3D(-0.9969834, 0, -0.07761517, 0, 1, 0, 0.07761517, 0, -0.9969834, -1.4899406, 0, 4.4725513)
+
+[node name="fern_02_a" parent="Foresta/Fern02A63" unique_id=2139718990 instance=ExtResource("25_1w1xm")]
+transform = Transform3D(2.457031, 0, 0, 0, 2.457031, 0, 0, 0, 2.457031, 0, 0, 0)
+
+[node name="Fern02C64" type="Node3D" parent="Foresta" unique_id=364940672]
+transform = Transform3D(-0.64078337, 0, 0.7677218, 0, 1, 0, -0.7677218, 0, -0.64078337, -4.444218, 0, -4.513221)
+
+[node name="fern_02_c" parent="Foresta/Fern02C64" unique_id=1059040483 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(2.3052475, 0, 0, 0, 2.3052475, 0, 0, 0, 2.3052475, 0, 0, 0)
+
+[node name="Fern02D65" type="Node3D" parent="Foresta" unique_id=1776212587]
+transform = Transform3D(0.5244634, 0, 0.851433, 0, 1, 0, -0.851433, 0, 0.5244634, 14.458727, 0, 11.607382)
+
+[node name="fern_02_d" parent="Foresta/Fern02D65" unique_id=1192351954 instance=ExtResource("26_e8sal")]
+transform = Transform3D(2.4205506, 0, 0, 0, 2.4205506, 0, 0, 0, 2.4205506, 0, 0, 0)
+
+[node name="Fern02D66" type="Node3D" parent="Foresta" unique_id=392663128]
+transform = Transform3D(0.77100164, 0, 0.63683313, 0, 1, 0, -0.63683313, 0, 0.77100164, 4.297367, 0, 15.1493)
+
+[node name="fern_02_d" parent="Foresta/Fern02D66" unique_id=115937656 instance=ExtResource("26_e8sal")]
+transform = Transform3D(4.1932464, 0, 0, 0, 4.1932464, 0, 0, 0, 4.1932464, 0, 0, 0)
+
+[node name="Fern02B67" type="Node3D" parent="Foresta" unique_id=220989497]
+transform = Transform3D(0.22541347, 0, -0.9742632, 0, 1, 0, 0.9742632, 0, 0.22541347, 15.921885, 0, 15.75415)
+
+[node name="fern_02_b" parent="Foresta/Fern02B67" unique_id=231512806 instance=ExtResource("24_bckml")]
+transform = Transform3D(1.4896036, 0, 0, 0, 1.4896036, 0, 0, 0, 1.4896036, 0, 0, 0)
+
+[node name="Fern02D68" type="Node3D" parent="Foresta" unique_id=1265339246]
+transform = Transform3D(-0.9982867, 0, 0.05851159, 0, 1, 0, -0.05851159, 0, -0.9982867, -3.9213648, 0, -15.487709)
+
+[node name="fern_02_d" parent="Foresta/Fern02D68" unique_id=474251371 instance=ExtResource("26_e8sal")]
+transform = Transform3D(2.812109, 0, 0, 0, 2.812109, 0, 0, 0, 2.812109, 0, 0, 0)
+
+[node name="Fern02B69" type="Node3D" parent="Foresta" unique_id=1174784681]
+transform = Transform3D(-0.95163846, 0, 0.30722016, 0, 1, 0, -0.30722016, 0, -0.95163846, -2.3157902, 0, -9.681579)
+
+[node name="fern_02_b" parent="Foresta/Fern02B69" unique_id=1923406948 instance=ExtResource("24_bckml")]
+transform = Transform3D(2.0520597, 0, 0, 0, 2.0520597, 0, 0, 0, 2.0520597, 0, 0, 0)
+
+[node name="Fern02C70" type="Node3D" parent="Foresta" unique_id=638218476]
+transform = Transform3D(-0.6180773, 0, 0.7861173, 0, 1, 0, -0.7861173, 0, -0.6180773, 13.724468, 0, -2.1154919)
+
+[node name="fern_02_c" parent="Foresta/Fern02C70" unique_id=385502184 instance=ExtResource("23_ctmtp")]
+transform = Transform3D(1.5479997, 0, 0, 0, 1.5479997, 0, 0, 0, 1.5479997, 0, 0, 0)
+
+[node name="Fern02B71" type="Node3D" parent="Foresta" unique_id=512322044]
+transform = Transform3D(-0.6591272, 0, 0.75203145, 0, 1, 0, -0.75203145, 0, -0.6591272, 9.162262, 0, 15.23513)
+
+[node name="fern_02_b" parent="Foresta/Fern02B71" unique_id=925631754 instance=ExtResource("24_bckml")]
+transform = Transform3D(1.8212684, 0, 0, 0, 1.8212684, 0, 0, 0, 1.8212684, 0, 0, 0)
+
+[node name="Fern02D72" type="Node3D" parent="Foresta" unique_id=1085515915]
+transform = Transform3D(0.97805834, 0, 0.2083312, 0, 1, 0, -0.2083312, 0, 0.97805834, 17.988865, 0, 6.2655563)
+
+[node name="fern_02_d" parent="Foresta/Fern02D72" unique_id=6492805 instance=ExtResource("26_e8sal")]
+transform = Transform3D(2.8395898, 0, 0, 0, 2.8395898, 0, 0, 0, 2.8395898, 0, 0, 0)
+
+[node name="Fern02B73" type="Node3D" parent="Foresta" unique_id=1621399585]
+transform = Transform3D(0.52132285, 0, -0.8533595, 0, 1, 0, 0.8533595, 0, 0.52132285, 4.1374245, 0, 14.11845)
+
+[node name="fern_02_b" parent="Foresta/Fern02B73" unique_id=338428515 instance=ExtResource("24_bckml")]
+transform = Transform3D(1.2355144, 0, 0, 0, 1.2355144, 0, 0, 0, 1.2355144, 0, 0, 0)
+
+[node name="FirSaplingMediumC5" type="Node3D" parent="Foresta" unique_id=769764746]
+transform = Transform3D(0.8830996, 0, -0.4691856, 0, 1, 0, 0.4691856, 0, 0.8830996, -3.5266457, 0, 21.965326)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC5" unique_id=1193534731 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0)
+
+[node name="FirSaplingMediumC7" type="Node3D" parent="Foresta" unique_id=1858645980]
+transform = Transform3D(0.8830996, 0, -0.4691856, 0, 1, 0, 0.4691856, 0, 0.8830996, 15.225864, 0, -18.586302)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC7" unique_id=571643240 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0)
+
+[node name="FirSaplingMediumC8" type="Node3D" parent="Foresta" unique_id=69055267]
+transform = Transform3D(0.8830996, 0, -0.4691856, 0, 1, 0, 0.4691856, 0, 0.8830996, 20.822643, 0, -18.586302)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC8" unique_id=78536251 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0, 0.80689085, 0, 0, 0)
+
+[node name="FirSaplingMediumC10" type="Node3D" parent="Foresta" unique_id=758803349]
+transform = Transform3D(0.3061991, 0, -0.9519675, 0, 1, 0, 0.9519675, 0, 0.3061991, 17.162518, 0, -3.2567253)
+
+[node name="fir_sapling_medium_c" parent="Foresta/FirSaplingMediumC10" unique_id=893982259 instance=ExtResource("20_cqpbn")]
+transform = Transform3D(0.9813631, 0, 0, 0, 0.9813631, 0, 0, 0, 0.9813631, 0, 0, 0)
+
+[node name="Accampamento" type="Node3D" parent="." unique_id=361131966]
+
+[node name="TendaPelli74" type="Node3D" parent="Accampamento" unique_id=624507139]
+transform = Transform3D(0.9396926, 0, 0.34202012, 0, 1, 0, -0.34202012, 0, 0.9396926, -13.5, 0, -10.5)
+
+[node name="tenda_pelli2" parent="Accampamento/TendaPelli74" unique_id=1310543974 instance=ExtResource("27_dyucv")]
+transform = Transform3D(0.86221415, 0, 0, 0, 0.86221415, 0, 0, 0, 0.86221415, 0, 0, -2.0556787e-07)
+
+[node name="TendaTelaRami75" type="Node3D" parent="Accampamento" unique_id=1762086316]
+transform = Transform3D(0.81915206, 0, -0.57357645, 0, 1, 0, 0.57357645, 0, 0.81915206, -8.2, 0, -11.2)
+
+[node name="tenda_tela_rami2" parent="Accampamento/TendaTelaRami75" unique_id=1360949626 instance=ExtResource("28_pv3v7")]
+transform = Transform3D(0.833567, 0, 0, 0, 0.833567, 0, 0, 0, 0.833567, 0, 0, 0)
+
+[node name="FocolareCalderone76" type="Node3D" parent="Accampamento" unique_id=1121557053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 0, -7)
+
+[node name="focolare_calderone2" parent="Accampamento/FocolareCalderone76" unique_id=1588916478 instance=ExtResource("29_10jmw")]
+transform = Transform3D(0.84570086, 0, 0, 0, 0.84570086, 0, 0, 0, 0.84570086, 0, 0, 0)
+
+[node name="FiammaAnimata" type="Node3D" parent="Accampamento/FocolareCalderone76" unique_id=594836745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+
+[node name="Fiamma" type="MeshInstance3D" parent="Accampamento/FocolareCalderone76/FiammaAnimata" unique_id=445762034]
+material_override = SubResource("ShaderMaterial_2smjc")
+cast_shadow = 0
+visibility_range_end = 45.0
+mesh = SubResource("QuadMesh_ib11r")
+
+[node name="Braci" type="GPUParticles3D" parent="Accampamento/FocolareCalderone76/FiammaAnimata" unique_id=1072550242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.495, 0)
+cast_shadow = 0
+visibility_range_end = 24.0
+lifetime = 1.5
+randomness = 1.0
+visibility_aabb = AABB(-1.5, -0.5, -1.5, 3, 3.5, 3)
+process_material = SubResource("ParticleProcessMaterial_v2pt5")
+draw_pass_1 = SubResource("QuadMesh_gsrmy")
+
+[node name="FumoSottile" type="GPUParticles3D" parent="Accampamento/FocolareCalderone76/FiammaAnimata" unique_id=222095269]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.81, 0)
+cast_shadow = 0
+visibility_range_end = 24.0
+amount = 3
+lifetime = 3.0
+randomness = 1.0
+fixed_fps = 20
+visibility_aabb = AABB(-2, -0.5, -2, 4, 5, 4)
+process_material = SubResource("ParticleProcessMaterial_vuaow")
+draw_pass_1 = SubResource("QuadMesh_7s7j1")
+
+[node name="LuceCampo" type="OmniLight3D" parent="." unique_id=564655496]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.8, 1.1, -7)
+light_color = Color(1, 0.6, 0.25, 1)
+light_energy = 1.4
+omni_range = 7.0
+
+[node name="Cantiere" type="Node3D" parent="." unique_id=763171638]
+
+[node name="Panca77" type="Node3D" parent="Cantiere" unique_id=1412575341]
+transform = Transform3D(0.34202015, 0, 0.9396926, 0, 1, 0, -0.9396926, 0, 0.34202015, -8.6, 0, 8)
+
+[node name="panca" parent="Cantiere/Panca77" unique_id=333866 instance=ExtResource("31_yssp7")]
+transform = Transform3D(1.0517995, 0, 0, 0, 1.0517995, 0, 0, 0, 1.0517995, 0.00048749405, 0.38290444, 0.0012468839)
+
+[node name="PilaTravi" type="Node3D" parent="Cantiere" unique_id=1996582658]
+transform = Transform3D(0.9659258, 0, 0.25881904, 0, 1, 0, -0.25881904, 0, 0.9659258, -9.2, 0, 11)
+visible = false
+
+[node name="travi_impilate" parent="Cantiere/PilaTravi" unique_id=433567708 instance=ExtResource("32_2ddv0")]
+transform = Transform3D(1.2612528, 0, 0, 0, 1.2612528, 0, 0, 0, 1.2612528, 0.00057389756, 0.08623314, 0.00095414044)
+
+[node name="Relitto79" type="Node3D" parent="Cantiere" unique_id=1070170994]
+transform = Transform3D(0.76604444, 0, 0.6427876, 0, 1, 0, -0.6427876, 0, 0.76604444, -13, -0.1, 11.5)
+
+[node name="relitto" parent="Cantiere/Relitto79" unique_id=811214627 instance=ExtResource("33_3suw4")]
+transform = Transform3D(1.5916309, 0, 0, 0, 1.5916309, 0, 0, 0, 1.5916309, 0.013357688, 0.48381764, -0.022940127)
+
+[node name="Trave80" type="Node3D" parent="Cantiere" unique_id=1076204160]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, -12.5, 0.05, 4.7)
+
+[node name="trave" parent="Cantiere/Trave80" unique_id=254667965 instance=ExtResource("34_tmjeo")]
+transform = Transform3D(0.9970535, 0, 0, 0, 0.9970535, 0, 0, 0, 0.9970535, 0.0012518129, 0.1735561, 0.00035544496)
+
+[node name="Trave81" type="Node3D" parent="Cantiere" unique_id=1803481792]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, -12.5, 0.25, 5.6)
+
+[node name="trave" parent="Cantiere/Trave81" unique_id=381287658 instance=ExtResource("34_tmjeo")]
+transform = Transform3D(0.9970535, 0, 0, 0, 0.9970535, 0, 0, 0, 0.9970535, 0.0012518129, 0.1735561, 0.00035544496)
+
+[node name="Trave82" type="Node3D" parent="Cantiere" unique_id=948643372]
+transform = Transform3D(0.25881907, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, 0.25881907, -12.5, 0.45, 6.5)
+
+[node name="trave" parent="Cantiere/Trave82" unique_id=1346285077 instance=ExtResource("34_tmjeo")]
+transform = Transform3D(0.9970535, 0, 0, 0, 0.9970535, 0, 0, 0, 0.9970535, 0.0012518129, 0.1735561, 0.00035544496)
+
+[node name="LuceCantiere" type="OmniLight3D" parent="." unique_id=612288254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, 16)
+light_color = Color(1, 0.62, 0.3, 1)
+light_energy = 1.4
+omni_range = 7.0
+
+[node name="Navi" type="Node3D" parent="." unique_id=894632479]
+
+[node name="Nave1" type="Node3D" parent="Navi" unique_id=1763089810]
+transform = Transform3D(-0.08715577, 0, 0.9961947, 0, 1, 0, -0.9961947, 0, -0.08715577, -13, -0.55, -5)
+
+[node name="nave_achea" parent="Navi/Nave1" unique_id=1329860842 instance=ExtResource("35_2si74")]
+transform = Transform3D(0.9167735, 0, 0, 0, 0.9167735, 0, 0, 0, 0.9167735, 9.854859, 0.00043553114, -1.8928499)
+
+[node name="Nave2" type="Node3D" parent="Navi" unique_id=2022471039]
+transform = Transform3D(0.087155804, 0, 0.9961947, 0, 1, 0, -0.9961947, 0, 0.087155804, -13.5, -0.55, 2)
+
+[node name="nave_achea" parent="Navi/Nave2" unique_id=25677445 instance=ExtResource("35_2si74")]
+transform = Transform3D(0.9167735, 0, -7.450581e-09, 0, 0.9167735, 0, 7.450581e-09, 0, 0.9167735, -0.16957712, 0.00043553114, -1.9885683)
+
+[node name="Nave3" type="Node3D" parent="Navi" unique_id=956078021]
+transform = Transform3D(-0.1736482, 0, 0.9848077, 0, 1, 0, -0.9848077, 0, -0.1736482, -14, -0.55, 16.5)
+
+[node name="nave_achea" parent="Navi/Nave3" unique_id=1510171512 instance=ExtResource("35_2si74")]
+transform = Transform3D(0.89940155, 0, 0.17762499, 0, 0.91677344, 0, -0.17762499, 0, 0.89940155, -2.6787558, 0.00043553114, -3.0990143)
+
+[node name="Nave4" type="Node3D" parent="Navi" unique_id=1825059171]
+transform = Transform3D(0.17364822, 0, 0.9848077, 0, 1, 0, -0.9848077, 0, 0.17364822, -21.5, -0.7, -10)
+
+[node name="nave_achea" parent="Navi/Nave4" unique_id=947291179 instance=ExtResource("35_2si74")]
+transform = Transform3D(0.9167735, 0, 0, 0, 0.9167735, 0, 0, 0, 0.9167735, 0.0043164357, 0.0004355483, -0.00095779926)
+
+[node name="CavalloDiTroia" type="Node3D" parent="." unique_id=1816571236]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 13)
+metadata/base_y = -0.8388281
+metadata/top_y = 0.8234681
+metadata/scale = 4.6
+
+[node name="cavallo_troia" parent="CavalloDiTroia" unique_id=1395808375 instance=ExtResource("36_2gs67")]
+transform = Transform3D(4.6, 0, 0, 0, 4.6, 0, 0, 0, 4.6, 0.0057822107, 3.8586092, 0.47553688)
+
+[node name="Carpentieri" type="Node3D" parent="." unique_id=1323374725]
+
+[node name="Epeo" type="Node3D" parent="Carpentieri" unique_id=1529825069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.2, 0, 15.5)
+
+[node name="epeo" parent="Carpentieri/Epeo" unique_id=451192692 instance=ExtResource("37_0xlr7")]
+transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 0, 0, 0)
+
+[node name="Carpentiere1" type="Node3D" parent="Carpentieri" unique_id=1001643379]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 0, 14)
+
+[node name="carpentiere" parent="Carpentieri/Carpentiere1" unique_id=1018585191 instance=ExtResource("38_kx7xf")]
+transform = Transform3D(0.92, 0, 0, 0, 0.92, 0, 0, 0, 0.92, 0, 0, 0)
+
+[node name="Carpentiere2" type="Node3D" parent="Carpentieri" unique_id=1952823294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0, 12.7)
+
+[node name="carpentiere" parent="Carpentieri/Carpentiere2" unique_id=127915155 instance=ExtResource("38_kx7xf")]
+transform = Transform3D(0.92, 0, 0, 0, 0.92, 0, 0, 0, 0.92, 0, 0, 0)
+
+[node name="Carpentiere3" type="Node3D" parent="Carpentieri" unique_id=1962536226]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4000001, 0, 11.4)
+
+[node name="carpentiere" parent="Carpentieri/Carpentiere3" unique_id=482901314 instance=ExtResource("38_kx7xf")]
+transform = Transform3D(0.92, 0, 0, 0, 0.92, 0, 0, 0, 0.92, 0, 0, 0)
+
+[node name="MassiConfine" type="Node3D" parent="." unique_id=2086867335]
+
+[node name="NamaqualandBoulder0387" type="Node3D" parent="MassiConfine" unique_id=1480330953]
+transform = Transform3D(-0.8384689, 0, -0.5449495, 0, 1, 0, 0.5449495, 0, -0.8384689, 2.1812744, -0.748802, -25.182686)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder0387" unique_id=1145473773 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.81209147, 0, 0, 0, 0.81209147, 0, 0, 0, 0.81209147, 0, 0, 0)
+
+[node name="Boulder0188" type="Node3D" parent="MassiConfine" unique_id=1989828626]
+transform = Transform3D(-0.9588314, 0, -0.28397593, 0, 1, 0, 0.28397593, 0, -0.9588314, -0.301836, -0.4933053, -23.078089)
+
+[node name="boulder_01" parent="MassiConfine/Boulder0188" unique_id=894665554 instance=ExtResource("13_tgphr")]
+transform = Transform3D(1.1790551, 0, 0, 0, 1.1790551, 0, 0, 0, 1.1790551, 0, 0, 0)
+
+[node name="NamaqualandBoulder0289" type="Node3D" parent="MassiConfine" unique_id=2003021855]
+transform = Transform3D(-0.64042306, 0, 0.76802236, 0, 1, 0, -0.76802236, 0, -0.64042306, 20.316399, -1.088202, -21.742907)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder0289" unique_id=55030012 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(1.4524837, 0, 0, 0, 1.4524837, 0, 0, 0, 1.4524837, 0, 0, 0)
+
+[node name="NamaqualandBoulder0290" type="Node3D" parent="MassiConfine" unique_id=1174714379]
+transform = Transform3D(0.9794226, 0, -0.20182009, 0, 1, 0, 0.20182009, 0, 0.9794226, -0.5877037, -0.90776396, -26.128593)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder0290" unique_id=811376 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(1.555081, 0, 0, 0, 1.555081, 0, 0, 0, 1.555081, 0, 0, 0)
+
+[node name="NamaqualandBoulder0291" type="Node3D" parent="MassiConfine" unique_id=1768505124]
+transform = Transform3D(-0.6254546, 0, -0.78026056, 0, 1, 0, 0.78026056, 0, -0.6254546, -11.668281, -0.7188819, -24.610306)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder0291" unique_id=443487195 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(1.0238806, 0, 0, 0, 1.0238806, 0, 0, 0, 1.0238806, 0, 0, 0)
+
+[node name="Boulder0192" type="Node3D" parent="MassiConfine" unique_id=687147557]
+transform = Transform3D(0.7073043, 0, 0.70690924, 0, 1, 0, -0.70690924, 0, 0.7073043, 24.612625, -0.9304871, -23.986225)
+
+[node name="boulder_01" parent="MassiConfine/Boulder0192" unique_id=1325700445 instance=ExtResource("13_tgphr")]
+transform = Transform3D(2.5780413, 0, 0, 0, 2.5780413, 0, 0, 0, 2.5780413, 0, 0, 0)
+
+[node name="NamaqualandBoulder0393" type="Node3D" parent="MassiConfine" unique_id=784577940]
+transform = Transform3D(0.70833683, 0, 0.7058746, 0, 1, 0, -0.7058746, 0, 0.70833683, 8.906549, -0.5846413, -21.733934)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder0393" unique_id=65841876 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.6485576, 0, 0, 0, 0.6485576, 0, 0, 0, 0.6485576, 0, 0, 0)
+
+[node name="NamaqualandBoulder0294" type="Node3D" parent="MassiConfine" unique_id=502083262]
+transform = Transform3D(0.5614108, 0, 0.82753724, 0, 1, 0, -0.82753724, 0, 0.5614108, -4.230321, -1.0172565, -21.490622)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder0294" unique_id=554989286 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(1.2499427, 0, 0, 0, 1.2499427, 0, 0, 0, 1.2499427, 0, 0, 0)
+
+[node name="NamaqualandBoulder0295" type="Node3D" parent="MassiConfine" unique_id=1484449124]
+transform = Transform3D(0.08618047, 0, -0.99627954, 0, 1, 0, 0.99627954, 0, 0.08618047, -3.6031399, -0.571861, -25.577522)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder0295" unique_id=879178890 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(0.92865723, 0, 0, 0, 0.92865723, 0, 0, 0, 0.92865723, 0, 0, 0)
+
+[node name="NamaqualandBoulder0396" type="Node3D" parent="MassiConfine" unique_id=65603494]
+transform = Transform3D(-0.98666954, 0, 0.1627365, 0, 1, 0, -0.1627365, 0, -0.98666954, -6.5326815, -0.37647182, -19.942497)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder0396" unique_id=1761302774 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.5668523, 0, 0, 0, 0.5668523, 0, 0, 0, 0.5668523, 0, 0, 0)
+
+[node name="NamaqualandBoulder0397" type="Node3D" parent="MassiConfine" unique_id=425764255]
+transform = Transform3D(0.07599562, 0, 0.99710816, 0, 1, 0, -0.99710816, 0, 0.07599562, 4.82053, -0.6276325, -22.708239)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder0397" unique_id=1255011436 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.90647244, 0, 0, 0, 0.90647244, 0, 0, 0, 0.90647244, 0, 0, 0)
+
+[node name="Boulder0198" type="Node3D" parent="MassiConfine" unique_id=1663100521]
+transform = Transform3D(-0.88458323, 0, -0.46638235, 0, 1, 0, 0.46638235, 0, -0.88458323, -10.067143, -0.98174775, -22.27674)
+
+[node name="boulder_01" parent="MassiConfine/Boulder0198" unique_id=87347120 instance=ExtResource("13_tgphr")]
+transform = Transform3D(2.212275, 0, 0, 0, 2.212275, 0, 0, 0, 2.212275, 0, 0, 0)
+
+[node name="Boulder0199" type="Node3D" parent="MassiConfine" unique_id=624694205]
+transform = Transform3D(-0.7672722, 0, -0.64132166, 0, 1, 0, 0.64132166, 0, -0.7672722, 5.0349026, -0.69023806, -25.618761)
+
+[node name="boulder_01" parent="MassiConfine/Boulder0199" unique_id=1598168765 instance=ExtResource("13_tgphr")]
+transform = Transform3D(1.491034, 0, 0, 0, 1.491034, 0, 0, 0, 1.491034, 0, 0, 0)
+
+[node name="NamaqualandBoulder03100" type="Node3D" parent="MassiConfine" unique_id=315916927]
+transform = Transform3D(-0.723316, 0, -0.6905171, 0, 1, 0, 0.6905171, 0, -0.723316, 0.67636967, -0.4212384, -19.954046)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder03100" unique_id=903366731 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.66266525, 0, 0, 0, 0.66266525, 0, 0, 0, 0.66266525, 0, 0, 0)
+
+[node name="NamaqualandBoulder03101" type="Node3D" parent="MassiConfine" unique_id=598169889]
+transform = Transform3D(-0.9180208, 0, -0.3965323, 0, 1, 0, 0.3965323, 0, -0.9180208, -2.159605, -0.8686598, -19.922447)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder03101" unique_id=1140937712 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.8519801, 0, 0, 0, 0.8519801, 0, 0, 0, 0.8519801, 0, 0, 0)
+
+[node name="Boulder01102" type="Node3D" parent="MassiConfine" unique_id=2098759572]
+transform = Transform3D(0.95472586, 0, -0.29748708, 0, 1, 0, 0.29748708, 0, 0.95472586, 24.39159, -0.49467817, -19.872091)
+
+[node name="boulder_01" parent="MassiConfine/Boulder01102" unique_id=1777812269 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.9187478, 0, 0, 0, 0.9187478, 0, 0, 0, 0.9187478, 0, 0, 0)
+
+[node name="Boulder01103" type="Node3D" parent="MassiConfine" unique_id=2002178357]
+transform = Transform3D(-0.43932644, 0, -0.89832747, 0, 1, 0, 0.89832747, 0, -0.43932644, -12.7897, -0.47527406, -19.091486)
+
+[node name="boulder_01" parent="MassiConfine/Boulder01103" unique_id=458346290 instance=ExtResource("13_tgphr")]
+transform = Transform3D(1.2726581, 0, 0, 0, 1.2726581, 0, 0, 0, 1.2726581, 0, 0, 0)
+
+[node name="NamaqualandBoulder03104" type="Node3D" parent="MassiConfine" unique_id=1996152585]
+transform = Transform3D(-0.30191812, 0, -0.95333385, 0, 1, 0, 0.95333385, 0, -0.30191812, 5.3226986, -0.3283054, -20.694616)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder03104" unique_id=1025788172 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.5460326, 0, 0, 0, 0.5460326, 0, 0, 0, 0.5460326, 0, 0, 0)
+
+[node name="Boulder01105" type="Node3D" parent="MassiConfine" unique_id=290652413]
+transform = Transform3D(0.28681996, 0, 0.9579845, 0, 1, 0, -0.9579845, 0, 0.28681996, 8.008953, -1.2732824, -25.26186)
+
+[node name="boulder_01" parent="MassiConfine/Boulder01105" unique_id=969430617 instance=ExtResource("13_tgphr")]
+transform = Transform3D(2.0556066, 0, 0, 0, 2.0556066, 0, 0, 0, 2.0556066, 0, 0, 0)
+
+[node name="NamaqualandBoulder03106" type="Node3D" parent="MassiConfine" unique_id=1013917826]
+transform = Transform3D(-0.630743, 0, -0.7759918, 0, 1, 0, 0.7759918, 0, -0.630743, -7.5815163, -0.57749146, -21.698944)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder03106" unique_id=421969346 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.5703773, 0, 0, 0, 0.5703773, 0, 0, 0, 0.5703773, 0, 0, 0)
+
+[node name="Boulder01107" type="Node3D" parent="MassiConfine" unique_id=697326845]
+transform = Transform3D(0.14687258, 0, 0.9891554, 0, 1, 0, -0.9891554, 0, 0.14687258, 4.0652523, -0.3690205, -19.501225)
+
+[node name="boulder_01" parent="MassiConfine/Boulder01107" unique_id=650574321 instance=ExtResource("13_tgphr")]
+transform = Transform3D(0.84562844, 0, 0, 0, 0.84562844, 0, 0, 0, 0.84562844, 0, 0, 0)
+
+[node name="NamaqualandBoulder03108" type="Node3D" parent="MassiConfine" unique_id=1024160893]
+transform = Transform3D(-0.74643207, 0, -0.6654616, 0, 1, 0, 0.6654616, 0, -0.74643207, -6.47596, -0.88843954, -24.707346)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder03108" unique_id=1917120844 instance=ExtResource("39_v14ye")]
+transform = Transform3D(1.0810541, 0, 0, 0, 1.0810541, 0, 0, 0, 1.0810541, 0, 0, 0)
+
+[node name="Boulder01109" type="Node3D" parent="MassiConfine" unique_id=1611336206]
+transform = Transform3D(0.3088969, 0, 0.9510955, 0, 1, 0, -0.9510955, 0, 0.3088969, 1.7600231, -0.80407894, -21.877222)
+
+[node name="boulder_01" parent="MassiConfine/Boulder01109" unique_id=1662854583 instance=ExtResource("13_tgphr")]
+transform = Transform3D(1.5055957, 0, 0, 0, 1.5055957, 0, 0, 0, 1.5055957, 0, 0, 0)
+
+[node name="NamaqualandBoulder03110" type="Node3D" parent="MassiConfine" unique_id=317941836]
+transform = Transform3D(-0.92399174, 0, -0.3824125, 0, 1, 0, 0.3824125, 0, -0.92399174, 6.76931, -0.5919674, -21.325972)
+
+[node name="namaqualand_boulder_03" parent="MassiConfine/NamaqualandBoulder03110" unique_id=940610377 instance=ExtResource("39_v14ye")]
+transform = Transform3D(0.6556234, 0, 0, 0, 0.6556234, 0, 0, 0, 0.6556234, 0, 0, 0)
+
+[node name="NamaqualandBoulder02111" type="Node3D" parent="MassiConfine" unique_id=1489863712]
+transform = Transform3D(-0.9999792, 0, -0.0064464044, 0, 1, 0, 0.0064464044, 0, -0.9999792, 21.105087, -0.55186075, -25.376822)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder02111" unique_id=216376360 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(0.8534555, 0, 0, 0, 0.8534555, 0, 0, 0, 0.8534555, 0, 0, 0)
+
+[node name="NamaqualandBoulder02112" type="Node3D" parent="MassiConfine" unique_id=1365622326]
+transform = Transform3D(-0.2486184, 0, -0.9686015, 0, 1, 0, 0.9686015, 0, -0.2486184, -1.9845886, -0.39628255, -22.232271)
+
+[node name="namaqualand_boulder_02" parent="MassiConfine/NamaqualandBoulder02112" unique_id=1086896501 instance=ExtResource("40_6sw3v")]
+transform = Transform3D(0.8636598, 0, 0, 0, 0.8636598, 0, 0, 0, 0.8636598, 0, 0, 0)
+
+[node name="NebbiaConfine" type="Node3D" parent="." unique_id=1704523571]
+
+[node name="Strato1" type="MeshInstance3D" parent="NebbiaConfine" unique_id=2040083198]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -19)
+material_override = SubResource("ShaderMaterial_qqus1")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_emk8u")
+
+[node name="Strato2" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1189642366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -22.6)
+material_override = SubResource("ShaderMaterial_ycawu")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_m0mps")
+
+[node name="Strato3" type="MeshInstance3D" parent="NebbiaConfine" unique_id=2101682783]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -26.2)
+material_override = SubResource("ShaderMaterial_j4248")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_fdpah")
+
+[node name="Strato4" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1873220521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -29.8)
+material_override = SubResource("ShaderMaterial_61dx4")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_6aayi")
+
+[node name="Strato5" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1621340264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -33.4)
+material_override = SubResource("ShaderMaterial_kuhpq")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_cisxd")
+
+[node name="Strato6" type="MeshInstance3D" parent="NebbiaConfine" unique_id=46659654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -37)
+material_override = SubResource("ShaderMaterial_tfstp")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_b5ruk")
+
+[node name="Strato7" type="MeshInstance3D" parent="NebbiaConfine" unique_id=246766871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -40.6)
+material_override = SubResource("ShaderMaterial_f442p")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_41bvj")
+
+[node name="Strato8" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1986113087]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 7, -44.2)
+material_override = SubResource("ShaderMaterial_soxbr")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_knqrw")
+
+[node name="Velo1" type="MeshInstance3D" parent="NebbiaConfine" unique_id=2049152529]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.3, -34)
+material_override = SubResource("ShaderMaterial_c0di7")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_al0uf")
+
+[node name="Velo2" type="MeshInstance3D" parent="NebbiaConfine" unique_id=23730552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.1, -34)
+material_override = SubResource("ShaderMaterial_ovy5u")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_yi3ly")
+
+[node name="Velo3" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1748676701]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.1, -34)
+material_override = SubResource("ShaderMaterial_23ufx")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_dbtps")
+
+[node name="Velo4" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1758306306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.3, -34)
+material_override = SubResource("ShaderMaterial_tat3h")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_fdt1y")
+
+[node name="Velo5" type="MeshInstance3D" parent="NebbiaConfine" unique_id=1795312722]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4.8, -34)
+material_override = SubResource("ShaderMaterial_7pyjx")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_7cvbn")

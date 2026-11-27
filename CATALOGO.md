@@ -92,6 +92,43 @@ Tutti GLB di Meshy, una mesh, nessun rig né animazioni, 3 texture 2048 (colore,
 
 Usi possibili: panca e trave per il cantiere del cavallo (livello 2), relitto per spiagge e scene di naufragio.
 
+## Aggiornamento 27/11/2026 (pomeriggio): `MODELLI_ANIMATI` e Polifemo
+
+Nuova cartella `~/Scaricati/MODELLI_ANIMATI` con 17 GLB di personaggi **già animati** (misure dall'intestazione glTF, senza Blender). Tutti: 1 mesh skinnata di ~30,2-30,8k triangoli, 1 materiale, 3 texture 2048, altezza a riposo 1,70-1,76 m, origine ai piedi (Y = 0, già giusta per Godot), scheletro Mixamo di 66 ossa (con dita) e animazioni incluse, 16-23 MB a file.
+
+### Polifemo (`polifemo.glb`, 14:33)
+- 30.530 triangoli, 16,9 MB, 3 texture 2048, altezza 1,70 m, larghezza 0,70 m (braccia lungo i fianchi), origine ai piedi.
+- Scheletro Mixamo a 66 ossa, 9 animazioni: `Walking`, `Running`, `Slow_Orc_Walk`, `Unsteady_Walk` (camminata incerta, utile per Polifemo ubriaco), `Boxing_Guard_Right_Straight_Kick`, `Right_Hand_Sword_Slash`, `Shield_Push_Left`, `Shot_and_Slow_Fall_Backward`, `Strangled_and_Fall_Forward` (caduta in avanti).
+- **Scala:** alto 1,70 m come un uomo, quindi per il livello della grotta **va scalato a 3-4 m** (scala 2,0-2,4 sul nodo; il rig e le animazioni scalano insieme). Non integrato: da fare quando si costruisce il livello.
+- Attenzione: alcune animazioni (spada, scudo) non c'entrano con un ciclope che usa un tronco; per un combattimento servirà sceglierne altre o aggiungerle da Mixamo.
+
+### Altri personaggi animati nella cartella
+
+| File (abbreviato) | Triangoli | Ossa | Animazioni |
+|---|---|---|---|
+| `ulisse.glb` | 30.632 | 66 | 17 (corsa, salto, scalata, torcia, colpi di ascia, blocco) |
+| `agamennone (1).glb` | 30.264 | 66 | 14 (combattimento, morte, calci) |
+| `polifemo.glb` | 30.530 | 66 | 9 |
+| Meshy_AI_Agamemnon_Character_Concept_Art | 30.552 | 70 | 12 |
+| Meshy_AI_Menelaus_Character_Concept_Art | 30.396 | 66 | 11 |
+| Meshy_AI_Eurylochus_Character_Concept | 30.528 | 66 | 15 |
+| Meshy_AI_Eurybates_Character_Study | 30.497 | 66 | 9 |
+| Meshy_AI_Bronze_Sentinel_of_Perimede (Perimede) | 30.366 | **36** | 11 |
+| Meshy_AI_Deiphobus_Trojan_Warrior (2 versioni) | 30.557 / 30.604 | 66 | 11 / 10 |
+| Meshy_AI_Pandarus_the_Trojan_Archer | 30.473 | 66 | 7 |
+| Meshy_AI_Trojan_Captain_Concept_Sheet | 30.231 | 66 | 10 |
+| Meshy_AI_Trojan_Foot_Soldier_Concept_Art | 30.420 | 66 | 8 |
+| Meshy_AI_The_One_Eyed_Legionary | 30.460 | 66 | 7 |
+| Meshy_AI_Wounded_Legionary_Concept_Art | 30.495 | 66 | 10 |
+| Meshy_AI_Wounded_Hoplite_Character_Study (2 versioni) | 30.640 / 30.847 | **36** / **78** | 10 / 13 |
+
+Osservazioni:
+- Gli scheletri **non sono tutti uguali**: 66 ossa è lo standard Mixamo con dita, ma Perimede e un Wounded Hoplite hanno 36 ossa, un altro Wounded Hoplite 78 e Agamemnon 70. Il retarget su `HumanoidAnims` (che usa un rig a 17 ossa, vedi memoria `mixamo-17bone-characters`) va quindi verificato modello per modello.
+- Le animazioni sono incorporate in ogni file con nomi Mixamo: stesse clip in file diversi, quindi duplicate. Per risparmiare, conviene tenerle in una sola libreria e separare le mesh.
+- 17 file × ~30k triangoli: per più personaggi insieme in scena serve comunque un LOD.
+- Ci sono due versioni di Deiphobus e di Wounded Hoplite: decidere quale tenere.
+- I nomi mostrano chiaramente Meshy + Mixamo: licenze come sopra, da verificare.
+
 ## Come sono stati prodotti (dedotto, da verificare)
 
 I nomi generici (`Mesh_0`, `Material_0`, `Image_0..2`), la mesh da quasi 1 milione di triangoli e la pipeline texture metallic-roughness fanno pensare a un export glTF di un generatore 3D da immagine/testo (tipo Meshy, Tripo, Hunyuan3D o simili), poi importato in Blender. **Nei file non c'è nessuna informazione su autore, fonte o licenza.** Serve chiederlo a Umberto (vedi sezione Licenze).

@@ -12,3 +12,6 @@ licenza o autore: **fonte e licenza da verificare** prima di una distribuzione p
 
 ## Audio livello 2 (assets/audio/sfx/level2)
 Effetti e loop generati con ElevenLabs Sound Effects (contenuto generato da AI, 27/11/2026): axe_chop, tree_fall, saw, hammer, wood_drop, log_splash, raiders, fleet_sails, rope_drag, trojan_cry, stream_loop, sea_fall_loop, torches_loop, river_mouth_loop, sea_waves_loop, forest_birds_loop.
+
+## Personaggi animati (da `~/Scaricati/MODELLI_ANIMATI`, non ancora negli assets)
+17 GLB (Polifemo, Ulisse, Agamennone, Menelao, Euriloco, Euribate, Perimede, Deifobo, Pandaro, capitano e fante troiani, ferito e altri): generati con **Meshy AI** e animati con **Mixamo** (nomi `...animated_mixamo_All_animation`). **Licenza e uso commerciale da verificare** (piano Meshy, termini Adobe Mixamo) prima di distribuire. Dettagli in [CATALOGO.md](CATALOGO.md).
